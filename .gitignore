@@ -1,0 +1,17 @@
+# 碳索之旅 - Git忽略文件
+
+# OS
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# 临时文件
+*.tmp
+*.temp
+~$*
