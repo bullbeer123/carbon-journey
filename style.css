@@ -4536,6 +4536,489 @@ body.loaded { visibility: visible; animation: pageEntry 0.8s ease-out; }
     }
 }
 
+/* ==================== 碳足迹与零碳园区板块 ==================== */
+.footprint-section {
+    padding: 80px 0 100px;
+    background: linear-gradient(180deg, #f0fdf4 0%, #ecfdf5 50%, #f0fdfa 100%);
+    position: relative;
+}
+
+.footprint-section::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 200px;
+    background: linear-gradient(180deg, rgba(26,154,92,0.06) 0%, transparent 100%);
+    pointer-events: none;
+}
+
+/* Tab切换 */
+.fp-tabs {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-bottom: 40px;
+}
+
+.fp-tab {
+    padding: 12px 32px;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    background: rgba(255,255,255,0.8);
+    border: 2px solid rgba(26,154,92,0.15);
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.fp-tab:hover {
+    border-color: var(--accent-green);
+    color: #065f46;
+}
+
+.fp-tab.active {
+    background: linear-gradient(135deg, var(--primary-green), var(--accent-green));
+    color: #fff;
+    border-color: transparent;
+    box-shadow: 0 4px 20px rgba(13,110,61,0.25);
+}
+
+.fp-panel {
+    display: none;
+}
+
+.fp-panel.active {
+    display: block;
+    animation: fadeIn 0.4s ease;
+}
+
+/* 子标题 */
+.fp-subtitle {
+    font-size: 18px;
+    font-weight: 700;
+    color: #065f46;
+    margin: 36px 0 20px;
+    padding-left: 12px;
+    border-left: 4px solid var(--accent-green);
+}
+
+/* ===== 碳足迹Tab ===== */
+.fp-concept-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.fp-concept-card {
+    background: rgba(255,255,255,0.9);
+    border-radius: 16px;
+    padding: 28px 24px;
+    text-align: center;
+    border: 1px solid rgba(26,154,92,0.12);
+    transition: all 0.3s ease;
+}
+
+.fp-concept-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 32px rgba(13,110,61,0.12);
+    border-color: var(--accent-green);
+}
+
+.fp-concept-icon {
+    font-size: 42px;
+    margin-bottom: 12px;
+}
+
+.fp-concept-card h4 {
+    font-size: 18px;
+    color: #065f46;
+    margin-bottom: 10px;
+}
+
+.fp-concept-card p {
+    font-size: 14px;
+    color: var(--text-secondary);
+    line-height: 1.7;
+}
+
+/* 核算标准 */
+.fp-standards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+}
+
+.fp-std-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    background: rgba(255,255,255,0.9);
+    border-radius: 12px;
+    padding: 16px 20px;
+    border: 1px solid rgba(26,154,92,0.1);
+}
+
+.fp-std-badge {
+    flex-shrink: 0;
+    padding: 4px 10px;
+    font-size: 11px;
+    font-weight: 700;
+    border-radius: 6px;
+    color: #fff;
+}
+
+.fp-std-badge.intl {
+    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+}
+
+.fp-std-badge.cn {
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+}
+
+.fp-std-body h5 {
+    font-size: 15px;
+    color: #065f46;
+    margin-bottom: 4px;
+}
+
+.fp-std-body p {
+    font-size: 13px;
+    color: var(--text-muted);
+}
+
+/* 管理流程 */
+.fp-flow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.fp-flow-step {
+    flex: 1;
+    min-width: 160px;
+    background: linear-gradient(135deg, rgba(13,110,61,0.06), rgba(26,154,92,0.03));
+    border: 1px solid rgba(26,154,92,0.15);
+    border-radius: 14px;
+    padding: 20px 16px;
+    text-align: center;
+}
+
+.fp-flow-num {
+    width: 32px;
+    height: 32px;
+    background: linear-gradient(135deg, var(--primary-green), var(--accent-green));
+    color: #fff;
+    font-size: 16px;
+    font-weight: 700;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 10px;
+}
+
+.fp-flow-step h5 {
+    font-size: 14px;
+    color: #065f46;
+    margin-bottom: 6px;
+}
+
+.fp-flow-step p {
+    font-size: 12px;
+    color: var(--text-secondary);
+}
+
+.fp-flow-arrow {
+    font-size: 20px;
+    color: var(--accent-green);
+    font-weight: 300;
+}
+
+/* 标识认证 */
+.fp-labels {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+}
+
+.fp-label-card {
+    background: rgba(255,255,255,0.9);
+    border-radius: 14px;
+    padding: 24px 20px;
+    text-align: center;
+    border: 1px solid rgba(26,154,92,0.12);
+    transition: all 0.3s ease;
+}
+
+.fp-label-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 24px rgba(13,110,61,0.1);
+}
+
+.fp-label-icon {
+    font-size: 36px;
+    margin-bottom: 10px;
+}
+
+.fp-label-card h5 {
+    font-size: 15px;
+    color: #065f46;
+    margin-bottom: 8px;
+}
+
+.fp-label-card p {
+    font-size: 13px;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    margin-bottom: 10px;
+}
+
+.fp-label-tag {
+    display: inline-block;
+    padding: 3px 10px;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--primary-green);
+    background: rgba(13,110,61,0.08);
+    border-radius: 20px;
+}
+
+/* ===== 零碳园区Tab ===== */
+.zp-intro {
+    display: flex;
+    align-items: flex-start;
+    gap: 24px;
+    background: linear-gradient(135deg, rgba(13,110,61,0.08), rgba(26,154,92,0.04));
+    border-radius: 16px;
+    padding: 28px 32px;
+    margin-bottom: 20px;
+    border: 1px solid rgba(26,154,92,0.15);
+}
+
+.zp-intro-icon {
+    font-size: 48px;
+    flex-shrink: 0;
+}
+
+.zp-intro-text h4 {
+    font-size: 18px;
+    color: #065f46;
+    margin-bottom: 10px;
+}
+
+.zp-intro-text p {
+    font-size: 15px;
+    color: var(--text-secondary);
+    line-height: 1.8;
+}
+
+/* 六步路径 */
+.zp-path {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 12px;
+}
+
+.zp-path-step {
+    background: rgba(255,255,255,0.9);
+    border-radius: 14px;
+    padding: 20px 14px;
+    text-align: center;
+    border: 1px solid rgba(26,154,92,0.12);
+    transition: all 0.3s ease;
+}
+
+.zp-path-step:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 28px rgba(13,110,61,0.12);
+    border-color: var(--accent-green);
+}
+
+.zp-path-icon {
+    font-size: 28px;
+    margin-bottom: 8px;
+}
+
+.zp-path-num {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--accent-green);
+    margin-bottom: 6px;
+}
+
+.zp-path-step h5 {
+    font-size: 13px;
+    color: #065f46;
+    margin-bottom: 6px;
+}
+
+.zp-path-step p {
+    font-size: 11px;
+    color: var(--text-muted);
+    line-height: 1.5;
+}
+
+/* 技术矩阵 */
+.zp-tech-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+}
+
+.zp-tech-card {
+    background: rgba(255,255,255,0.9);
+    border-radius: 12px;
+    padding: 18px 16px;
+    text-align: center;
+    border: 1px solid rgba(26,154,92,0.1);
+    transition: all 0.3s ease;
+}
+
+.zp-tech-card:hover {
+    background: linear-gradient(135deg, rgba(13,110,61,0.06), rgba(26,154,92,0.03));
+    border-color: var(--accent-green);
+}
+
+.zp-tech-icon {
+    font-size: 28px;
+    margin-bottom: 8px;
+}
+
+.zp-tech-card h5 {
+    font-size: 14px;
+    color: #065f46;
+    margin-bottom: 4px;
+}
+
+.zp-tech-card p {
+    font-size: 12px;
+    color: var(--text-muted);
+}
+
+/* 案例卡片 */
+.zp-cases {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+}
+
+.zp-case-card {
+    background: rgba(255,255,255,0.95);
+    border-radius: 14px;
+    padding: 22px 20px;
+    border: 1px solid rgba(26,154,92,0.12);
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.zp-case-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 28px rgba(13,110,61,0.1);
+    border-color: var(--accent-green);
+}
+
+.zp-case-badge {
+    position: absolute;
+    top: -10px;
+    right: 16px;
+    padding: 4px 12px;
+    font-size: 11px;
+    font-weight: 700;
+    color: #fff;
+    background: linear-gradient(135deg, var(--primary-green), var(--accent-green));
+    border-radius: 20px;
+}
+
+.zp-case-card h5 {
+    font-size: 16px;
+    color: #065f46;
+    margin: 8px 0 10px;
+}
+
+.zp-case-card p {
+    font-size: 13px;
+    color: var(--text-secondary);
+    line-height: 1.7;
+    margin-bottom: 12px;
+}
+
+.zp-case-tags {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+
+.zp-case-tags span {
+    padding: 3px 10px;
+    font-size: 11px;
+    color: var(--primary-green);
+    background: rgba(13,110,61,0.08);
+    border-radius: 20px;
+}
+
+/* 政策时间线 */
+.zp-policy-timeline {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.zp-policy-item {
+    display: flex;
+    gap: 20px;
+    background: rgba(255,255,255,0.9);
+    border-radius: 12px;
+    padding: 16px 20px;
+    border: 1px solid rgba(26,154,92,0.1);
+}
+
+.zp-policy-year {
+    flex-shrink: 0;
+    width: 56px;
+    height: 32px;
+    background: linear-gradient(135deg, var(--primary-green), var(--accent-green));
+    color: #fff;
+    font-size: 14px;
+    font-weight: 700;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.zp-policy-body h5 {
+    font-size: 15px;
+    color: #065f46;
+    margin-bottom: 4px;
+}
+
+.zp-policy-body p {
+    font-size: 13px;
+    color: var(--text-secondary);
+}
+
+/* 响应式 */
+@media (max-width: 1200px) {
+    .fp-concept-row, .fp-standards, .fp-labels, .zp-cases { grid-template-columns: repeat(2, 1fr); }
+    .zp-path { grid-template-columns: repeat(3, 1fr); }
+    .zp-tech-grid { grid-template-columns: repeat(3, 1fr); }
+}
+
+@media (max-width: 768px) {
+    .fp-tabs { flex-direction: column; align-items: center; gap: 8px; }
+    .fp-tab { padding: 10px 24px; font-size: 14px; }
+    .fp-concept-row, .fp-standards, .fp-labels, .zp-cases { grid-template-columns: 1fr; }
+    .fp-flow { flex-direction: column; }
+    .fp-flow-arrow { transform: rotate(90deg); }
+    .zp-path { grid-template-columns: repeat(2, 1fr); }
+    .zp-tech-grid { grid-template-columns: repeat(2, 1fr); }
+    .zp-intro { flex-direction: column; text-align: center; }
+}
+
 /* ==================== AI数据分析工具板块 ==================== */
 .ai-tools-section {
     padding: 80px 0 100px;

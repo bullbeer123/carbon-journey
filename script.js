@@ -825,6 +825,17 @@ function initGlobalSearch() {
         { type: 'achievement', title: '可再生能源装机', desc: '可再生能源总装机1300GW，风电光伏装机之和超越煤电', category: '降碳成果', targetId: 'achievements', icon: '⚡' },
         { type: 'achievement', title: '特高压输电', desc: '"西电东送"特高压线路33条，输送能力超3亿千瓦', category: '国家工程', targetId: 'projects', icon: '⚡' },
         { type: 'achievement', title: '雄安新区', desc: '"千年大计"绿色基因——清洁能源利用率100%，绿色建筑比例100%', category: '绿色城市', targetId: 'projects', icon: '🏛️' },
+        // 碳足迹与零碳园区
+        { type: 'footprint', title: '产品碳足迹', desc: '基于ISO 14067标准量化产品全生命周期温室气体排放', category: '碳足迹', targetId: 'carbon-footprint', icon: '🔬' },
+        { type: 'footprint', title: '企业碳足迹', desc: '按GHG Protocol分为Scope 1/2/3三大范畴进行碳排放核算', category: '碳足迹', targetId: 'carbon-footprint', icon: '🏭' },
+        { type: 'footprint', title: 'ISO 14067', desc: '国际通行产品碳足迹量化标准', category: '碳足迹标准', targetId: 'carbon-footprint', icon: '📋' },
+        { type: 'footprint', title: 'CBAM碳边境调节', desc: '欧盟碳关税要求进口产品申报碳排放数据，倒逼出口企业碳足迹核算', category: '碳足迹', targetId: 'carbon-footprint', icon: '🇪🇺' },
+        { type: 'footprint', title: 'EPD环境产品声明', desc: '经第三方验证的标准化环境声明，涵盖碳足迹等全维度指标', category: '碳足迹认证', targetId: 'carbon-footprint', icon: '📄' },
+        { type: 'footprint', title: '碳标签', desc: '标注产品碳足迹数值，面向消费者透明展示碳排放信息', category: '碳足迹认证', targetId: 'carbon-footprint', icon: '🌱' },
+        { type: 'footprint', title: '零碳园区', desc: '通过能源清洁替代、产业低碳转型实现温室气体净零排放的产业集聚区', category: '零碳园区', targetId: 'carbon-footprint', icon: '🏗️' },
+        { type: 'footprint', title: '远景赤峰零碳产业园', desc: '全球首个零碳产业园，风光储绿色能源+绿色电池产业链', category: '零碳园区', targetId: 'carbon-footprint', icon: '🏆' },
+        { type: 'footprint', title: '宁德时代零碳工厂', desc: '全球首批灯塔工厂+零碳工厂，光伏+储能+绿证实现运营碳中和', category: '零碳园区', targetId: 'carbon-footprint', icon: '🔋' },
+        { type: 'footprint', title: '雄安新区零碳园区', desc: '全域绿色建筑、100%清洁能源供应、智慧能源管理平台', category: '零碳园区', targetId: 'carbon-footprint', icon: '🏛️' },
     ];
     
     // 加入服务平台数据（含功能标签）
@@ -926,6 +937,7 @@ function initGlobalSearch() {
                 policy: '📜 政策',
                 achievement: '📊 成果',
                 platform: '🔧 平台',
+                footprint: '👣 碳足迹',
             };
             
             searchResults.innerHTML = results.map(item => `
@@ -1387,6 +1399,17 @@ document.querySelectorAll('.pff-btn').forEach(btn => {
         const activeFilter = document.querySelector('.pf-btn.active');
         const searchInput = document.getElementById('platformSearchInput');
         renderPlatforms(activeFilter ? activeFilter.dataset.pfilter : 'all', searchInput ? searchInput.value : '');
+    });
+});
+
+// 碳足迹与零碳园区 Tab切换
+document.querySelectorAll('.fp-tab').forEach(btn => {
+    btn.addEventListener('click', () => {
+        document.querySelectorAll('.fp-tab').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const target = btn.dataset.fptab;
+        document.querySelectorAll('.fp-panel').forEach(p => p.classList.remove('active'));
+        document.getElementById('fp-' + target).classList.add('active');
     });
 });
 

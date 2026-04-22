@@ -53,6 +53,7 @@
                 <li><a href="#projects">低碳项目</a></li>
                 <li><a href="#tech">技术创新</a></li>
                 <li><a href="#market">碳市场</a></li>
+                <li><a href="#carbon-footprint">碳足迹·零碳园区</a></li>
                 <li><a href="#policy">政策推动</a></li>
                 <li><a href="#global">全球贡献</a></li>
                 <li><a href="#ai-tools">AI工具</a></li>
@@ -71,7 +72,7 @@
                     </div>
                     <div id="searchResults" class="search-results"></div>
                     <div class="search-shortcuts">
-                        <span>💡 试试搜：CCUS、光伏、碳中和、比亚迪...</span>
+                        <span>💡 试试搜：碳足迹、零碳园区、CCUS、光伏、CBAM...</span>
                     </div>
                 </div>
             </div>
@@ -1113,7 +1114,328 @@
         </div>
     </section>
 
-    <!-- ==================== 第七屏：政策推动 ==================== -->
+    <!-- ==================== 第七屏：碳足迹与零碳园区 ==================== -->
+    <section id="carbon-footprint" class="section footprint-section">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag">👣 碳足迹·零碳园区</span>
+                <h2 class="section-title">碳足迹管理<span class="highlight">与零碳园区</span>建设</h2>
+                <p class="section-desc">从产品碳足迹核算到园区碳中和路径，打通"核算—认证—减排—中和"全链条</p>
+            </div>
+
+            <!-- 双Tab切换 -->
+            <div class="fp-tabs">
+                <button class="fp-tab active" data-fptab="footprint">👣 碳足迹管理</button>
+                <button class="fp-tab" data-fptab="zeropark">🏗️ 零碳园区</button>
+            </div>
+
+            <!-- ===== Tab1: 碳足迹管理 ===== -->
+            <div class="fp-panel active" id="fp-footprint">
+                <!-- 核心概念卡片 -->
+                <div class="fp-concept-row">
+                    <div class="fp-concept-card">
+                        <div class="fp-concept-icon">🔬</div>
+                        <h4>产品碳足迹 (PCF)</h4>
+                        <p>基于ISO 14067标准，量化产品全生命周期温室气体排放，从原材料获取到废弃处置全链条核算</p>
+                    </div>
+                    <div class="fp-concept-card">
+                        <div class="fp-concept-icon">🏭</div>
+                        <h4>企业碳足迹</h4>
+                        <p>按GHG Protocol将排放分为Scope 1/2/3三大范畴，覆盖直接排放、能源间接排放和价值链排放</p>
+                    </div>
+                    <div class="fp-concept-card">
+                        <div class="fp-concept-icon">👤</div>
+                        <h4>个人碳足迹</h4>
+                        <p>量化衣、食、住、行等日常活动的碳排放，推动公众低碳生活方式转变</p>
+                    </div>
+                </div>
+
+                <!-- 碳足迹核算标准体系 -->
+                <h3 class="fp-subtitle">📋 碳足迹核算标准体系</h3>
+                <div class="fp-standards">
+                    <div class="fp-std-item">
+                        <div class="fp-std-badge intl">国际</div>
+                        <div class="fp-std-body">
+                            <h5>ISO 14067</h5>
+                            <p>产品碳足迹量化标准，国际通行方法论基础</p>
+                        </div>
+                    </div>
+                    <div class="fp-std-item">
+                        <div class="fp-std-badge intl">国际</div>
+                        <div class="fp-std-body">
+                            <h5>PAS 2050</h5>
+                            <p>英国BSI发布的产品生命周期温室气体排放评估规范</p>
+                        </div>
+                    </div>
+                    <div class="fp-std-item">
+                        <div class="fp-std-badge intl">国际</div>
+                        <div class="fp-std-body">
+                            <h5>GHG Protocol</h5>
+                            <p>温室气体核算体系，企业碳排放盘查的全球标杆</p>
+                        </div>
+                    </div>
+                    <div class="fp-std-item">
+                        <div class="fp-std-badge cn">中国</div>
+                        <div class="fp-std-body">
+                            <h5>GB/T 32150</h5>
+                            <p>工业企业温室气体排放核算和报告通则</p>
+                        </div>
+                    </div>
+                    <div class="fp-std-item">
+                        <div class="fp-std-badge cn">中国</div>
+                        <div class="fp-std-body">
+                            <h5>产品碳足迹量化要求</h5>
+                            <p>生态环境部2024年发布，统一国内产品碳足迹核算方法</p>
+                        </div>
+                    </div>
+                    <div class="fp-std-item">
+                        <div class="fp-std-badge cn">中国</div>
+                        <div class="fp-std-body">
+                            <h5>行业碳足迹核算标准</h5>
+                            <p>电力、钢铁、水泥、铝、锂电池等重点行业已发布专项核算标准</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 碳足迹管理全流程 -->
+                <h3 class="fp-subtitle">🔄 碳足迹管理全流程</h3>
+                <div class="fp-flow">
+                    <div class="fp-flow-step">
+                        <div class="fp-flow-num">1</div>
+                        <h5>确定目标与范围</h5>
+                        <p>明确核算边界、功能单位、系统边界</p>
+                    </div>
+                    <div class="fp-flow-arrow">→</div>
+                    <div class="fp-flow-step">
+                        <div class="fp-flow-num">2</div>
+                        <h5>数据收集建模</h5>
+                        <p>采集活动数据、排放因子，建立LCA模型</p>
+                    </div>
+                    <div class="fp-flow-arrow">→</div>
+                    <div class="fp-flow-step">
+                        <div class="fp-flow-num">3</div>
+                        <h5>核算与验证</h5>
+                        <p>计算碳足迹结果，第三方核查验证</p>
+                    </div>
+                    <div class="fp-flow-arrow">→</div>
+                    <div class="fp-flow-step">
+                        <div class="fp-flow-num">4</div>
+                        <h5>标识与声明</h5>
+                        <p>碳标签、EPD声明、碳足迹报告</p>
+                    </div>
+                    <div class="fp-flow-arrow">→</div>
+                    <div class="fp-flow-step">
+                        <div class="fp-flow-num">5</div>
+                        <h5>减排与持续改进</h5>
+                        <p>识别热点、制定减排路径、持续监测</p>
+                    </div>
+                </div>
+
+                <!-- 碳足迹认证标识 -->
+                <h3 class="fp-subtitle">🏷️ 碳足迹标识与认证</h3>
+                <div class="fp-labels">
+                    <div class="fp-label-card">
+                        <div class="fp-label-icon">🌱</div>
+                        <h5>产品碳标签</h5>
+                        <p>标注产品碳足迹数值，面向消费者透明展示碳排放信息</p>
+                        <span class="fp-label-tag">消费端</span>
+                    </div>
+                    <div class="fp-label-card">
+                        <div class="fp-label-icon">📄</div>
+                        <h5>EPD环境产品声明</h5>
+                        <p>经第三方验证的标准化环境声明，涵盖碳足迹等全维度指标</p>
+                        <span class="fp-label-tag">国际通行</span>
+                    </div>
+                    <div class="fp-label-card">
+                        <div class="fp-label-icon">🇪🇺</div>
+                        <h5>CBAM碳边境调节</h5>
+                        <p>欧盟碳关税要求进口产品申报碳排放数据，倒逼出口企业碳足迹核算</p>
+                        <span class="fp-label-tag">出口合规</span>
+                    </div>
+                    <div class="fp-label-card">
+                        <div class="fp-label-icon">♻️</div>
+                        <h5>碳中和声明</h5>
+                        <p>基于PAS 2060标准，经抵消后实现碳中和的正式声明</p>
+                        <span class="fp-label-tag">品牌价值</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== Tab2: 零碳园区 ===== -->
+            <div class="fp-panel" id="fp-zeropark">
+                <!-- 零碳园区定义 -->
+                <div class="zp-intro">
+                    <div class="zp-intro-icon">🏗️</div>
+                    <div class="zp-intro-text">
+                        <h4>什么是零碳园区？</h4>
+                        <p>零碳园区是指在特定空间范围内，通过能源清洁替代、产业低碳转型、碳汇与碳捕集等措施，实现温室气体净零排放的产业集聚区。它是"双碳"目标落地的核心载体，也是绿色低碳技术创新的试验场。</p>
+                    </div>
+                </div>
+
+                <!-- 零碳园区建设路径 -->
+                <h3 class="fp-subtitle">🛤️ 零碳园区建设六步路径</h3>
+                <div class="zp-path">
+                    <div class="zp-path-step">
+                        <div class="zp-path-icon">📊</div>
+                        <div class="zp-path-num">Step 1</div>
+                        <h5>碳盘查摸底</h5>
+                        <p>全面核算园区碳排放现状，建立排放清单与数据基线</p>
+                    </div>
+                    <div class="zp-path-step">
+                        <div class="zp-path-icon">🎯</div>
+                        <div class="zp-path-num">Step 2</div>
+                        <h5>设定碳中和目标</h5>
+                        <p>明确基准年、达峰年、中和年，制定分阶段减排路线图</p>
+                    </div>
+                    <div class="zp-path-step">
+                        <div class="zp-path-icon">⚡</div>
+                        <div class="zp-path-num">Step 3</div>
+                        <h5>能源结构转型</h5>
+                        <p>分布式光伏+风电+储能+智能微网，构建清洁能源供应体系</p>
+                    </div>
+                    <div class="zp-path-step">
+                        <div class="zp-path-icon">🏭</div>
+                        <div class="zp-path-num">Step 4</div>
+                        <h5>产业低碳升级</h5>
+                        <p>工艺改造、循环经济、绿色供应链、余热回收利用</p>
+                    </div>
+                    <div class="zp-path-step">
+                        <div class="zp-path-icon">🌳</div>
+                        <div class="zp-path-num">Step 5</div>
+                        <h5>碳汇与碳移除</h5>
+                        <p>生态碳汇建设、CCUS技术、碳交易抵消残余排放</p>
+                    </div>
+                    <div class="zp-path-step">
+                        <div class="zp-path-icon">📡</div>
+                        <div class="zp-path-num">Step 6</div>
+                        <h5>智慧碳管理</h5>
+                        <p>碳排放在线监测、AI能耗优化、数字孪生园区管理平台</p>
+                    </div>
+                </div>
+
+                <!-- 零碳园区关键技术 -->
+                <h3 class="fp-subtitle">⚡ 零碳园区关键技术矩阵</h3>
+                <div class="zp-tech-grid">
+                    <div class="zp-tech-card">
+                        <div class="zp-tech-icon">☀️</div>
+                        <h5>分布式光伏</h5>
+                        <p>厂房屋顶、车棚、空地分布式光伏发电</p>
+                    </div>
+                    <div class="zp-tech-card">
+                        <div class="zp-tech-icon">🔋</div>
+                        <h5>储能系统</h5>
+                        <p>电化学储能+飞轮储能，削峰填谷稳定供能</p>
+                    </div>
+                    <div class="zp-tech-card">
+                        <div class="zp-tech-icon">🌬️</div>
+                        <h5>分散式风电</h5>
+                        <p>园区周边中小型风力发电机组</p>
+                    </div>
+                    <div class="zp-tech-card">
+                        <div class="zp-tech-icon">🏗️</div>
+                        <h5>超低能耗建筑</h5>
+                        <p>被动式设计+BIPV光伏建筑一体化</p>
+                    </div>
+                    <div class="zp-tech-card">
+                        <div class="zp-tech-icon">🔌</div>
+                        <h5>智能微电网</h5>
+                        <p>源网荷储一体化协同优化调度</p>
+                    </div>
+                    <div class="zp-tech-card">
+                        <div class="zp-tech-icon">♻️</div>
+                        <h5>循环经济</h5>
+                        <p>废物资源化、水资源循环、余热梯级利用</p>
+                    </div>
+                    <div class="zp-tech-card">
+                        <div class="zp-tech-icon">🚗</div>
+                        <h5>绿色交通</h5>
+                        <p>充电桩网络、氢能物流、共享出行</p>
+                    </div>
+                    <div class="zp-tech-card">
+                        <div class="zp-tech-icon">🤖</div>
+                        <h5>智慧能管平台</h5>
+                        <p>AI能耗优化、碳排放在线监测预警</p>
+                    </div>
+                </div>
+
+                <!-- 典型零碳园区案例 -->
+                <h3 class="fp-subtitle">🏆 典型零碳园区案例</h3>
+                <div class="zp-cases">
+                    <div class="zp-case-card">
+                        <div class="zp-case-badge">国家试点</div>
+                        <h5>雄安新区零碳园区</h5>
+                        <p>全域绿色建筑、100%清洁能源供应、智慧能源管理平台，打造零碳城市样板</p>
+                        <div class="zp-case-tags"><span>雄安</span><span>新城</span><span>智慧能源</span></div>
+                    </div>
+                    <div class="zp-case-card">
+                        <div class="zp-case-badge">行业标杆</div>
+                        <h5>远景赤峰零碳产业园</h5>
+                        <p>全球首个零碳产业园——风光储绿色能源+绿色电池产业链，实现80%绿电覆盖</p>
+                        <div class="zp-case-tags"><span>赤峰</span><span>远景</span><span>电池产业链</span></div>
+                    </div>
+                    <div class="zp-case-card">
+                        <div class="zp-case-badge">国际合作</div>
+                        <h5>中新天津生态城</h5>
+                        <p>中国-新加坡合作项目，100%绿色建筑、太阳能热水全覆盖、废弃物无害化处理100%</p>
+                        <div class="zp-case-tags"><span>天津</span><span>国际合作</span><span>生态城</span></div>
+                    </div>
+                    <div class="zp-case-card">
+                        <div class="zp-case-badge">产业转型</div>
+                        <h5>苏州工业园区</h5>
+                        <p>国家级经开区低碳转型标杆，循环化改造+绿色工厂+碳资产管理综合示范</p>
+                        <div class="zp-case-tags"><span>苏州</span><span>产业转型</span><span>循环化</span></div>
+                    </div>
+                    <div class="zp-case-card">
+                        <div class="zp-case-badge">零碳工厂</div>
+                        <h5>宁德时代零碳工厂</h5>
+                        <p>全球首批灯塔工厂+零碳工厂，光伏+储能+绿证组合实现运营碳中和</p>
+                        <div class="zp-case-tags"><span>宁德</span><span>制造业</span><span>绿电+绿证</span></div>
+                    </div>
+                    <div class="zp-case-card">
+                        <div class="zp-case-badge">零碳物流</div>
+                        <h5>京东"亚洲一号"零碳园区</h5>
+                        <p>屋顶光伏+充电桩+智能仓储，首个实现碳中和的电商物流园区</p>
+                        <div class="zp-case-tags"><span>上海</span><span>物流</span><span>光伏+充电</span></div>
+                    </div>
+                </div>
+
+                <!-- 政策支撑 -->
+                <h3 class="fp-subtitle">📜 零碳园区政策支撑</h3>
+                <div class="zp-policy-timeline">
+                    <div class="zp-policy-item">
+                        <div class="zp-policy-year">2022</div>
+                        <div class="zp-policy-body">
+                            <h5>《工业领域碳达峰实施方案》</h5>
+                            <p>工信部提出打造绿色低碳工业园区，推广零碳工厂建设</p>
+                        </div>
+                    </div>
+                    <div class="zp-policy-item">
+                        <div class="zp-policy-year">2023</div>
+                        <div class="zp-policy-body">
+                            <h5>《零碳园区建设指南》</h5>
+                            <p>中国标准化研究院等发布团体标准，为零碳园区建设提供方法学指引</p>
+                        </div>
+                    </div>
+                    <div class="zp-policy-item">
+                        <div class="zp-policy-year">2024</div>
+                        <div class="zp-policy-body">
+                            <h5>碳足迹管理体系建设方案</h5>
+                            <p>国务院办公厅印发，明确2027年前建立碳足迹标准体系，重点行业碳足迹核算全覆盖</p>
+                        </div>
+                    </div>
+                    <div class="zp-policy-item">
+                        <div class="zp-policy-year">2025</div>
+                        <div class="zp-policy-body">
+                            <h5>零碳园区试点推进</h5>
+                            <p>多省发布零碳园区创建方案，将零碳园区纳入绿色制造体系梯度培育</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== 第八屏：政策推动 ==================== -->
     <section id="policy" class="section policy-section">
         <div class="container">
             <div class="section-header">
@@ -1750,6 +2072,7 @@
                     <div class="footer-col">
                         <h5>专题板块</h5>
                         <a href="#market">碳市场</a>
+                        <a href="#carbon-footprint">碳足迹·零碳园区</a>
                         <a href="#policy">政策体系</a>
                         <a href="#global">全球贡献</a>
                         <a href="#platforms">服务平台</a>
@@ -1809,6 +2132,11 @@
                 <span class="sidenav-dot"></span>
                 <span class="sidenav-label">碳市场</span>
                 <span class="sidenav-hint">体系建设</span>
+            </li>
+            <li class="sidenav-item" data-target="carbon-footprint">
+                <span class="sidenav-dot"></span>
+                <span class="sidenav-label">碳足迹·零碳园区</span>
+                <span class="sidenav-hint">核算+园区</span>
             </li>
             <li class="sidenav-item" data-target="policy">
                 <span class="sidenav-dot"></span>
