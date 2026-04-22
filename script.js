@@ -1046,6 +1046,26 @@ const platformsData = [
     { id: 66, category: 'info', icon: '&#128300;', name: 'CCUS 国家地方联合工程研究中心', url: 'https://ccus.nwu.edu.cn/', desc: '西北大学牵头建设的CCUS技术国家级研究平台，聚焦二氧化碳捕集、利用与封存技术的研发与产业化推广。CCUS是实现碳中和的关键兜底技术。', tags: ['CCUS', '国家级中心', '西北大学', '碳中和技术'], region: '陕西' },
     { id: 67, category: 'market', icon: '&#9888;', name: '旧版CCER注册登记/交易系统（历史存档）', url: 'http://registry.ccersc.org.cn/login.do', desc: '旧版自愿减排注册登记系统和交易系统的游客登录入口。2017年暂停后不再接受新项目，但历史数据和已签发CCER仍可通过此系统查询。仅供研究参考使用。', tags: ['历史存档', '旧版CCER', '仅参考', '已停运'], region: '全国' },
     { id: 68, category: 'market', icon: '&#128736;', name: '北京市碳排放权电子交易平台', url: 'https://www.bjets.com.cn', desc: '北京市碳排放权电子交易专用平台，与北京绿色交易所(cbgex)分工不同，此平台侧重于电子化的配额交易操作功能。', tags: ['地方试点', '北京', '电子化交易'], region: '北京' },
+
+    // ===== 七、AI数据分析工具 =====
+    { id: 69, category: 'enterprise', icon: '&#129302;', name: 'ChatGPT', url: 'https://chat.openai.com', desc: 'OpenAI旗舰对话模型，逻辑严谨、擅长结构化拆解业务问题，精准界定分析范围。适用于数据分析全流程中的目标明确与问题分析环节。', tags: ['AI对话', '业务分析', 'OpenAI'], region: '全球' },
+    { id: 70, category: 'enterprise', icon: '&#129302;', name: 'Claude', url: 'https://www.anthropic.com/claude', desc: '强大的语言理解和生成能力，深度融入工作流和知识体系，帮助解决实际问题、激发创意、提升效率。适用于业务问题拆解与知识管理。', tags: ['AI办公', '知识管理', 'Anthropic'], region: '全球' },
+    { id: 71, category: 'enterprise', icon: '&#129302;', name: 'DeepSeek', url: 'https://www.deepseek.com/', desc: '开源、低成本、强推理能力的国产通用AI工具，提供文本理解、推理、生成能力。适用于编写报告与落地建议输出。', tags: ['国产AI', '强推理', '开源'], region: '中国' },
+    { id: 72, category: 'enterprise', icon: '&#129302;', name: 'Power BI Copilot', url: 'https://powerbi.microsoft.com/zh-cn/', desc: '微软BI+AI，对话式数据接入、建模、统计，适合企业级数据源整合。适用于数据采集获取与报告输出。', tags: ['企业级', 'BI+AI', '微软'], region: '全球' },
+    { id: 73, category: 'enterprise', icon: '&#129302;', name: 'Tableau Pulse', url: 'https://www.tableau.com/zh-cn/products/pulse', desc: 'Salesforce旗下AI驱动BI，自动探索数据源、生成指标卡片与预警。适用于数据采集与可视化分析。', tags: ['AI驱动', 'BI', 'Salesforce'], region: '全球' },
+    { id: 74, category: 'enterprise', icon: '&#129302;', name: 'ChatExcel', url: 'https://chatexcel.com', desc: '北大团队开发，纯文字指令完成去重、填充、格式规范，免费不限次。适用于数据清洗与预处理环节。', tags: ['AI表格', '数据清洗', '免费'], region: '中国' },
+    { id: 75, category: 'enterprise', icon: '&#129302;', name: 'WPS AI', url: 'https://ai.wps.cn', desc: '办公AI助手，深度集成WPS表格，一键清洗、填充缺失、规范字段，零学习成本。适用于数据清洗与报告输出。', tags: ['办公AI', 'WPS集成', '零学习成本'], region: '中国' },
+    { id: 76, category: 'enterprise', icon: '&#129302;', name: '办公小浣熊', url: 'https://www.xiaohuanxiong.com/officev2', desc: '商汤大模型驱动，上传即自动清洗、异常检测、标准化。适用于数据清洗与预处理环节。', tags: ['商汤AI', '自动清洗', '异常检测'], region: '中国' },
+    { id: 77, category: 'enterprise', icon: '&#129302;', name: '飞书多维表格AI', url: 'https://base.feishu.cn/', desc: '飞书原生AI表格，一句话生成转化率、环比、透视表，支持多人协同。适用于数据加工与统计分析。', tags: ['飞书AI', '表格分析', '多人协同'], region: '中国' },
+    { id: 78, category: 'enterprise', icon: '&#129302;', name: 'KIMI表格解析', url: 'https://kimi.moonshot.cn/', desc: '支持表格上传，自动清洗、写公式、做透视分析，长文本友好。适用于数据加工与统计分析。', tags: ['表格分析', '自动清洗', '长文本'], region: '中国' },
+    { id: 79, category: 'enterprise', icon: '&#129302;', name: 'Julius AI', url: 'https://julius.ai/', desc: '专注数据分析的AI助手，对话完成分组、衍生指标、回归预测。适用于数据加工与统计分析。', tags: ['数据分析', '衍生指标', '回归预测'], region: '全球' },
+    { id: 80, category: 'enterprise', icon: '&#129302;', name: '镝数图表AI', url: 'https://dycharts.com/', desc: '国内AI图表工具，接入DeepSeek，自动推荐图表、一键生成可视化报告。适用于可视化分析与结论挖掘。', tags: ['AI图表', '可视化', '一键生成'], region: '中国' },
+    { id: 81, category: 'enterprise', icon: '&#129302;', name: 'Canva可画', url: 'https://www.canva.com/', desc: '全球设计平台，图表模板丰富、拖拽美化，适合对外展示。适用于可视化分析与结论挖掘。', tags: ['设计平台', '图表模板', '对外展示'], region: '全球' },
+    { id: 82, category: 'enterprise', icon: '&#129302;', name: 'Quick BI', url: 'https://quickbi.aliyun.com/', desc: '阿里瓴羊出品，内置智能小Q，对话生成报表与看板，适配企业数据。适用于可视化分析与结论挖掘。', tags: ['阿里BI', '智能小Q', '企业数据'], region: '中国' },
+    { id: 83, category: 'enterprise', icon: '&#129302;', name: 'FineBI', url: 'https://www.fanruan.com/products/finebi', desc: '帆软旗舰BI，AI问答、自助分析、深度建模，企业级稳定可靠。适用于可视化分析与结论挖掘。', tags: ['帆软BI', 'AI问答', '企业级'], region: '中国' },
+    { id: 84, category: 'industry', icon: '&#127822;', name: '绿网', url: 'http://www.lvwang.org.cn/', desc: '中国绿色网络信息中心，提供绿色低碳发展相关资讯、政策解读、技术交流和案例分享，是环保领域重要的信息服务平台。', tags: ['环保资讯', '政策解读', '信息中心'], region: '全国' },
+    { id: 85, category: 'enterprise', icon: '&#128202;', name: 'i-esg', url: 'https://www.i-esg.com/', desc: '专业的ESG信息服务平台，提供ESG评级、数据查询、报告分析和投资研究服务，帮助企业提升ESG表现。', tags: ['ESG评级', '数据服务', '报告分析'], region: '全国' },
+    { id: 86, category: 'market', icon: '&#128176;', name: '碳在线', url: 'https://www.tanco2.cc/', desc: '碳市场在线服务平台，提供碳交易行情、碳资产管理、碳金融产品等信息服务。', tags: ['碳交易', '行情查询', '碳资产'], region: '全国' }
 ];
 
 let displayedPlatforms = 12;
@@ -1348,7 +1368,7 @@ const roleMapping = {
     trading:   { scene: 'trading',      label: '碳交易从业者',     desc: '为您筛选了CCER、配额、碳金融、绿证等16个平台' },
     gov:        { filter: 'gov',         label: '政府/公务人员',    desc: '为您展示了政策查询、数据统计等政府平台' },
     learn:      { scene: 'learn',        label: '研究/学习者',     desc: '为您筛选了资讯、数据库、智库等20+个平台' },
-    all:        { filter: 'all',         label: '全部浏览',        desc: '展示所有68+个双碳相关平台' }
+    all:        { filter: 'all',         label: '全部浏览',        desc: '展示所有86+个双碳相关平台' }
 };
 
 let currentSelectedRole = getStorage(STORAGE_KEYS.role, null);
