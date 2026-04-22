@@ -827,6 +827,21 @@ function initGlobalSearch() {
         { type: 'achievement', title: '雄安新区', desc: '"千年大计"绿色基因——清洁能源利用率100%，绿色建筑比例100%', category: '绿色城市', targetId: 'projects', icon: '🏛️' },
     ];
     
+    // 加入服务平台数据（含功能标签）
+    const platformSearchData = platformsData.map(p => {
+        const funcNames = getPlatformFunctionNames(p).join(' ');
+        return {
+            type: 'platform',
+            title: p.name,
+            desc: p.desc,
+            category: getPlatformCategoryName(p.category) + ' | ' + funcNames,
+            tags: [...p.tags, ...getPlatformFunctionNames(p)],
+            targetId: 'platforms',
+            icon: p.icon,
+        };
+    });
+    const allSearchData = [...searchData, ...platformSearchData];
+    
     let isSearchOpen = false;
     
     // 打开搜索面板
@@ -893,7 +908,7 @@ function initGlobalSearch() {
             }
             
             // 执行搜索
-            const results = searchData.filter(item => {
+            const results = allSearchData.filter(item => {
                 const searchText = `${item.title} ${item.desc} ${item.category} ${(item.tags || []).join(' ')} ${(item.location || '')}`.toLowerCase();
                 return searchText.includes(query);
             }).slice(0, 8); // 最多显示8条结果
@@ -910,6 +925,7 @@ function initGlobalSearch() {
                 tech: '🔬 技术',
                 policy: '📜 政策',
                 achievement: '📊 成果',
+                platform: '🔧 平台',
             };
             
             searchResults.innerHTML = results.map(item => `
@@ -960,9 +976,23 @@ function highlightMatch(text, query) {
 
 // ==================== 碳管理服务平台数据与交互 ====================
 
+// ==================== 功能分类定义 ====================
+const functionCategories = {
+    'carbon-footprint': { name: '碳足迹核算', icon: '👣', desc: '产品碳足迹、LCA分析、背景数据库' },
+    'accounting': { name: '碳排放盘查', icon: '📊', desc: '企业碳核算、MRV、清单编制' },
+    'certification': { name: '认证合规', icon: '✓', desc: '认证、核查、EPD声明、CBAM合规' },
+    'trading': { name: '碳交易履约', icon: '💹', desc: '配额交易、CCER、碳金融' },
+    'green-cert': { name: '绿证碳汇', icon: '🍃', desc: '绿证、碳汇、自愿减排' },
+    'data-query': { name: '数据查询', icon: '🔍', desc: '因子库、排放数据、统计数据' },
+    'policy-info': { name: '政策资讯', icon: '📰', desc: '政策文件、新闻动态、行业资讯' },
+    'tool-platform': { name: '工具平台', icon: '🔧', desc: 'SaaS工具、计算平台、管理系统' },
+    'standard': { name: '标准方法', icon: '📜', desc: '国际标准、方法学、技术规范' },
+    'research': { name: '研究智库', icon: '🎓', desc: '研究报告、智库机构、学术资源' }
+};
+
 const platformsData = [
     // ===== 一、政府平台 =====
-    { id: 1, category: 'gov', icon: '&#127793;', name: '国家温室气体排放因子数据库', url: 'https://data.ncsc.org.cn/factories/index', desc: '生态环境部建立的国家温室气体排放因子数据库，发布全国（部分因子细分到区域）温室气体排放因子和碳足迹因子，提供政策文件、标准规范和碳排放计算工具等模块。是国家统一核算的重要公共基础。', tags: ['国家级', '因子数据', '免费'], region: '全国' },
+    { id: 1, category: 'gov', icon: '&#127793;', name: '国家温室气体排放因子数据库', url: 'https://data.ncsc.org.cn/factories/index', desc: '生态环境部建立的国家温室气体排放因子数据库，发布全国（部分因子细分到区域）温室气体排放因子和碳足迹因子，提供政策文件、标准规范和碳排放计算工具等模块。是国家统一核算的重要公共基础。', tags: ['国家级', '因子数据', '免费'], region: '全国', functions: ['data-query', 'accounting', 'standard'] },
     { id: 2, category: 'gov', icon: '&#127795;', name: '江苏省产品碳足迹公共服务平台', url: 'https://jstzj.fzggw.jiangsu.gov.cn/portal/home/index', desc: '江苏省发改委主导建设的碳足迹公共服务平台，提供产品碳足迹建模、核算、认证及采信一站式服务。已入驻企业1018家，完成核算报告500份，认证报告230份。', tags: ['省级', '认证服务', '企业已超1000家'], region: '江苏' },
     { id: 3, category: 'gov', icon: '&#127796;', name: '浙江省产品碳足迹服务平台', url: 'https://ny.fzggw.zj.gov.cn/tzj/org/home/#/platForm', desc: '以"方法统一、数据可信"为原则，采用"全省规范指导、市场自主实践"模式，建立符合省情、衔接国家、接轨国际的产品碳足迹数据库。适合产业集群地区企业使用。', tags: ['省级', '市场化实践', '产业集群'], region: '浙江' },
     { id: 4, category: 'gov', icon: '&#127781;', name: '山东省企业产品碳足迹一站式服务平台', url: 'https://cfootprint.greendev.org.cn/user/login', desc: '山东省生态环境厅组织开发的公益性平台，覆盖ecoinvent因子库、中国LCA因子库、山东本土因子库等权威数据库。依据ISO14067、PAS2050国际标准快速精准核算。', tags: ['省级', '公益性', '多因子库', 'ISO标准'], region: '山东' },
@@ -1051,6 +1081,93 @@ const platformsData = [
     { id: 71, category: 'market', icon: '&#128176;', name: '碳在线', url: 'https://www.tanco2.cc/', desc: '碳市场在线服务平台，提供碳交易行情、碳资产管理、碳金融产品等信息服务。', tags: ['碳交易', '行情查询', '碳资产'], region: '全国' }
 ];
 
+// ==================== 平台功能映射表 ====================
+// 每个平台的功能标签，基于其核心能力和解决问题场景
+const platformFunctions = {
+    // 政府平台
+    1:  ['data-query', 'accounting', 'standard'],         // 国家因子库
+    2:  ['carbon-footprint', 'certification', 'tool-platform'], // 江苏
+    3:  ['carbon-footprint', 'certification', 'data-query'],    // 浙江
+    4:  ['carbon-footprint', 'certification', 'data-query'],    // 山东
+    5:  ['carbon-footprint', 'data-query', 'standard'],         // 上海
+    6:  ['carbon-footprint', 'accounting', 'certification', 'tool-platform'], // 湖北
+    7:  ['carbon-footprint', 'certification'],                  // 大湾区
+    8:  ['carbon-footprint', 'certification'],                  // 大连
+    9:  ['carbon-footprint', 'tool-platform'],                  // 绍兴
+    10: ['carbon-footprint', 'accounting', 'tool-platform'],    // 秦皇岛
+    // 碳交易平台
+    11: ['trading', 'certification'],                          // 全国碳市场
+    12: ['trading', 'green-cert'],                             // CCER交易
+    13: ['trading', 'green-cert', 'standard'],                 // CCER注册
+    14: ['trading', 'green-cert'],                             // 北京绿色交易所
+    15: ['trading', 'data-query'],                             // 上海环境能源交易所
+    16: ['trading', 'green-cert'],                             // 广州碳排放权交易中心
+    17: ['trading'],                                           // 湖北碳排放权交易中心
+    18: ['trading', 'research'],                               // 深圳绿色交易所
+    19: ['trading'],                                           // 天津排放权交易所
+    20: ['trading'],                                           // 重庆碳排放权交易中心
+    21: ['trading'],                                           // 福建海峡股权交易中心
+    22: ['trading', 'green-cert'],                             // 四川联合环境交易所
+    // 行业协会
+    23: ['carbon-footprint', 'certification', 'standard'],     // 电力EPD
+    24: ['carbon-footprint', 'accounting', 'tool-platform'],   // 铝工业
+    25: ['carbon-footprint', 'certification', 'data-query'],   // CNCD
+    26: ['carbon-footprint', 'data-query'],                    // 交通运输
+    27: ['carbon-footprint', 'certification', 'data-query'],   // 汽车CPP
+    28: ['carbon-footprint', 'data-query'],                    // 锂电池
+    29: ['carbon-footprint', 'certification'],                 // 建材碳标签
+    30: ['carbon-footprint', 'data-query', 'standard'],        // LCA系数库
+    31: ['carbon-footprint', 'tool-platform', 'data-query'],   // GIS-LCA
+    64: ['policy-info', 'research'],                           // 生物质能产业分会
+    69: ['policy-info', 'research'],                           // 绿网
+    // 企业SaaS
+    32: ['carbon-footprint', 'tool-platform', 'accounting'],   // 京碳惠
+    33: ['carbon-footprint', 'certification', 'tool-platform'], // 西碳迹
+    34: ['accounting', 'tool-platform'],                       // 吉碳云
+    35: ['carbon-footprint', 'tool-platform', 'accounting'],   // 阳光慧碳
+    36: ['carbon-footprint', 'accounting', 'tool-platform'],   // 法泰电器
+    70: ['certification', 'data-query', 'tool-platform'],      // i-esg
+    // 国际机制
+    37: ['trading', 'green-cert', 'standard'],                 // VCS
+    38: ['standard', 'green-cert'],                            // CDM
+    39: ['standard', 'green-cert'],                            // GCC
+    40: ['certification', 'standard', 'policy-info'],          // CBAM
+    41: ['policy-info', 'standard'],                           // EU Green Deal
+    42: ['policy-info', 'standard'],                           // EUR-Lex
+    43: ['trading', 'data-query'],                             // EEX
+    44: ['trading', 'data-query'],                             // ICE
+    45: ['certification', 'standard'],                         // GRI
+    46: ['green-cert'],                                        // 中国绿证GEC
+    47: ['green-cert', 'certification'],                       // I-REC
+    48: ['green-cert'],                                        // APX Tigrs
+    // 资讯/数据/智库
+    49: ['policy-info', 'standard', 'data-query'],             // 生态环境部
+    50: ['policy-info'],                                       // 发改委
+    51: ['policy-info'],                                       // 国家能源局
+    52: ['policy-info', 'data-query', 'research'],             // 气候变化信息网
+    53: ['data-query', 'research'],                            // 国家信息通报
+    54: ['data-query', 'tool-platform', 'accounting'],         // 蔚蓝地图
+    55: ['policy-info'],                                       // 中国能源网
+    56: ['policy-info', 'trading'],                            // 碳排放交易网
+    57: ['trading', 'policy-info'],                            // 碳道
+    58: ['data-query', 'research'],                            // 碳导航
+    59: ['research', 'policy-info'],                           // 落基山研究所
+    60: ['research', 'standard'],                              // GEIDCO
+    61: ['research', 'policy-info'],                           // 清华
+    62: ['research', 'policy-info'],                           // 北大
+    63: ['research', 'tool-platform'],                         // 公共机构案例库
+    65: ['policy-info', 'research'],                           // 中国储能网
+    66: ['research', 'standard'],                              // CCUS研究中心
+    67: ['trading', 'green-cert', 'data-query'],               // 旧版CCER
+    68: ['trading'],                                           // 北京碳交易电子平台
+    71: ['trading', 'data-query']                              // 碳在线
+};
+
+// 将功能标签合并到平台数据中
+platformsData.forEach(p => {
+    p.functions = platformFunctions[p.id] || [];
+});
+
 let displayedPlatforms = 12;
 const platformsGrid = document.getElementById('platformsGrid');
 
@@ -1064,6 +1181,18 @@ function getPlatformCategoryName(cat) {
         info: '资讯/数据/智库'
     };
     return names[cat] || cat;
+}
+
+// 获取平台的功能标签名称列表
+function getPlatformFunctionNames(p) {
+    return (p.functions || []).map(f => functionCategories[f]?.name || f);
+}
+
+// 获取平台的所有可搜索文本（含功能名称和描述）
+function getPlatformSearchText(p) {
+    const funcNames = getPlatformFunctionNames(p).join(' ');
+    const funcDescs = (p.functions || []).map(f => functionCategories[f]?.desc || '').join(' ');
+    return `${p.name} ${p.desc} ${p.tags.join(' ')} ${p.region} ${getPlatformCategoryName(p.category)} ${funcNames} ${funcDescs}`.toLowerCase();
 }
 
 function getPlatformCategoryIcon(cat) {
@@ -1081,6 +1210,7 @@ function getPlatformCategoryIcon(cat) {
 // ==================== 平台视图与筛选系统 ====================
 let currentViewMode = 'card'; // card | list | table
 let currentScene = 'all';    // all | export | accounting | trading | learn
+let currentFunction = 'all'; // 功能分类筛选
 
 // 场景关键词映射
 const sceneKeywords = {
@@ -1113,11 +1243,16 @@ function renderPlatforms(filter = 'all', searchQuery = '') {
         );
     }
     
-    // 搜索筛选
+    // 功能分类筛选
+    if (currentFunction && currentFunction !== 'all') {
+        filtered = filtered.filter(p => p.functions && p.functions.includes(currentFunction));
+    }
+    
+    // 搜索筛选（使用增强的搜索函数）
     if (searchQuery.trim()) {
         const q = searchQuery.toLowerCase();
         filtered = filtered.filter(p => {
-            const searchText = `${p.name} ${p.desc} ${p.tags.join(' ')} ${p.region} ${getPlatformCategoryName(p.category)}`.toLowerCase();
+            const searchText = getPlatformSearchText(p);
             return searchText.includes(q);
         });
     }
@@ -1127,7 +1262,7 @@ function renderPlatforms(filter = 'all', searchQuery = '') {
     // 更新搜索计数
     const countEl = document.getElementById('platformSearchCount');
     if (countEl) {
-        if (searchQuery.trim() || filter !== 'all' || (currentScene && currentScene !== 'all')) {
+        if (searchQuery.trim() || filter !== 'all' || (currentScene && currentScene !== 'all') || (currentFunction && currentFunction !== 'all')) {
             countEl.textContent = `找到 ${filtered.length} 个`;
             countEl.style.display = 'inline';
         } else {
@@ -1138,7 +1273,7 @@ function renderPlatforms(filter = 'all', searchQuery = '') {
     const platformsGrid = document.getElementById('platformsGrid');
 
     if (toShow.length === 0) {
-        platformsGrid.innerHTML = `<div class="platforms-empty"><span style="font-size:40px;">&#128269;</span><h3>未找到匹配的平台</h3><p>试试其他关键词或切换分类/场景</p></div>`;
+        platformsGrid.innerHTML = `<div class="platforms-empty"><span style="font-size:40px;">&#128269;</span><h3>未找到匹配的平台</h3><p>试试其他关键词或切换分类/场景/功能</p></div>`;
         platformsGrid.classList.remove('view-list', 'view-table');
         return;
     }
@@ -1165,26 +1300,32 @@ function renderPlatforms(filter = 'all', searchQuery = '') {
 /* ---------- 卡片视图 ---------- */
 function renderCardView(container, data) {
     container.className = 'platforms-grid';
-    container.innerHTML = data.map(p => `
+    container.innerHTML = data.map(p => {
+        const funcBadges = getPlatformFunctionNames(p).slice(0,3).map(f => `<span class="pfunc-badge">${f}</span>`).join('');
+        return `
         <div class="platform-card reveal" data-category="${p.category}" data-id="${p.id}">
             <div class="pcard-header"><div class="pcard-icon">${p.icon}</div><div class="pcard-type-badge">${getPlatformCategoryIcon(p.category)} ${getPlatformCategoryName(p.category)}</div></div>
             <h3 class="pcard-name">${p.name}</h3>
             <p class="pcard-desc">${p.desc}</p>
+            <div class="pcard-functions">${funcBadges}</div>
             <div class="pcard-meta"><span class="pcard-region">&#128205; ${p.region}</span><div class="pcard-tags">${p.tags.slice(0,3).map(t=>`<span class="ptag">${t}</span>`).join('')}</div></div>
             <div class="pcard-actions"><a href="${p.url}" target="_blank" rel="noopener noreferrer" class="pcard-visit-btn">访问 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h3M15 3h6v6M10 14L21 3"/></svg></a></div>
-        </div>`).join('');
+        </div>`}).join('');
 }
 
 /* ---------- 列表视图 ---------- */
 function renderListView(container, data) {
     container.className = 'platforms-grid view-list';
-    container.innerHTML = data.map(p => `
+    container.innerHTML = data.map(p => {
+        const funcBadges = getPlatformFunctionNames(p).slice(0,2).map(f => `<span class="pfunc-badge">${f}</span>`).join('');
+        return `
         <div class="platform-card reveal" data-category="${p.category}" data-id="${p.id}">
             <div class="pcard-header"><div class="pcard-icon">${p.icon}</div><div><h3 class="pcard-name">${p.name}</h3><span class="pcard-type-badge">${getPlatformCategoryName(p.category)}</span></div></div>
             <p class="pcard-desc">${p.desc}</p>
+            <div class="pcard-functions">${funcBadges}</div>
             <div class="pcard-meta"><span class="pcard-region">&#128205; ${p.region}</span><div class="pcard-tags">${p.tags.slice(0,2).map(t=>`<span class="ptag">${t}</span>`).join('')}</div></div>
             <div class="pcard-actions"><a href="${p.url}" target="_blank" rel="noopener noreferrer" class="pcard-visit-btn">访问 &rarr;</a></div>
-        </div>`).join('');
+        </div>`}).join('');
 }
 
 /* ---------- 表格视图 ---------- */
@@ -1192,9 +1333,10 @@ function renderTableView(container, data, totalCount) {
     container.className = 'platforms-grid view-table';
     let rows = data.map((p,i)=>{
         let tagsHtml = p.tags.slice(0,2).map(t=>`<span class="ttag">${t}</span>`).join('');
-        return `<tr data-row="${i}"><td><span class="tname-icon">${p.icon}</span><span class="tname" title="${p.name}">${p.name}</span></td><td class="tdesc" title="${p.desc}">${p.desc}</td><td><span class="tcat">${getPlatformCategoryIcon(p.category)} ${getPlatformCategoryName(p.category)}</span></td><td class="tregion">&#128205; ${p.region}</td><td><div class="ttags">${tagsHtml}</div></td><td class="taction" style="text-align:center"><a href="${p.url}" target="_blank" rel="noopener noreferrer">访问 &rarr;</a></td></tr>`;
+        let funcHtml = getPlatformFunctionNames(p).slice(0,2).map(f=>`<span class="tfunc">${f}</span>`).join('');
+        return `<tr data-row="${i}"><td><span class="tname-icon">${p.icon}</span><span class="tname" title="${p.name}">${p.name}</span></td><td class="tdesc" title="${p.desc}">${p.desc}</td><td><span class="tcat">${getPlatformCategoryIcon(p.category)} ${getPlatformCategoryName(p.category)}</span></td><td><div class="tfuncs">${funcHtml}</div></td><td class="tregion">&#128205; ${p.region}</td><td><div class="ttags">${tagsHtml}</div></td><td class="taction" style="text-align:center"><a href="${p.url}" target="_blank" rel="noopener noreferrer">访问 &rarr;</a></td></tr>`;
     }).join('');
-    container.innerHTML = `<table class="platforms-table"><thead><tr><th>平台名称</th><th>简介</th><th>类型</th><th>地区/范围</th><th>标签</th><th style="text-align:center">操作</th></tr></thead><tbody>${rows}</tbody></table>`;
+    container.innerHTML = `<table class="platforms-table"><thead><tr><th>平台名称</th><th>简介</th><th>类型</th><th>核心功能</th><th>地区/范围</th><th>标签</th><th style="text-align:center">操作</th></tr></thead><tbody>${rows}</tbody></table>`;
 }
 
 
@@ -1205,6 +1347,11 @@ document.querySelectorAll('.pf-btn').forEach(btn => {
     btn.addEventListener('click', () => {
         document.querySelectorAll('.pf-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
+        // 重置功能和场景筛选
+        currentFunction = 'all';
+        currentScene = 'all';
+        document.querySelectorAll('.pff-btn').forEach(b => b.classList.toggle('active', b.dataset.func === 'all'));
+        document.querySelectorAll('.psf-btn').forEach(b => b.classList.toggle('active', b.dataset.scene === 'all'));
         displayedPlatforms = 20;
         const searchInput = document.getElementById('platformSearchInput');
         renderPlatforms(btn.dataset.pfilter, searchInput ? searchInput.value : '');
@@ -1217,6 +1364,25 @@ document.querySelectorAll('.psf-btn').forEach(btn => {
         document.querySelectorAll('.psf-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
         currentScene = btn.dataset.scene;
+        // 重置功能筛选
+        currentFunction = 'all';
+        document.querySelectorAll('.pff-btn').forEach(b => b.classList.toggle('active', b.dataset.func === 'all'));
+        displayedPlatforms = 20;
+        const activeFilter = document.querySelector('.pf-btn.active');
+        const searchInput = document.getElementById('platformSearchInput');
+        renderPlatforms(activeFilter ? activeFilter.dataset.pfilter : 'all', searchInput ? searchInput.value : '');
+    });
+});
+
+// 功能分类筛选
+document.querySelectorAll('.pff-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+        document.querySelectorAll('.pff-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentFunction = btn.dataset.func;
+        // 重置场景筛选
+        currentScene = 'all';
+        document.querySelectorAll('.psf-btn').forEach(b => b.classList.toggle('active', b.dataset.scene === 'all'));
         displayedPlatforms = 20;
         const activeFilter = document.querySelector('.pf-btn.active');
         const searchInput = document.getElementById('platformSearchInput');
@@ -1434,6 +1600,7 @@ function renderTier1(role) {
             : '';
         const recentTagHtml = isRecent ? '<span class="recent-tag">🕐 近期</span>' : '';
         const favStarHtml = `<span class="fav-star ${isFav ? 'active' : ''}" onclick="toggleFavorite(${p.id}, event)" title="${isFav ? '取消收藏' : '收藏'}">${isFav ? '★' : '☆'}</span>`;
+        const funcBadges = getPlatformFunctionNames(p).slice(0,2).map(f => `<span class="pfunc-badge">${f}</span>`).join('');
         
         return `
         <div class="tier1-card reveal visible" data-id="${p.id}" onclick="visitPlatform(${p.id})">
@@ -1448,6 +1615,7 @@ function renderTier1(role) {
                     </div>
                 </div>
             </div>
+            <div class="pcard-functions">${funcBadges}</div>
             <div class="tier1-desc">${p.desc}</div>
             <div class="tier1-meta">
                 <span class="tier1-region">📍 ${p.region}</span>
@@ -1504,6 +1672,12 @@ function hideFullPlatforms() {
 // 将角色筛选应用到完整列表
 function applyRoleToFullList(role) {
     const mapping = roleMapping[role] || roleMapping.all;
+    
+    // 重置功能筛选
+    currentFunction = 'all';
+    document.querySelectorAll('.pff-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.func === 'all');
+    });
     
     if (mapping.filter) {
         // 设置分类按钮

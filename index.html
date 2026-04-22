@@ -1365,7 +1365,7 @@
                     <div class="psb-item"><span class="psb-num">100%</span><span class="psb-label">官方/权威来源</span></div>
                 </div>
 
-                <!-- 分类 + 场景筛选 -->
+                <!-- 分类 + 场景筛选 + 功能筛选 -->
                 <div class="platforms-toolbar">
                     <div class="platforms-filters">
                         <button class="pf-btn active" data-pfilter="all"><span class="pf-icon">&#127760;</span> 全部</button>
@@ -1376,8 +1376,22 @@
                         <button class="pf-btn" data-pfilter="intl"><span class="pf-icon">&#127758;</span> 国际机制</button>
                         <button class="pf-btn" data-pfilter="info"><span class="pf-icon">&#128240;</span> 资讯数据</button>
                     </div>
+                    <div class="platforms-function-filters">
+                        <span class="func-label">按功能筛选：</span>
+                        <button class="pff-btn active" data-func="all">全部</button>
+                        <button class="pff-btn" data-func="carbon-footprint">👣 碳足迹核算</button>
+                        <button class="pff-btn" data-func="accounting">📊 碳排放盘查</button>
+                        <button class="pff-btn" data-func="certification">✓ 认证合规</button>
+                        <button class="pff-btn" data-func="trading">💹 碳交易履约</button>
+                        <button class="pff-btn" data-func="green-cert">🍃 绿证碳汇</button>
+                        <button class="pff-btn" data-func="data-query">🔍 数据查询</button>
+                        <button class="pff-btn" data-func="policy-info">📰 政策资讯</button>
+                        <button class="pff-btn" data-func="tool-platform">🔧 工具平台</button>
+                        <button class="pff-btn" data-func="standard">📜 标准方法</button>
+                        <button class="pff-btn" data-func="research">🎓 研究智库</button>
+                    </div>
                     <div class="platforms-scene-filters">
-                        <span class="scene-label">快速定位：</span>
+                        <span class="scene-label">按场景定位：</span>
                         <button class="psf-btn active" data-scene="all">全部</button>
                         <button class="psf-btn" data-scene="export">&#128640; 出口合规</button>
                         <button class="psf-btn" data-scene="accounting">&#128203; 核算认证</button>
@@ -1390,7 +1404,7 @@
                 <div class="platforms-search-row">
                     <div class="platforms-search-wrap">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
-                        <input type="text" id="platformSearchInput" placeholder="搜索平台名称、关键词..." autocomplete="off"/>
+                        <input type="text" id="platformSearchInput" placeholder="搜索平台名称、功能、关键词（如：碳足迹、认证、CCER）..." autocomplete="off"/>
                         <span class="platforms-search-count" id="platformSearchCount"></span>
                     </div>
                     <div class="view-switcher">

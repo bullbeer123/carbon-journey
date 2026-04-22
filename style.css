@@ -3440,6 +3440,97 @@ body.loaded { visibility: visible; animation: pageEntry 0.8s ease-out; }
     box-shadow: 0 2px 10px rgba(27, 136, 216, 0.12);
 }
 
+/* 功能分类筛选按钮 */
+.platforms-function-filters {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 12px 20px;
+    background: rgba(13, 110, 61, 0.04);
+    border-radius: var(--radius-lg);
+    border: 1px solid rgba(26, 154, 92, 0.12);
+}
+
+.func-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-muted);
+    white-space: nowrap;
+}
+
+.pff-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 6px 14px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    background: rgba(255, 255, 255, 0.8);
+    border: 1px solid rgba(26, 154, 92, 0.15);
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    white-space: nowrap;
+}
+
+.pff-btn:hover {
+    background: rgba(26, 154, 92, 0.08);
+    border-color: rgba(26, 154, 92, 0.3);
+    color: #065f46;
+}
+
+.pff-btn.active {
+    background: linear-gradient(135deg, rgba(13, 110, 61, 0.12), rgba(26, 154, 92, 0.06));
+    border-color: var(--accent-green);
+    color: #065f46;
+    font-weight: 700;
+    box-shadow: 0 2px 10px rgba(13, 110, 61, 0.12);
+}
+
+/* 平台卡片上的功能标签 */
+.pcard-functions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    margin: 8px 0 4px;
+}
+
+.pfunc-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    padding: 2px 10px;
+    font-size: 11px;
+    font-weight: 600;
+    color: #065f46;
+    background: linear-gradient(135deg, rgba(13, 110, 61, 0.08), rgba(26, 154, 92, 0.05));
+    border: 1px solid rgba(26, 154, 92, 0.18);
+    border-radius: 12px;
+    white-space: nowrap;
+}
+
+/* 表格视图中的功能标签 */
+.tfunc {
+    display: inline-block;
+    padding: 2px 8px;
+    font-size: 11px;
+    font-weight: 600;
+    color: #065f46;
+    background: rgba(13, 110, 61, 0.08);
+    border-radius: 10px;
+    white-space: nowrap;
+    margin: 2px;
+}
+
+.tfuncs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 3px;
+}
+
 /* 搜索行（搜索框 + 视图切换） */
 .platforms-search-row {
     display: flex;
