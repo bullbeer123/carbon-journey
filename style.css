@@ -4444,3 +4444,254 @@ body.loaded { visibility: visible; animation: pageEntry 0.8s ease-out; }
         transition-duration: 0.01ms !important;
     }
 }
+
+/* ==================== AI数据分析工具板块 ==================== */
+.ai-tools-section {
+    padding: 80px 0 100px;
+    background: linear-gradient(170deg, #0c1a12 0%, #0d2818 40%, #112211 100%);
+    position: relative;
+}
+
+.ai-tools-section::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: radial-gradient(ellipse 60% 40% at 30% 20%, rgba(16, 185, 129, 0.06) 0%, transparent 70%),
+                radial-gradient(ellipse 50% 50% at 70% 80%, rgba(0, 212, 170, 0.04) 0%, transparent 70%);
+    pointer-events: none;
+}
+
+.ai-tools-section .section-header {
+    text-align: center;
+    margin-bottom: 50px;
+    position: relative;
+    z-index: 1;
+}
+
+.ai-tools-section .section-title {
+    font-size: clamp(24px, 4vw, 36px);
+    font-weight: 800;
+    color: #f0fdf4;
+    margin-bottom: 12px;
+}
+
+.ai-tools-section .section-title .title-icon {
+    font-size: 1.1em;
+}
+
+.ai-tools-section .title-badge {
+    display: inline-block;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 4px 14px;
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.25), rgba(0, 212, 170, 0.15));
+    border: 1px solid rgba(16, 185, 129, 0.3);
+    border-radius: 20px;
+    color: #6ee7b7;
+    margin-left: 12px;
+    vertical-align: middle;
+}
+
+.ai-tools-section .section-subtitle {
+    color: #94a3b8;
+    font-size: 16px;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+/* 流程容器 */
+.ai-flow {
+    max-width: 900px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    position: relative;
+    z-index: 1;
+}
+
+/* 步骤卡片 */
+.ai-step {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 16px;
+    padding: 24px 28px;
+    transition: all 0.3s ease;
+}
+
+.ai-step:hover {
+    background: rgba(255, 255, 255, 0.06);
+    border-color: rgba(16, 185, 129, 0.25);
+    box-shadow: 0 8px 32px rgba(16, 185, 129, 0.08);
+}
+
+.step-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    margin-bottom: 16px;
+}
+
+.step-num {
+    flex-shrink: 0;
+    width: 42px;
+    height: 42px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #059669, #0d9488);
+    color: #fff;
+    font-size: 14px;
+    font-weight: 800;
+    border-radius: 12px;
+    letter-spacing: -0.5px;
+}
+
+.step-info {
+    flex: 1;
+}
+
+.step-title {
+    font-size: 17px;
+    font-weight: 700;
+    color: #ecfdf5;
+    margin: 0 0 6px 0;
+}
+
+.step-desc {
+    font-size: 13px;
+    color: #94a3b8;
+    line-height: 1.6;
+    margin: 0;
+}
+
+/* 步骤内的工具卡片 */
+.step-tools {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding-left: 58px;
+}
+
+.ai-tool-card {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 16px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    text-decoration: none;
+    transition: all 0.25s ease;
+    flex: 1;
+    min-width: 180px;
+}
+
+.ai-tool-card:hover {
+    background: rgba(16, 185, 129, 0.1);
+    border-color: rgba(16, 185, 129, 0.35);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(16, 185, 129, 0.1);
+}
+
+.ai-tool-card .tool-icon {
+    font-size: 24px;
+    flex-shrink: 0;
+}
+
+.ai-tool-card .tool-info h4 {
+    font-size: 14px;
+    font-weight: 700;
+    color: #d1fae5;
+    margin: 0 0 2px 0;
+}
+
+.ai-tool-card .tool-info p {
+    font-size: 11px;
+    color: #64748b;
+    margin: 0;
+    line-height: 1.4;
+}
+
+/* 步骤箭头 */
+.step-arrow {
+    text-align: center;
+    font-size: 22px;
+    color: rgba(16, 185, 129, 0.3);
+    padding: 4px 0;
+    line-height: 1;
+}
+
+/* 使用建议 */
+.ai-tips {
+    max-width: 900px;
+    margin: 36px auto 0;
+    position: relative;
+    z-index: 1;
+}
+
+.ai-tips details {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 14px;
+    overflow: hidden;
+}
+
+.ai-tips summary {
+    padding: 16px 24px;
+    font-size: 15px;
+    font-weight: 600;
+    color: #d1fae5;
+    cursor: pointer;
+    list-style: none;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: background 0.2s;
+}
+
+.ai-tips summary::-webkit-details-marker { display: none; }
+
+.ai-tips summary:hover {
+    background: rgba(255, 255, 255, 0.04);
+}
+
+.ai-tips .tips-icon {
+    font-size: 18px;
+}
+
+.ai-tips .tips-content {
+    padding: 0 24px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.ai-tips .tip-item {
+    font-size: 14px;
+    color: #cbd5e1;
+    line-height: 1.7;
+    padding: 10px 16px;
+    background: rgba(255, 255, 255, 0.02);
+    border-radius: 10px;
+    border-left: 3px solid rgba(16, 185, 129, 0.3);
+}
+
+.ai-tips .tip-item strong {
+    color: #6ee7b7;
+}
+
+/* 响应式 */
+@media (max-width: 768px) {
+    .ai-tools-section { padding: 50px 0 70px; }
+    .ai-step { padding: 18px 16px; border-radius: 12px; }
+    .step-header { flex-direction: column; gap: 10px; }
+    .step-num { width: 36px; height: 36px; font-size: 13px; border-radius: 10px; }
+    .step-tools { padding-left: 0; }
+    .ai-tool-card { min-width: 140px; padding: 8px 12px; }
+    .ai-tool-card .tool-icon { font-size: 20px; }
+    .ai-tool-card .tool-info h4 { font-size: 13px; }
+    .ai-tool-card .tool-info p { font-size: 10px; }
+    .step-arrow { font-size: 18px; }
+    .ai-tips { margin: 24px 16px 0; }
+}
