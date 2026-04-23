@@ -1,0 +1,1745 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>发电设施碳排放核算工具 · 一站式工作台</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root {
+  --bg: #0f1b2d;
+  --panel: rgba(16,30,50,0.92);
+  --border: rgba(79,195,247,0.25);
+  --accent: #4fc3f7;
+  --green: #66bb6a;
+  --red: #ef5350;
+  --yellow: #ffb300;
+  --orange: #ff7043;
+  --blue: #42a5f5;
+  --text: #e0e8f0;
+  --muted: #78909c;
+  --card-bg: rgba(255,255,255,0.04);
+}
+body{background:var(--bg);color:var(--text);font-family:'Microsoft YaHei',sans-serif;overflow-x:hidden}
+
+/* ===== 顶部导航 ===== */
+#topbar{
+  position:fixed;top:0;left:0;right:0;z-index:200;
+  background:rgba(10,20,40,0.95);
+  border-bottom:1px solid var(--border);
+  display:flex;align-items:center;padding:0 20px;height:56px;gap:12px;
+  backdrop-filter:blur(12px);
+}
+.brand{
+  font-size:15px;font-weight:700;
+  background:linear-gradient(90deg,#4fc3f7,#b3e5fc);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+}
+.tag-green{background:rgba(102,187,106,0.2);color:#66bb6a;border:1px solid rgba(102,187,106,0.4);padding:2px 8px;border-radius:10px;font-size:10px;margin-left:8px}
+.tag-blue{background:rgba(79,195,247,0.15);color:#4fc3f7;border:1px solid rgba(79,195,247,0.3);padding:2px 8px;border-radius:10px;font-size:10px}
+.nav-tabs{display:flex;gap:4px;margin-left:24px}
+.nav-tab{
+  padding:6px 14px;border-radius:8px;font-size:12px;cursor:pointer;
+  color:var(--muted);background:transparent;border:1px solid transparent;
+  transition:all 0.2s;display:flex;align-items:center;gap:5px;
+}
+.nav-tab:hover{color:var(--text);background:rgba(79,195,247,0.08)}
+.nav-tab.active{color:var(--accent);background:rgba(79,195,247,0.12);border-color:rgba(79,195,247,0.3)}
+.nav-tab .dot{width:6px;height:6px;border-radius:50%;background:currentColor}
+
+/* ===== 主布局 ===== */
+#main{display:flex;min-height:100vh;padding-top:56px}
+#left-panel{
+  width:300px;flex-shrink:0;padding:16px;display:flex;flex-direction:column;gap:12px;
+  border-right:1px solid var(--border);position:sticky;top:56px;height:calc(100vh - 56px);overflow-y:auto;
+}
+#left-panel::-webkit-scrollbar{width:4px}
+#left-panel::-webkit-scrollbar-thumb{background:rgba(79,195,247,0.2);border-radius:2px}
+
+#center-view{flex:1;min-width:0;position:relative;padding:16px;min-height:calc(100vh - 56px)}
+
+/* ===== 面板卡片 ===== */
+.panel-card{
+  background:var(--panel);border:1px solid var(--border);border-radius:14px;
+  padding:16px;backdrop-filter:blur(10px);
+}
+.panel-title{
+  font-size:13px;color:var(--accent);margin-bottom:12px;
+  border-bottom:1px solid rgba(79,195,247,0.15);padding-bottom:8px;
+  display:flex;align-items:center;gap:6px;
+}
+.panel-title .icon{font-size:14px}
+
+/* ===== 左侧参数区 ===== */
+.param-row{margin-bottom:12px}
+.param-label{font-size:11px;color:var(--muted);margin-bottom:4px;display:flex;justify-content:space-between}
+.param-label .val{color:var(--accent);font-weight:600}
+input[type=range]{
+  width:100%;height:4px;appearance:none;
+  background:rgba(79,195,247,0.2);border-radius:2px;
+}
+input[type=range]::-webkit-slider-thumb{
+  appearance:none;width:14px;height:14px;border-radius:50%;
+  background:var(--accent);cursor:pointer;box-shadow:0 0 6px var(--accent);
+}
+
+/* ===== 等轴测SVG场景 ===== */
+#iso-scene{
+  width:100%;max-width:900px;margin:0 auto;
+  position:relative;
+}
+#iso-svg{width:100%;height:auto;display:block}
+
+/* 设备提示悬浮框 */
+#device-tip{
+  position:absolute;z-index:50;
+  background:rgba(10,20,40,0.96);
+  border:1px solid var(--accent);border-radius:12px;
+  padding:14px 16px;max-width:240px;display:none;
+  box-shadow:0 4px 20px rgba(79,195,247,0.15);
+  pointer-events:none;
+}
+#device-tip .tip-name{font-size:13px;color:var(--accent);font-weight:700;margin-bottom:2px}
+#device-tip .tip-scope{font-size:11px;margin-bottom:6px}
+#device-tip .tip-desc{font-size:11px;color:#b0bec5;line-height:1.7}
+#device-tip .tip-tags{margin-top:6px;display:flex;flex-wrap:wrap;gap:4px}
+.tag-in{background:rgba(102,187,106,0.2);color:#66bb6a;border:1px solid rgba(102,187,106,0.4);padding:1px 6px;border-radius:4px;font-size:10px}
+.tag-out{background:rgba(255,112,67,0.15);color:#ff7043;border:1px solid rgba(255,112,67,0.3);padding:1px 6px;border-radius:4px;font-size:10px}
+.tag-warn{background:rgba(255,179,0,0.15);color:#ffb300;border:1px solid rgba(255,179,0,0.3);padding:1px 6px;border-radius:4px;font-size:10px}
+
+/* 核算边界颜色 */
+.scope-in{filter:drop-shadow(0 0 6px rgba(102,187,106,0.5))}
+.scope-out{filter:drop-shadow(0 0 4px rgba(255,112,67,0.3))}
+.scope-key{filter:drop-shadow(0 0 8px rgba(255,179,0,0.6))}
+
+/* 粒子效果层 */
+#particle-layer{position:absolute;inset:0;pointer-events:none;overflow:hidden;top:0}
+.particle{
+  position:absolute;border-radius:50%;pointer-events:none;
+  animation:rise linear forwards;
+}
+@keyframes rise{
+  0%{opacity:0.8;transform:translate(0,0) scale(1)}
+  80%{opacity:0.4}
+  100%{opacity:0;transform:translate(var(--dx),var(--dy)) scale(0.3)}
+}
+.particle.co2{background:#ff5722;box-shadow:0 0 4px #ff5722}
+.particle.desc{background:#ffb300;box-shadow:0 0 4px #ffb300}
+.particle.steam{background:#b3e5fc;box-shadow:0 0 3px #b3e5fc;opacity:0.5}
+.particle.ash{background:#78909c;box-shadow:0 0 3px #78909c;opacity:0.4}
+
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0.4}}
+.blink{animation:blink 2s ease-in-out infinite}
+
+/* ===== 数据面板 ===== */
+.data-card{
+  background:rgba(10,20,40,0.6);border-radius:10px;padding:10px 12px;
+  margin-bottom:8px;border-left:3px solid transparent;
+}
+.data-card.combustion{border-left-color:#ff7043}
+.data-card.desulfur{border-left-color:#ffb300}
+.data-card.purchase{border-left-color:#42a5f5}
+.data-card.total{border-left-color:#66bb6a;background:rgba(102,187,106,0.06)}
+.data-row{display:flex;justify-content:space-between;align-items:center}
+.data-name{font-size:11px;color:var(--muted)}
+.data-val{font-size:15px;font-weight:700}
+.data-unit{font-size:10px;color:var(--muted);margin-left:2px}
+.data-val.combustion{color:#ff7043}
+.data-val.desulfur{color:#ffb300}
+.data-val.purchase{color:#42a5f5}
+.data-val.total{color:#66bb6a}
+
+/* 排放强度条 */
+.intensity-bar-wrap{background:rgba(255,255,255,0.07);border-radius:6px;height:8px;margin-top:6px;overflow:hidden}
+.intensity-bar{height:100%;border-radius:6px;background:linear-gradient(90deg,#66bb6a,#ffb300,#ef5350);transition:width 0.5s}
+
+/* ===== 核算公式面板 ===== */
+.formula-block{
+  background:rgba(0,0,0,0.2);border-radius:8px;padding:10px 12px;
+  margin-bottom:8px;border:1px solid rgba(79,195,247,0.1);
+}
+.formula-title{font-size:12px;color:var(--accent);margin-bottom:4px;font-weight:600}
+.formula-exp{font-size:10px;color:var(--muted);line-height:1.7}
+.formula-var{color:#b0bec5}
+.formula-highlight{color:#ffb300;font-weight:600}
+
+/* ===== 交叉验证 ===== */
+.verify-item{
+  background:rgba(0,0,0,0.15);border-radius:8px;padding:10px 12px;
+  margin-bottom:8px;border-left:3px solid var(--yellow);
+}
+.verify-title{font-size:12px;color:var(--yellow);font-weight:600;margin-bottom:3px}
+.verify-desc{font-size:11px;color:#b0bec5;line-height:1.6}
+.verify-status{font-size:10px;margin-top:4px;padding:2px 6px;border-radius:4px;display:inline-block}
+.verify-ok{background:rgba(102,187,106,0.15);color:#66bb6a}
+.verify-fail{background:rgba(239,83,80,0.15);color:#ef5350}
+.verify-warn{background:rgba(255,179,0,0.15);color:#ffb300}
+
+/* ===== 常见错误 ===== */
+.error-item{
+  background:rgba(0,0,0,0.15);border-radius:8px;padding:10px 12px;
+  margin-bottom:6px;border-left:3px solid;
+  cursor:pointer;transition:background 0.2s;
+}
+.error-item:hover{background:rgba(0,0,0,0.3)}
+.error-item.high{border-left-color:#ef5350}
+.error-item.medium{border-left-color:#ffb300}
+.error-item.low{border-left-color:#42a5f5}
+.error-title{font-size:12px;font-weight:600;margin-bottom:2px}
+.error-title.high{color:#ef5350}
+.error-title.medium{color:#ffb300}
+.error-title.low{color:#42a5f5}
+.error-detail{font-size:11px;color:#90a4ae;line-height:1.6}
+.error-tag{margin-top:4px;font-size:10px}
+
+/* ===== 核查清单 ===== */
+.check-item{
+  display:flex;align-items:flex-start;gap:10px;padding:8px 0;
+  border-bottom:1px solid rgba(255,255,255,0.04);cursor:pointer;
+}
+.check-item:last-child{border-bottom:none}
+.check-box{
+  width:16px;height:16px;border-radius:4px;border:1.5px solid rgba(79,195,247,0.4);
+  flex-shrink:0;margin-top:1px;transition:all 0.2s;
+  display:flex;align-items:center;justify-content:center;font-size:10px;color:transparent;
+}
+.check-item.checked .check-box{
+  background:rgba(79,195,247,0.3);border-color:var(--accent);color:var(--accent);
+}
+.check-content{flex:1}
+.check-title{font-size:12px;color:var(--text)}
+.check-item.checked .check-title{color:var(--muted);text-decoration:line-through}
+.check-chapter{font-size:10px;color:var(--muted);margin-top:1px}
+.check-progress{
+  background:rgba(255,255,255,0.07);border-radius:6px;height:6px;margin:8px 0;
+  overflow:hidden;
+}
+.check-progress-bar{
+  height:100%;border-radius:6px;background:var(--accent);
+  transition:width 0.3s;
+}
+
+/* ===== 数据优先序 ===== */
+.priority-row{
+  display:flex;align-items:center;gap:8px;padding:8px;
+  background:rgba(0,0,0,0.12);border-radius:8px;margin-bottom:6px;
+}
+.priority-num{
+  width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-size:11px;font-weight:700;flex-shrink:0;
+}
+.priority-1{background:rgba(102,187,106,0.3);color:#66bb6a;border:1px solid rgba(102,187,106,0.5)}
+.priority-2{background:rgba(79,195,247,0.2);color:#4fc3f7;border:1px solid rgba(79,195,247,0.4)}
+.priority-3{background:rgba(255,179,0,0.15);color:#ffb300;border:1px solid rgba(255,179,0,0.3)}
+.priority-desc{font-size:11px;color:#b0bec5;line-height:1.5}
+
+/* ===== PDF查看器 ===== */
+#pdf-drawer{
+  position:fixed;right:0;top:56px;bottom:0;width:420px;
+  background:var(--panel);border-left:1px solid var(--border);
+  z-index:150;transform:translateX(100%);transition:transform 0.3s ease;
+  backdrop-filter:blur(12px);display:flex;flex-direction:column;
+}
+#pdf-drawer.open{transform:translateX(0)}
+.pdf-header{
+  padding:14px 16px;border-bottom:1px solid var(--border);
+  display:flex;justify-content:space-between;align-items:center;
+}
+.pdf-title{font-size:13px;color:var(--accent)}
+.pdf-close{background:none;border:none;color:var(--muted);font-size:18px;cursor:pointer}
+.pdf-iframe{flex:1;border:none}
+
+/* ===== PDF按钮 ===== */
+.pdf-btn{
+  display:flex;align-items:center;gap:4px;padding:6px 12px;
+  border:1px solid rgba(79,195,247,0.3);border-radius:8px;
+  background:rgba(79,195,247,0.08);color:var(--accent);font-size:11px;
+  cursor:pointer;transition:all 0.2s;white-space:nowrap;
+}
+.pdf-btn:hover{background:rgba(79,195,247,0.2);border-color:var(--accent)}
+.pdf-btn-spacer{flex:1}
+
+/* ===== 右侧详情面板 ===== */
+#right-panel{
+  width:320px;flex-shrink:0;padding:16px;border-left:1px solid var(--border);
+  position:sticky;top:56px;height:calc(100vh - 56px);overflow-y:auto;
+}
+#right-panel::-webkit-scrollbar{width:4px}
+#right-panel::-webkit-scrollbar-thumb{background:rgba(79,195,247,0.2);border-radius:2px}
+
+/* 视角切换 */
+.view-switcher{display:flex;gap:6px;margin-bottom:14px}
+.view-btn{
+  flex:1;padding:5px 8px;border:1px solid rgba(79,195,247,0.2);border-radius:6px;
+  background:transparent;color:var(--muted);font-size:11px;cursor:pointer;transition:all 0.2s;text-align:center;
+}
+.view-btn:hover{color:var(--text);background:rgba(79,195,247,0.08)}
+.view-btn.active{color:var(--accent);background:rgba(79,195,247,0.12);border-color:rgba(79,195,247,0.4)}
+
+/* 快捷数据面板 */
+.quick-stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px}
+.quick-stat{
+  background:rgba(0,0,0,0.2);border-radius:8px;padding:10px;text-align:center;
+}
+.quick-stat .val{font-size:18px;font-weight:700}
+.quick-stat .label{font-size:10px;color:var(--muted);margin-top:2px}
+.quick-stat.green .val{color:#66bb6a}
+.quick-stat.orange .val{color:#ff7043}
+.quick-stat.yellow .val{color:#ffb300}
+.quick-stat.blue .val{color:#42a5f5}
+
+/* ===== 搜索/筛选 ===== */
+.filter-bar{display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap}
+.filter-chip{
+  padding:3px 10px;border-radius:20px;font-size:10px;cursor:pointer;
+  border:1px solid rgba(79,195,247,0.2);color:var(--muted);
+  background:transparent;transition:all 0.2s;
+}
+.filter-chip:hover,.filter-chip.active{color:var(--accent);background:rgba(79,195,247,0.12);border-color:var(--accent)}
+
+/* ===== 核验辅助区 ===== */
+#verify-hint{
+  background:rgba(255,179,0,0.06);border:1px solid rgba(255,179,0,0.2);
+  border-radius:8px;padding:10px 12px;margin-bottom:12px;
+}
+#verify-hint .hint-title{font-size:11px;color:#ffb300;font-weight:600;margin-bottom:4px}
+#verify-hint .hint-text{font-size:10px;color:#b0bec5;line-height:1.7}
+
+/* ===== 3D旋转动画 ===== */
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
+.floating{animation:float 4s ease-in-out infinite}
+
+/* ===== 分割线 ===== */
+.section-divider{
+  border:none;border-top:1px solid rgba(255,255,255,0.06);
+  margin:12px 0;
+}
+
+/* ===== 统计总览 ===== */
+.overview-cards{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
+.overview-card{
+  background:rgba(0,0,0,0.15);border-radius:10px;padding:12px;
+  border:1px solid rgba(255,255,255,0.05);
+}
+.overview-card .ov-val{font-size:20px;font-weight:700}
+.overview-card .ov-label{font-size:10px;color:var(--muted);margin-top:3px}
+.overview-card .ov-sub{font-size:9px;color:#546e7a;margin-top:2px}
+
+/* ===== 工具栏 ===== */
+.toolbar{
+  display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;align-items:center;
+}
+.tool-btn{
+  padding:5px 12px;border:1px solid rgba(79,195,247,0.2);border-radius:6px;
+  background:rgba(79,195,247,0.05);color:var(--accent);font-size:11px;
+  cursor:pointer;transition:all 0.2s;display:flex;align-items:center;gap:5px;
+}
+.tool-btn:hover{background:rgba(79,195,247,0.15);border-color:var(--accent)}
+.tool-btn.on{background:rgba(79,195,247,0.2);border-color:var(--accent);box-shadow:0 0 8px rgba(79,195,247,0.2)}
+.tool-sep{flex:1}
+
+/* 隐藏视图 */
+.view-section{display:none}
+.view-section.active{display:block}
+
+/* ===== 响应式 ===== */
+@media(max-width:1200px){
+  #right-panel{width:280px}
+  #left-panel{width:260px}
+}
+@media(max-width:900px){
+  #left-panel,#right-panel{display:none}
+  #main{padding-top:56px}
+}
+
+/* ===== 发光脉冲 ===== */
+@keyframes glow{0%,100%{filter:drop-shadow(0 0 4px rgba(255,87,34,0.4))}50%{filter:drop-shadow(0 0 10px rgba(255,87,34,0.8))}}
+.glow-chimney{animation:glow 2s ease-in-out infinite;transform-origin:center bottom}
+
+/* ===== 滚动条 ===== */
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:rgba(79,195,247,0.2);border-radius:3px}
+::-webkit-scrollbar-thumb:hover{background:rgba(79,195,247,0.4)}
+</style>
+</head>
+<body>
+
+<!-- 顶部导航 -->
+<div id="topbar">
+  <span class="brand">🏭 发电设施碳排放核算工作台</span>
+  <span class="tag-green">v2.0 整合版</span>
+  <span class="tag-blue">依据2022发电指南</span>
+  <div class="nav-tabs">
+    <div class="nav-tab active" onclick="switchTab('scene')"><span class="dot"></span>3D场景</div>
+    <div class="nav-tab" onclick="switchTab('formula')"><span class="dot"></span>核算公式</div>
+    <div class="nav-tab" onclick="switchTab('verify')"><span class="dot"></span>交叉验证</div>
+    <div class="nav-tab" onclick="switchTab('errors')"><span class="dot"></span>常见错误</div>
+    <div class="nav-tab" onclick="switchTab('checklist')"><span class="dot"></span>核查清单</div>
+    <div class="nav-tab" onclick="switchTab('reference')"><span class="dot"></span>参数速查</div>
+  </div>
+  <div class="pdf-btn-spacer"></div>
+  <button class="pdf-btn" onclick="openPDF('hesuan')">📄 核算指南原文</button>
+  <button class="pdf-btn" onclick="openPDF('hecha')">📄 核查指南原文</button>
+</div>
+
+<!-- 主体 -->
+<div id="main">
+
+  <!-- 左侧面板 -->
+  <div id="left-panel">
+    <div class="panel-card">
+      <div class="panel-title"><span class="icon">⚙️</span> 工况参数调节</div>
+      <div class="param-row">
+        <div class="param-label">发电负荷率 <span class="val" id="p-load">85%</span></div>
+        <input type="range" id="s-load" min="30" max="100" value="85" oninput="syncParams()">
+      </div>
+      <div class="param-row">
+        <div class="param-label">燃煤热值 (MJ/kg) <span class="val" id="p-heat">20.93</span></div>
+        <input type="range" id="s-heat" min="14" max="28" value="20.93" step="0.1" oninput="syncParams()">
+      </div>
+      <div class="param-row">
+        <div class="param-label">元素碳含量 <span class="val" id="p-carbon">55.0%</span></div>
+        <input type="range" id="s-carbon" min="40" max="70" value="55" step="0.5" oninput="syncParams()">
+      </div>
+      <div class="param-row">
+        <div class="param-label">碳氧化率 <span class="val" id="p-oxid">98.0%</span></div>
+        <input type="range" id="s-oxid" min="90" max="100" value="98" step="0.5" oninput="syncParams()">
+      </div>
+      <div class="param-row">
+        <div class="param-label">石灰石掺量 (t/h) <span class="val" id="p-lime">2.5</span></div>
+        <input type="range" id="s-lime" min="0" max="10" value="2.5" step="0.1" oninput="syncParams()">
+      </div>
+      <div class="param-row">
+        <div class="param-label">上网电量 (MWh/h) <span class="val" id="p-elec">480</span></div>
+        <input type="range" id="s-elec" min="0" max="600" value="480" step="10" oninput="syncParams()">
+      </div>
+      <hr class="section-divider">
+      <div class="overview-cards">
+        <div class="overview-card">
+          <div class="ov-val orange" id="ov-coal">--</div>
+          <div class="ov-label">燃煤消耗</div>
+          <div class="ov-sub">t/h</div>
+        </div>
+        <div class="overview-card">
+          <div class="ov-val green" id="ov-power">--</div>
+          <div class="ov-label">发电功率</div>
+          <div class="ov-sub">MW</div>
+        </div>
+      </div>
+      <div class="data-card total">
+        <div class="data-row">
+          <div><div class="data-name">综合碳排放总量</div></div>
+          <div><span class="data-val total" id="ov-total">--</span><span class="data-unit">tCO₂/h</span></div>
+        </div>
+      </div>
+      <div style="margin-top:6px">
+        <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--muted);margin-bottom:4px">
+          <span>碳排放强度</span><span id="ov-intensity" style="color:#ffb300;font-weight:600">-- tCO₂/MWh</span>
+        </div>
+        <div class="intensity-bar-wrap">
+          <div class="intensity-bar" id="intensity-bar" style="width:60%"></div>
+        </div>
+        <div style="display:flex;justify-content:space-between;font-size:9px;color:#546e7a;margin-top:2px">
+          <span>基准 0.7710</span><span>警戒 1.2000</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3D视图控制 -->
+    <div class="panel-card" id="scene-ctrl">
+      <div class="panel-title"><span class="icon">🎮</span> 3D视图控制</div>
+      <div class="view-switcher">
+        <button class="view-btn active" onclick="setIsoView('angle')">多角度</button>
+        <button class="view-btn" onclick="setIsoView('top')">俯视图</button>
+        <button class="view-btn" onclick="setIsoView('front')">正视图</button>
+      </div>
+      <div class="toolbar">
+        <button class="tool-btn on" id="btn-particle" onclick="toggleParticles()">🌫️ 粒子效果</button>
+        <button class="tool-btn" id="btn-highlight" onclick="toggleHighlight()">💡 核算高亮</button>
+        <button class="tool-btn" id="btn-annotate" onclick="toggleAnnotate()">📝 标注显示</button>
+      </div>
+    </div>
+
+    <!-- 核算边界快速导航 -->
+    <div class="panel-card">
+      <div class="panel-title"><span class="icon">🗺️</span> 核算边界导航</div>
+      <div id="scope-nav"></div>
+    </div>
+  </div>
+
+  <!-- 中心视图 -->
+  <div id="center-view">
+
+    <!-- ===== 3D场景视图 ===== -->
+    <div class="view-section active" id="view-scene">
+      <div id="iso-scene">
+        <div id="particle-layer"></div>
+        <div id="device-tip">
+          <div class="tip-name" id="tip-name"></div>
+          <div class="tip-scope" id="tip-scope"></div>
+          <div class="tip-desc" id="tip-desc"></div>
+          <div class="tip-tags" id="tip-tags"></div>
+        </div>
+        <svg id="iso-svg" viewBox="0 0 900 580" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="skyGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#0d1b2a"/>
+              <stop offset="100%" stop-color="#1b2838"/>
+            </linearGradient>
+            <linearGradient id="groundGrad" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#1a2535"/>
+              <stop offset="100%" stop-color="#16202e"/>
+            </linearGradient>
+            <linearGradient id="boilerTop" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#e53935"/>
+              <stop offset="100%" stop-color="#b71c1c"/>
+            </linearGradient>
+            <linearGradient id="boilerFace" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#c62828"/>
+              <stop offset="100%" stop-color="#8e0000"/>
+            </linearGradient>
+            <linearGradient id="fgdGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#607d8b"/>
+              <stop offset="100%" stop-color="#37474f"/>
+            </linearGradient>
+            <linearGradient id="turbineGrad" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0%" stop-color="#1565c0"/>
+              <stop offset="100%" stop-color="#0d47a1"/>
+            </linearGradient>
+            <linearGradient id="genGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#2e7d32"/>
+              <stop offset="100%" stop-color="#1b5e20"/>
+            </linearGradient>
+            <linearGradient id="towerGrad" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0%" stop-color="#546e7a"/>
+              <stop offset="100%" stop-color="#78909c"/>
+            </linearGradient>
+            <linearGradient id="chimneyGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#546e7a"/>
+              <stop offset="100%" stop-color="#263238"/>
+            </linearGradient>
+            <filter id="glow">
+              <feGaussianBlur stdDeviation="3" result="blur"/>
+              <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+            </filter>
+            <filter id="softShadow">
+              <feDropShadow dx="2" dy="4" stdDeviation="4" flood-color="#000" flood-opacity="0.4"/>
+            </filter>
+            <filter id="fireGlow">
+              <feGaussianBlur stdDeviation="4" result="blur"/>
+              <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+            </filter>
+          </defs>
+
+          <!-- 背景 -->
+          <rect width="900" height="580" fill="url(#skyGrad)"/>
+
+          <!-- 星空 -->
+          <g id="stars" opacity="0.6">
+            <circle cx="50" cy="30" r="1" fill="white"/>
+            <circle cx="120" cy="60" r="0.8" fill="white"/>
+            <circle cx="200" cy="25" r="1.2" fill="white"/>
+            <circle cx="300" cy="50" r="0.7" fill="white"/>
+            <circle cx="380" cy="20" r="1" fill="white"/>
+            <circle cx="450" cy="45" r="0.9" fill="white"/>
+            <circle cx="550" cy="15" r="1.1" fill="white"/>
+            <circle cx="620" cy="40" r="0.8" fill="white"/>
+            <circle cx="700" cy="25" r="1" fill="white"/>
+            <circle cx="780" cy="55" r="0.7" fill="white"/>
+            <circle cx="840" cy="30" r="1.2" fill="white"/>
+            <circle cx="80" cy="80" r="0.6" fill="white"/>
+            <circle cx="350" cy="70" r="0.8" fill="white"/>
+            <circle cx="650" cy="60" r="1" fill="white"/>
+            <circle cx="800" cy="80" r="0.7" fill="white"/>
+          </g>
+
+          <!-- 地面 -->
+          <polygon points="0,440 900,440 900,580 0,580" fill="#0d1520"/>
+          <polygon points="50,400 850,400 900,580 0,580" fill="url(#groundGrad)" opacity="0.8"/>
+          <!-- 地面网格 -->
+          <g stroke="#1e3040" stroke-width="0.5" opacity="0.4">
+            <line x1="0" y1="420" x2="900" y2="420"/>
+            <line x1="0" y1="460" x2="900" y2="460"/>
+            <line x1="0" y1="500" x2="900" y2="500"/>
+            <line x1="0" y1="540" x2="900" y2="540"/>
+            <line x1="150" y1="380" x2="50" y2="580"/>
+            <line x1="300" y1="380" x2="150" y2="580"/>
+            <line x1="450" y1="380" x2="300" y2="580"/>
+            <line x1="600" y1="380" x2="450" y2="580"/>
+            <line x1="750" y1="380" x2="600" y2="580"/>
+            <line x1="750" y1="380" x2="900" y2="580"/>
+          </g>
+          <!-- 地面等高线装饰 -->
+          <polygon points="80,440 820,440 900,580 0,580" fill="none" stroke="#1e3040" stroke-width="0.5" opacity="0.3"/>
+
+          <!-- ===== 主建筑群 ===== -->
+          <!-- 等轴测偏移: dx=+1.5, dy=-0.75 -->
+          <!-- 基准点(0,450)=地面原点 -->
+
+          <!-- 烟囱1 (主排放口) -->
+          <g id="chimney1" class="scope-in glow-chimney" data-device="chimney1" style="cursor:pointer"
+             onmouseenter="showDeviceTip(event,'chimney1')" onmouseleave="hideTip()">
+            <rect x="668" y="150" width="28" height="180" rx="2" fill="url(#chimneyGrad)" filter="url(#softShadow)"/>
+            <rect x="668" y="150" width="28" height="20" fill="#546e7a"/>
+            <rect x="668" y="185" width="28" height="8" fill="#e53935"/>
+            <rect x="668" y="225" width="28" height="8" fill="#e53935"/>
+            <rect x="668" y="265" width="28" height="8" fill="#e53935"/>
+            <rect x="668" y="305" width="28" height="8" fill="#e53935"/>
+            <rect x="668" y="150" width="28" height="5" rx="2" fill="#455a64"/>
+            <!-- 顶部冒烟 -->
+            <ellipse cx="682" cy="148" rx="18" ry="8" fill="#546e7a" opacity="0.5"/>
+          </g>
+
+          <!-- 烟囱2 -->
+          <g id="chimney2" class="scope-in glow-chimney" style="cursor:pointer;animation-delay:0.5s"
+             onmouseenter="showDeviceTip(event,'chimney2')" onmouseleave="hideTip()">
+            <rect x="648" y="170" width="24" height="150" rx="2" fill="url(#chimneyGrad)" filter="url(#softShadow)"/>
+            <rect x="648" y="170" width="24" height="16" fill="#546e7a"/>
+            <rect x="648" y="200" width="24" height="6" fill="#e53935"/>
+            <rect x="648" y="235" width="24" height="6" fill="#e53935"/>
+            <rect x="648" y="270" width="24" height="6" fill="#e53935"/>
+            <ellipse cx="660" cy="168" rx="14" ry="6" fill="#546e7a" opacity="0.5"/>
+          </g>
+
+          <!-- 烟囱3 -->
+          <g id="chimney3" class="scope-in glow-chimney" style="cursor:pointer;animation-delay:1s"
+             onmouseenter="showDeviceTip(event,'chimney3')" onmouseleave="hideTip()">
+            <rect x="706" y="160" width="22" height="160" rx="2" fill="url(#chimneyGrad)" filter="url(#softShadow)"/>
+            <rect x="706" y="160" width="22" height="14" fill="#546e7a"/>
+            <rect x="706" y="188" width="22" height="5" fill="#e53935"/>
+            <rect x="706" y="220" width="22" height="5" fill="#e53935"/>
+            <rect x="706" y="252" width="22" height="5" fill="#e53935"/>
+            <ellipse cx="717" cy="158" rx="13" ry="5" fill="#546e7a" opacity="0.5"/>
+          </g>
+
+          <!-- 脱硫塔 (FGD) -->
+          <g id="fgd" class="scope-in" style="cursor:pointer"
+             onmouseenter="showDeviceTip(event,'fgd')" onmouseleave="hideTip()">
+            <rect x="558" y="280" width="80" height="140" rx="4" fill="url(#fgdGrad)" filter="url(#softShadow)"/>
+            <rect x="563" y="285" width="70" height="130" rx="3" fill="#455a64" opacity="0.4"/>
+            <!-- 脱硫塔腰部 -->
+            <rect x="558" y="330" width="80" height="40" rx="2" fill="#37474f"/>
+            <!-- 脱硫塔喷淋层 -->
+            <rect x="560" y="300" width="76" height="8" rx="2" fill="#607d8b"/>
+            <rect x="560" y="316" width="76" height="6" rx="2" fill="#607d8b"/>
+            <rect x="560" y="370" width="76" height="6" rx="2" fill="#607d8b"/>
+            <!-- FGD标识 -->
+            <text x="598" y="350" font-size="11" fill="#4fc3f7" text-anchor="middle" font-weight="bold">FGD</text>
+            <text x="598" y="362" font-size="8" fill="#90a4ae" text-anchor="middle">脱硫</text>
+          </g>
+
+          <!-- 脱硫塔进烟道 -->
+          <rect x="488" y="300" width="72" height="20" rx="2" fill="#37474f" filter="url(#softShadow)"/>
+
+          <!-- 主锅炉房 -->
+          <g id="boiler" class="scope-in" style="cursor:pointer"
+             onmouseenter="showDeviceTip(event,'boiler')" onmouseleave="hideTip()">
+            <!-- 锅炉主体 (等轴测矩形，右侧面+顶面) -->
+            <!-- 右侧面 -->
+            <polygon points="488,420 488,240 590,180 590,360" fill="#8e0000" filter="url(#softShadow)"/>
+            <!-- 顶面 -->
+            <polygon points="488,240 488,220 590,160 590,180" fill="#c62828"/>
+            <!-- 正面 -->
+            <polygon points="370,330 370,150 488,240 488,420" fill="url(#boilerFace)"/>
+            <!-- 锅炉炉膛发光 -->
+            <rect x="395" y="310" width="70" height="90" rx="4" fill="#bf360c" opacity="0.8" id="fire-box"/>
+            <rect x="400" y="315" width="60" height="80" rx="3" fill="#ff6d00" opacity="0.6" id="fire-inner">
+              <animate attributeName="opacity" values="0.4;0.8;0.4" dur="1.5s" repeatCount="indefinite"/>
+            </rect>
+            <rect x="405" y="320" width="50" height="70" rx="2" fill="#ffab40" opacity="0.4">
+              <animate attributeName="opacity" values="0.2;0.6;0.2" dur="1.2s" repeatCount="indefinite"/>
+            </rect>
+            <!-- 锅炉装饰条纹 -->
+            <line x1="370" y1="180" x2="488" y2="270" stroke="#e53935" stroke-width="1" opacity="0.5"/>
+            <line x1="370" y1="210" x2="488" y2="300" stroke="#e53935" stroke-width="1" opacity="0.5"/>
+            <!-- 锅炉标签 -->
+            <text x="430" y="230" font-size="13" fill="#ffcdd2" font-weight="bold">燃煤锅炉</text>
+            <text x="430" y="244" font-size="9" fill="#ef9a9a">Coal-fired Boiler</text>
+          </g>
+
+          <!-- SCR脱硝装置 -->
+          <g id="scr" class="scope-out" style="cursor:pointer"
+             onmouseenter="showDeviceTip(event,'scr')" onmouseleave="hideTip()">
+            <rect x="370" y="128" width="118" height="24" rx="3" fill="#5c6bc0" opacity="0.85" filter="url(#softShadow)"/>
+            <text x="429" y="143" font-size="9" fill="#c5cae9" text-anchor="middle" font-weight="bold">SCR 脱硝</text>
+          </g>
+
+          <!-- 汽轮机厂房 -->
+          <g id="turbine" class="scope-key" style="cursor:pointer"
+             onmouseenter="showDeviceTip(event,'turbine')" onmouseleave="hideTip()">
+            <!-- 汽轮机主体 -->
+            <rect x="100" y="300" width="180" height="100" rx="4" fill="#0d47a1" filter="url(#softShadow)"/>
+            <rect x="100" y="300" width="180" height="30" rx="3" fill="#1565c0"/>
+            <!-- 汽轮机缸体 -->
+            <ellipse cx="190" cy="330" rx="40" ry="15" fill="#1976d2" stroke="#0d47a1" stroke-width="2"/>
+            <ellipse cx="190" cy="330" rx="25" ry="10" fill="#2196f3" opacity="0.6"/>
+            <!-- 旋转轴 -->
+            <line x1="140" y1="330" x2="240" y2="330" stroke="#90caf9" stroke-width="3"/>
+            <circle cx="140" cy="330" r="5" fill="#90caf9"/>
+            <circle cx="240" cy="330" r="5" fill="#90caf9"/>
+            <!-- 标签 -->
+            <text x="190" y="375" font-size="11" fill="#90caf9" text-anchor="middle" font-weight="bold">汽轮机</text>
+            <text x="190" y="388" font-size="8" fill="#5c6bc0" text-anchor="middle">Turbine</text>
+          </g>
+
+          <!-- 发电机 -->
+          <g id="generator" class="scope-key" style="cursor:pointer"
+             onmouseenter="showDeviceTip(event,'generator')" onmouseleave="hideTip()">
+            <rect x="70" y="310" width="50" height="80" rx="4" fill="url(#genGrad)" filter="url(#softShadow)"/>
+            <rect x="75" y="315" width="40" height="70" rx="3" fill="#1b5e20" opacity="0.5"/>
+            <!-- 发电机散热片 -->
+            <g stroke="#2e7d32" stroke-width="1.5">
+              <line x1="78" y1="320" x2="78" y2="385"/>
+              <line x1="85" y1="318" x2="85" y2="387"/>
+              <line x1="92" y1="320" x2="92" y2="385"/>
+              <line x1="99" y1="318" x2="99" y2="387"/>
+              <line x1="106" y1="320" x2="106" y2="385"/>
+            </g>
+            <text x="95" y="368" font-size="8" fill="#a5d6a7" text-anchor="middle" font-weight="bold">发电机</text>
+          </g>
+
+          <!-- 主变压器 -->
+          <g id="transformer" class="scope-key" style="cursor:pointer"
+             onmouseenter="showDeviceTip(event,'transformer')" onmouseleave="hideTip()">
+            <rect x="30" y="320" width="55" height="70" rx="4" fill="#f57f17" filter="url(#softShadow)"/>
+            <rect x="34" y="324" width="47" height="62" rx="3" fill="#f9a825" opacity="0.5"/>
+            <!-- 绝缘子 -->
+            <g fill="#eceff1">
+              <rect x="36" y="310" width="4" height="12" rx="2"/>
+              <rect x="43" y="308" width="4" height="14" rx="2"/>
+              <rect x="50" y="310" width="4" height="12" rx="2"/>
+              <rect x="57" y="308" width="4" height="14" rx="2"/>
+              <rect x="64" y="310" width="4" height="12" rx="2"/>
+            </g>
+            <text x="57" y="365" font-size="8" fill="#fff9c4" text-anchor="middle" font-weight="bold">主变</text>
+          </g>
+
+          <!-- 高压线 -->
+          <g stroke="#90a4ae" stroke-width="1" fill="none">
+            <path d="M 40 308 Q 60 280 90 310" stroke-dasharray="4 2"/>
+            <path d="M 50 306 Q 70 275 95 312" stroke-dasharray="4 2"/>
+          </g>
+
+          <!-- 冷却塔1 -->
+          <g id="cooltower1" class="scope-out" style="cursor:pointer"
+             onmouseenter="showDeviceTip(event,'cooltower1')" onmouseleave="hideTip()">
+            <!-- 双曲线冷却塔 -->
+            <path d="M 160 400 Q 160 380 175 350 Q 190 320 205 350 Q 220 380 220 400 Z"
+                  fill="url(#towerGrad)" opacity="0.85" filter="url(#softShadow)"/>
+            <path d="M 168 400 Q 168 382 180 355 Q 192 328 204 355 Q 216 382 216 400 Z"
+                  fill="#37474f" opacity="0.5"/>
+            <ellipse cx="190" cy="400" rx="30" ry="8" fill="#455a64"/>
+            <ellipse cx="190" cy="340" rx="18" ry="5" fill="#607d8b" opacity="0.4"/>
+            <text x="190" y="375" font-size="8" fill="#b0bec5" text-anchor="middle">冷却塔</text>
+          </g>
+
+          <!-- 冷却塔2 -->
+          <g id="cooltower2" class="scope-out" style="cursor:pointer"
+             onmouseenter="showDeviceTip(event,'cooltower2')" onmouseleave="hideTip()">
+            <path d="M 210 400 Q 210 385 222 360 Q 234 335 246 360 Q 258 385 258 400 Z"
+                  fill="url(#towerGrad)" opacity="0.85" filter="url(#softShadow)"/>
+            <ellipse cx="234" cy="400" rx="24" ry="6" fill="#455a64"/>
+            <ellipse cx="234" cy="348" rx="14" ry="4" fill="#607d8b" opacity="0.4"/>
+          </g>
+
+          <!-- 煤仓 -->
+          <g id="coalsilo" class="scope-out" style="cursor:pointer"
+             onmouseenter="showDeviceTip(event,'coalsilo')" onmouseleave="hideTip()">
+            <ellipse cx="310" cy="400" rx="28" ry="10" fill="#37474f"/>
+            <rect x="282" y="320" width="56" height="80" rx="4" fill="#455a64" filter="url(#softShadow)"/>
+            <ellipse cx="310" cy="320" rx="28" ry="10" fill="#546e7a"/>
+            <rect x="285" y="325" width="50" height="70" rx="3" fill="#37474f" opacity="0.4"/>
+            <text x="310" y="365" font-size="8" fill="#90a4ae" text-anchor="middle">灰仓</text>
+          </g>
+
+          <!-- 输煤皮带 -->
+          <g fill="none" stroke="#546e7a" stroke-width="4">
+            <line x1="290" y1="360" x2="350" y2="310" stroke-dasharray="none"/>
+            <line x1="350" y1="310" x2="440" y2="270"/>
+          </g>
+          <g fill="#37474f">
+            <circle cx="295" cy="358" r="5"/>
+            <circle cx="345" cy="312" r="5"/>
+            <circle cx="438" cy="272" r="5"/>
+          </g>
+          <!-- 煤堆 -->
+          <ellipse cx="310" cy="415" rx="35" ry="12" fill="#212121"/>
+          <ellipse cx="320" cy="410" rx="25" ry="10" fill="#212121"/>
+          <ellipse cx="300" cy="412" rx="20" ry="8" fill="#1a1a1a"/>
+
+          <!-- 蒸汽管道 -->
+          <g stroke="#ef9a9a" stroke-width="6" fill="none" opacity="0.7">
+            <path d="M 488 240 Q 460 220 420 230 Q 380 240 300 270 Q 200 300 170 340"/>
+          </g>
+          <g stroke="#ef9a9a" stroke-width="2" fill="none" opacity="0.4">
+            <path d="M 488 245 Q 460 225 420 235 Q 380 245 300 275 Q 200 305 170 345"/>
+          </g>
+
+          <!-- 烟气管道 -->
+          <g stroke="#455a64" stroke-width="8" fill="none">
+            <line x1="560" y1="290" x2="488" y2="290"/>
+            <line x1="488" y1="290" x2="488" y2="330"/>
+          </g>
+
+          <!-- 围墙/厂界 -->
+          <g stroke="#1e3040" stroke-width="2" fill="none" opacity="0.6">
+            <line x1="0" y1="450" x2="900" y2="450"/>
+            <line x1="0" y1="580" x2="900" y2="580"/>
+          </g>
+
+          <!-- ===== 标注层 ===== -->
+          <g id="annotations" opacity="0">
+            <!-- 燃烧排放标注 -->
+            <g>
+              <line x1="430" y1="230" x2="430" y2="80" stroke="#ff7043" stroke-width="1" stroke-dasharray="3 2"/>
+              <rect x="370" y="60" width="120" height="22" rx="6" fill="rgba(239,83,80,0.15)" stroke="#ff7043" stroke-width="1"/>
+              <text x="430" y="75" font-size="10" fill="#ff7043" text-anchor="middle" font-weight="bold">化石燃料燃烧 → CO₂</text>
+            </g>
+            <!-- 脱硫排放标注 -->
+            <g>
+              <line x1="598" y1="310" x2="620" y2="60" stroke="#ffb300" stroke-width="1" stroke-dasharray="3 2"/>
+              <rect x="560" y="42" width="120" height="22" rx="6" fill="rgba(255,179,0,0.12)" stroke="#ffb300" stroke-width="1"/>
+              <text x="620" y="57" font-size="10" fill="#ffb300" text-anchor="middle" font-weight="bold">石灰石脱硫 → CO₂</text>
+            </g>
+            <!-- 购电标注 -->
+            <g>
+              <line x1="57" y1="350" x2="57" y2="60" stroke="#42a5f5" stroke-width="1" stroke-dasharray="3 2"/>
+              <rect x="10" y="42" width="95" height="22" rx="6" fill="rgba(66,165,245,0.12)" stroke="#42a5f5" stroke-width="1"/>
+              <text x="57" y="57" font-size="10" fill="#42a5f5" text-anchor="middle" font-weight="bold">购入电力 → CO₂</text>
+            </g>
+            <!-- 不纳入标注 -->
+            <g>
+              <rect x="170" y="430" width="70" height="18" rx="5" fill="rgba(79,195,247,0.08)" stroke="rgba(79,195,247,0.3)" stroke-width="1"/>
+              <text x="205" y="443" font-size="9" fill="#78909c" text-anchor="middle">不纳入</text>
+            </g>
+          </g>
+
+          <!-- ===== 排放标注 ===== -->
+          <g id="emission-labels">
+            <g id="e-label-comb">
+              <rect x="720" y="80" width="150" height="56" rx="8" fill="rgba(239,83,80,0.1)" stroke="rgba(239,83,80,0.3)" stroke-width="1"/>
+              <text x="795" y="98" font-size="10" fill="#ff7043" text-anchor="middle" font-weight="bold">化石燃料燃烧排放</text>
+              <text x="795" y="114" font-size="14" fill="#ff7043" text-anchor="middle" font-weight="bold" id="label-e-comb">— tCO₂/h</text>
+              <text x="795" y="128" font-size="9" fill="#78909c" text-anchor="middle">E燃烧 ≥ 95% 排放总量</text>
+            </g>
+            <g id="e-label-desc">
+              <rect x="720" y="145" width="150" height="56" rx="8" fill="rgba(255,179,0,0.08)" stroke="rgba(255,179,0,0.25)" stroke-width="1"/>
+              <text x="795" y="163" font-size="10" fill="#ffb300" text-anchor="middle" font-weight="bold">石灰石脱硫排放</text>
+              <text x="795" y="179" font-size="14" fill="#ffb300" text-anchor="middle" font-weight="bold" id="label-e-desc">— tCO₂/h</text>
+              <text x="795" y="193" font-size="9" fill="#78909c" text-anchor="middle">E脱硫 = 石灰石 × 44/100</text>
+            </g>
+            <g id="e-label-purchase">
+              <rect x="10" y="90" width="140" height="56" rx="8" fill="rgba(66,165,245,0.08)" stroke="rgba(66,165,245,0.25)" stroke-width="1"/>
+              <text x="80" y="108" font-size="10" fill="#42a5f5" text-anchor="middle" font-weight="bold">购入电力排放</text>
+              <text x="80" y="124" font-size="14" fill="#42a5f5" text-anchor="middle" font-weight="bold" id="label-e-elec">— tCO₂/h</text>
+              <text x="80" y="138" font-size="9" fill="#78909c" text-anchor="middle">电网因子 0.5810</text>
+            </g>
+          </g>
+
+          <!-- ===== 图例 ===== -->
+          <g id="svg-legend" transform="translate(10,470)">
+            <rect x="0" y="0" width="380" height="56" rx="8" fill="rgba(10,20,40,0.85)" stroke="rgba(79,195,247,0.2)" stroke-width="1"/>
+            <text x="12" y="16" font-size="10" fill="#4fc3f7" font-weight="bold">图例</text>
+            <circle cx="18" cy="30" r="5" fill="#ff5722" opacity="0.8"/>
+            <text x="28" y="34" font-size="9" fill="#90a4ae">化石燃料燃烧CO₂ ✅纳入</text>
+            <circle cx="150" cy="30" r="5" fill="#ffb300" opacity="0.8"/>
+            <text x="160" y="34" font-size="9" fill="#90a4ae">石灰石脱硫CO₂ ✅纳入</text>
+            <circle cx="280" cy="30" r="5" fill="#b3e5fc" opacity="0.6"/>
+            <text x="290" y="34" font-size="9" fill="#90a4ae">冷却塔蒸汽 ❌不纳入</text>
+            <circle cx="18" cy="46" r="4" fill="#78909c" opacity="0.5"/>
+            <text x="28" y="50" font-size="9" fill="#90a4ae">飞灰含碳 ❌不扣除</text>
+            <circle cx="150" cy="46" r="4" fill="#ef5350"/>
+            <text x="160" y="50" font-size="9" fill="#90a4ae">⚠️ 高频错误</text>
+          </g>
+
+          <!-- 标题 -->
+          <text x="450" y="545" font-size="13" fill="#4fc3f7" text-anchor="middle" font-weight="bold"
+                font-family="Microsoft YaHei">发电设施碳排放核算边界示意图 · 依据2022生态环境部发电指南</text>
+        </svg>
+      </div>
+    </div>
+
+    <!-- ===== 核算公式视图 ===== -->
+    <div class="view-section" id="view-formula">
+      <div class="panel-card" style="max-width:800px;margin:0 auto">
+        <div class="panel-title"><span class="icon">🔢</span> 发电设施温室气体排放核算公式</div>
+
+        <div class="formula-block" style="border-left:3px solid #ff7043">
+          <div class="formula-title">📌 公式一：化石燃料燃烧排放量 E燃烧</div>
+          <div class="formula-exp" style="font-size:13px;color:#ff7043;font-weight:600;margin:6px 0">
+            E燃烧 = Σ(燃料消耗量 × 低位发热量 × 碳含量 × 碳氧化率 × 44/12)
+          </div>
+          <div class="formula-exp">
+            <span class="formula-highlight">燃料消耗量</span>：优先入炉煤皮带秤实测，次选批次化验均值<br>
+            <span class="formula-highlight">低位发热量</span>：优先按批次实测，次选月均值，缺省值 <span style="color:#ef5350">17.6 GJ/t（烟煤）</span><br>
+            <span class="formula-highlight">元素碳含量</span>：优先实测，次选缺省值 <span style="color:#ef5350">55%</span><br>
+            <span class="formula-highlight">碳氧化率</span>：优先实测，次选缺省值 <span style="color:#ef5350">98%</span>（已含飞灰未燃碳，不重复扣除）<br>
+            <span class="formula-var">⚠️ 注意：勿从排放量中扣除飞灰/底灰含碳量</span>
+          </div>
+        </div>
+
+        <div class="formula-block" style="border-left:3px solid #ffb300">
+          <div class="formula-title">📌 公式二：石灰石脱硫过程排放量 E脱硫</div>
+          <div class="formula-exp" style="font-size:13px;color:#ffb300;font-weight:600;margin:6px 0">
+            E脱硫 = 石灰石消耗量(t) × (44/100) × 脱硫效率
+          </div>
+          <div class="formula-exp">
+            <span class="formula-highlight">石灰石消耗量</span>：来自采购入库台账或石灰石仓电子秤<br>
+            <span class="formula-var">化学原理：CaCO₃ + SO₂ → CaSO₄ + CO₂↑，每1吨石灰石 → 排放0.44 tCO₂</span><br>
+            <span class="formula-var">⚠️ 常见错误：用石膏产量反算石灰石消耗量（石膏含水量变化导致误差大）</span>
+          </div>
+        </div>
+
+        <div class="formula-block" style="border-left:3px solid #42a5f5">
+          <div class="formula-title">📌 公式三：购入电力排放量 E购电</div>
+          <div class="formula-exp" style="font-size:13px;color:#42a5f5;font-weight:600;margin:6px 0">
+            E购电 = 购入电量(MWh) × 电网排放因子
+          </div>
+          <div class="formula-exp">
+            <span class="formula-highlight">购入电量</span>：厂用电中由电网购入部分（非发电量）<br>
+            <span class="formula-highlight">电网排放因子</span>：2021年全国平均 <span style="color:#42a5f5">0.5810 tCO₂/MWh</span><br>
+            <span class="formula-var">分区因子参考：华北0.8042 | 华东0.7035 | 华中0.5965 | 南方0.5257 | 西北0.6671</span>
+          </div>
+        </div>
+
+        <div class="formula-block" style="border-left:3px solid #66bb6a">
+          <div class="formula-title">📌 公式五：综合碳排放总量 E总</div>
+          <div class="formula-exp" style="font-size:14px;color:#66bb6a;font-weight:600;margin:6px 0">
+            E总 = E燃烧 + E脱硫 + E购电 − E热电联产分摊（若有供热）
+          </div>
+          <div class="formula-exp">
+            <span class="formula-highlight">热电联产分摊规则</span>：若有对外供热，按发电热量和供热热量比例分摊碳排放<br>
+            <span class="formula-var">发电碳排放 = E总 × 发电热量 / (发电热量 + 供热热量)</span>
+          </div>
+        </div>
+
+        <div class="formula-block" style="border-left:3px solid #78909c">
+          <div class="formula-title">📌 碳排放强度（基准值比较）</div>
+          <div class="formula-exp" style="font-size:13px;color:#b0bec5;margin:6px 0">
+            碳排放强度 = E总 / 发电量(MWh) &nbsp;&nbsp; vs &nbsp;&nbsp; 2022年全国基准 <span style="color:#ffb300;font-weight:bold">0.7710 tCO₂/MWh</span>
+          </div>
+          <div class="formula-exp">
+            强度低于基准：说明机组效率高（燃煤利用率高）<br>
+            强度高于基准：需分析原因（煤质差？设备老化？热耗高？）
+          </div>
+        </div>
+      </div>
+
+      <!-- 数据优先序 -->
+      <div class="panel-card" style="max-width:800px;margin:20px auto 0">
+        <div class="panel-title"><span class="icon">📊</span> 数据获取优先序（越优先越准确）</div>
+        <div class="priority-row">
+          <div class="priority-num priority-1">1</div>
+          <div class="priority-desc">
+            <strong style="color:#66bb6a">实测数据优先</strong><br>
+            计量设备实测（皮带秤、电子秤、电能表）+ 化验室检测（热值、碳含量）
+          </div>
+        </div>
+        <div class="priority-row">
+          <div class="priority-num priority-2">2</div>
+          <div class="priority-desc">
+            <strong style="color:#4fc3f7">辅助数据次之</strong><br>
+            供应商提供证明文件（月度化验报告、购煤发票）、台账记录
+          </div>
+        </div>
+        <div class="priority-row">
+          <div class="priority-num priority-3">3</div>
+          <div class="priority-desc">
+            <strong style="color:#ffb300">缺省值兜底</strong><br>
+            仅用于无法获取数据时：碳含量55%、氧化率98%、热值17.6 GJ/t（烟煤）<br>
+            <span style="color:#ef5350;font-size:10px">⚠️ 长期使用缺省值将导致不确定性增大，核查风险提高</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== 交叉验证视图 ===== -->
+    <div class="view-section" id="view-verify">
+      <div class="panel-card" style="max-width:800px;margin:0 auto">
+        <div class="panel-title"><span class="icon">🔗</span> 交叉验证逻辑（核查重点）</div>
+        <div id="verify-hint">
+          <div class="hint-title">💡 核查建议</div>
+          <div class="hint-text">
+            以下6组验证关系是核查机构在现场核查时最常使用的交叉检验方法。
+            建议在提交核算报告前，自行完成以下全部验证，确保数据逻辑一致。
+          </div>
+        </div>
+
+        <div class="verify-item">
+          <div class="verify-title">🔴 验证一：燃煤消耗量三角验证</div>
+          <div class="verify-desc">
+            <strong>检验关系：</strong>入炉煤累计消耗量 ≈ 煤场盘点增量 + 月度运输进煤量 − 损耗<br>
+            <strong>操作方法：</strong>调取皮带秤累计值，与燃料仓库台账、供应商发运单进行三方比对，偏差应 < 3%<br>
+            <strong>高风险项：</strong>皮带秤未检定、计量精度不足 → 导致基准排放量系统性偏差
+          </div>
+          <span class="verify-status verify-warn">⚠️ 必查项</span>
+        </div>
+
+        <div class="verify-item">
+          <div class="verify-title">🟡 验证二：热值-供热量一致性验证</div>
+          <div class="verify-desc">
+            <strong>检验关系：</strong>锅炉热输入(MJ) = 燃煤量(t) × 低位发热量(MJ/kg) × 1000<br>
+            <strong>判断标准：</strong>锅炉热效率 = 供热量 / 热输入，应在 35%~42%（600MW超超临界）区间<br>
+            <strong>异常识别：</strong>热效率过高(>45%)→ 可能虚报供热或热值高估；过低(<30%)→ 煤质差或计量问题
+          </div>
+          <span class="verify-status verify-warn">⚠️ 必查项</span>
+        </div>
+
+        <div class="verify-item">
+          <div class="verify-title">🟡 验证三：元素碳含量基准换算</div>
+          <div class="verify-desc">
+            <strong>检验关系：</strong>固定碳(%) + 灰分(%) + 挥发分(%) = 100%<br>
+            <strong>标准方法：</strong>碳含量必须通过元素分析实测，勿用工业分析(固定碳)直接代替<br>
+            <strong>常见错误：</strong>混淆工业分析(灰分/挥发分/固定碳)与元素分析(碳/氢/氧/氮/硫) → 排放量偏差5%~15%
+          </div>
+          <span class="verify-status verify-fail">❌ 高频错误</span>
+        </div>
+
+        <div class="verify-item">
+          <div class="verify-title">🔵 验证四：发电量-上网电量-厂用电量关系</div>
+          <div class="verify-desc">
+            <strong>检验关系：</strong>发电量 = 上网电量 + 厂用电量（厂用电率 = 厂用电量 / 发电量）<br>
+            <strong>标准判断：</strong>600MW机组厂用电率约 3%~6%；循环水泵满发时可达 7%~8%<br>
+            <strong>异常识别：</strong>厂用电率 > 10%→ 可能是循环水泵故障或计量表计问题
+          </div>
+          <span class="verify-status verify-ok">✅ 常规验证</span>
+        </div>
+
+        <div class="verify-item">
+          <div class="verify-title">🟡 验证五：石灰石消耗量与脱硫效率</div>
+          <div class="verify-desc">
+            <strong>检验关系：</strong>脱硫效率 = (入口SO₂ − 出口SO₂) / 入口SO₂，应达 95%~99%<br>
+            <strong>标准判断：</strong>FGD脱硫效率应 ≥ 95%；石灰石耗量 ≈ SO₂减排量 × 100/64（摩尔比换算）<br>
+            <strong>异常识别：</strong>石灰石消耗量明显偏低 → 可能脱硫剂质量差、喷淋层堵塞或CEMS数据异常
+          </div>
+          <span class="verify-status verify-ok">✅ 常规验证</span>
+        </div>
+
+        <div class="verify-item">
+          <div class="verify-title">🟠 验证六：CEMS数据与核算数据偏差</div>
+          <div class="verify-desc">
+            <strong>检验关系：</strong>核算值与CEMS实测值趋势应基本一致（受效率、流量模型影响会有偏差）<br>
+            <strong>判断标准：</strong>两者偏差超过 15%~20% 时需查明原因<br>
+            <strong>注意：</strong>CEMS数据仅用于交叉验证，不作为核算主数据来源（核算用入炉煤数据）
+          </div>
+          <span class="verify-status verify-ok">✅ 常规验证</span>
+        </div>
+
+        <div class="verify-item">
+          <div class="verify-title">⚠️ 验证七：生物质掺烧的特殊处理</div>
+          <div class="verify-desc">
+            <strong>检验关系：</strong>生物质（含秸秆、稻壳、木屑等）排放因子为 0，属于碳中性燃料<br>
+            <strong>计算方法：</strong>混合燃烧时，仅对化石燃料部分计算排放量，生物质部分不计入<br>
+            <strong>关键操作：</strong>必须将生物质消耗量和热值单独计量，并在燃煤消耗量中扣除生物质热值占比<br>
+            <strong>高风险项：</strong>未单独计量生物质 → 将其热值误计入燃煤导致排放量高估
+          </div>
+          <span class="verify-status verify-fail">❌ 特别注意</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== 常见错误视图 ===== -->
+    <div class="view-section" id="view-errors">
+      <div class="panel-card" style="max-width:800px;margin:0 auto">
+        <div class="panel-title"><span class="icon">⚠️</span> 常见错误归纳（按风险等级）</div>
+        <div class="filter-bar">
+          <div class="filter-chip active" onclick="filterErrors('all')">全部</div>
+          <div class="filter-chip" onclick="filterErrors('high')">🔴 高风险</div>
+          <div class="filter-chip" onclick="filterErrors('medium')">🟡 中风险</div>
+          <div class="filter-chip" onclick="filterErrors('low')">🔵 低风险</div>
+        </div>
+
+        <div class="error-item high" data-level="high">
+          <div class="error-title high">🔴 E1 重复扣除飞灰含碳量</div>
+          <div class="error-detail">将飞灰中未燃尽碳从排放量中扣除。实际上碳氧化率（98%）已包含飞灰损失，不应重复扣除。重复扣除会导致排放量低估约3%~5%。</div>
+          <div class="error-tag"><span class="tag-warn">涉及公式：E燃烧</span> <span class="tag-out">高风险项</span></div>
+        </div>
+
+        <div class="error-item high" data-level="high">
+          <div class="error-title high">🔴 E2 混淆工业分析与元素分析</div>
+          <div class="error-detail">使用工业分析（固定碳、灰分、挥发分）代替元素分析（碳、氢、氧、氮、硫）计算碳排放。两者概念不同，固定碳 ≠ 元素碳，误差可达 5%~15%。</div>
+          <div class="error-tag"><span class="tag-warn">涉及参数：碳含量</span> <span class="tag-out">高风险项</span></div>
+        </div>
+
+        <div class="error-item high" data-level="high">
+          <div class="error-title high">🔴 E3 用石膏产量反算石灰石消耗量</div>
+          <div class="error-detail">石膏含水量不稳定（波动10%~20%），用石膏产量反算石灰石消耗量会导致较大误差。应直接从石灰石仓称重或台账获取。</div>
+          <div class="error-tag"><span class="tag-warn">涉及公式：E脱硫</span> <span class="tag-out">高风险项</span></div>
+        </div>
+
+        <div class="error-item medium" data-level="medium">
+          <div class="error-title medium">🟡 E4 将CEMS数据作为核算主数据</div>
+          <div class="error-detail">用CEMS监测的CO₂浓度×烟气流量计算排放量作为核算结果。实际上核算应以入炉煤消耗量×碳含量为基础，CEMS仅作交叉验证。</div>
+          <div class="error-tag"><span class="tag-warn">涉及：CEMS数据用法</span> <span class="tag-out">中风险项</span></div>
+        </div>
+
+        <div class="error-item medium" data-level="medium">
+          <div class="error-title medium">🟡 E5 厂用电量计量范围错误</div>
+          <div class="error-detail">将发电量当作厂用电基数，或遗漏脱硫脱硝等辅助设备用电。购入电力排放 = 购入电量(MWh) × 电网因子，应单独计量。</div>
+          <div class="error-tag"><span class="tag-warn">涉及公式：E购电</span> <span class="tag-out">中风险项</span></div>
+        </div>
+
+        <div class="error-item medium" data-level="medium">
+          <div class="error-title medium">🟡 E6 生物质掺烧未单独计量</div>
+          <div class="error-detail">掺烧生物质时，未将生物质热值从燃煤消耗量中扣除。生物质属于碳中性燃料，混入燃煤计算会导致排放量被高估。</div>
+          <div class="error-tag"><span class="tag-warn">涉及公式：E燃烧</span> <span class="tag-out">中风险项</span></div>
+        </div>
+
+        <div class="error-item medium" data-level="medium">
+          <div class="error-title medium">🟡 E7 热值单位换算错误</div>
+          <div class="error-detail">热值实测值单位为MJ/kg，但计算时忘记乘以1000转换为GJ/t，或单位标注混淆（高位/低位）。标准要求使用低位发热量。</div>
+          <div class="error-tag"><span class="tag-warn">涉及参数：低位发热量</span> <span class="tag-out">中风险项</span></div>
+        </div>
+
+        <div class="error-item low" data-level="low">
+          <div class="error-title low">🔵 E8 监测报告超期使用</div>
+          <div class="error-detail">使用超过12个月的燃煤热值/碳含量化验报告，未按月更新。月度至少1次化验是基本要求，批次间波动大时应加密检测。</div>
+          <div class="error-tag"><span class="tag-in">低风险项</span></div>
+        </div>
+
+        <div class="error-item low" data-level="low">
+          <div class="error-title low">🔵 E9 供电量 vs 发电量混淆</div>
+          <div class="error-detail">计算碳排放强度时，分子用发电量，分母却用上网电量（不含厂用电），导致强度偏低。应保持口径一致：全部使用发电量。</div>
+          <div class="error-tag"><span class="tag-in">低风险项</span></div>
+        </div>
+
+        <div class="error-item low" data-level="low">
+          <div class="error-title low">🔵 E10 燃煤消耗量计量精度不足</div>
+          <div class="error-detail">皮带秤未按周期检定，计量精度超±2%允许误差。计量误差会直接传导至排放量误差，属于基础数据质量风险。</div>
+          <div class="error-tag"><span class="tag-in">低风险项</span></div>
+        </div>
+
+        <div class="error-item low" data-level="low">
+          <div class="error-title low">🔵 E11 遗漏脱硫塔CO₂排放</div>
+          <div class="error-detail">石灰石-石膏湿法脱硫（FGD）过程中CaCO₃分解产生的CO₂容易被忽略。每吨石灰石脱硫约产生0.44tCO₂，占总排放约1%~3%。</div>
+          <div class="error-tag"><span class="tag-in">低风险项</span></div>
+        </div>
+
+        <div class="error-item low" data-level="low">
+          <div class="error-title low">🔵 E12 应急柴油发电机未核算</div>
+          <div class="error-detail">应急柴油发电机（燃油）属于辅助生产设备，消耗的柴油应计入燃料燃烧排放。规模虽小但属于核算边界内。</div>
+          <div class="error-tag"><span class="tag-in">低风险项</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== 核查清单视图 ===== -->
+    <div class="view-section" id="view-checklist">
+      <div class="panel-card" style="max-width:800px;margin:0 auto">
+        <div class="panel-title"><span class="icon">✅</span> 核查清单（按指南章节）</div>
+        <div style="margin-bottom:10px;display:flex;justify-content:space-between;align-items:center">
+          <span style="font-size:12px;color:var(--muted)">已完成 <span id="check-count" style="color:var(--accent);font-weight:700">0</span> / <span id="check-total">26</span> 项</span>
+          <button class="tool-btn" onclick="exportChecklist()" style="font-size:10px">📥 导出清单</button>
+        </div>
+        <div class="check-progress"><div class="check-progress-bar" id="check-bar" style="width:0%"></div></div>
+        <hr class="section-divider">
+
+        <div class="check-item" onclick="toggleCheck(this)">
+          <div class="check-box">✓</div>
+          <div class="check-content">
+            <div class="check-title">3.1 核算边界：确认发电设施边界（厂界范围内全部排放源）</div>
+            <div class="check-chapter">指南3.1节 · 必查</div>
+          </div>
+        </div>
+        <div class="check-item" onclick="toggleCheck(this)">
+          <div class="check-box">✓</div>
+          <div class="check-content">
+            <div class="check-title">3.1 核算边界：确认辅助生产设施（脱硫、脱硝、输煤、冷却等）纳入边界</div>
+            <div class="check-chapter">指南3.1节 · 必查</div>
+          </div>
+        </div>
+        <div class="check-item" onclick="toggleCheck(this)">
+          <div class="check-box">✓</div>
+          <div class="check-content">
+            <div class="check-title">3.1 核算边界：确认脱硫塔石灰石消耗纳入过程排放</div>
+            <div class="check-chapter">指南3.1节 · 重要</div>
+          </div>
+        </div>
+        <div class="check-item" onclick="toggleCheck(this)">
+          <div class="check-box">✓</div>
+          <div class="check-content">
+            <div class="check-title">3.2 活动数据：燃煤消耗量来源（皮带秤/轨道衡/电子皮带秤）</div>
+            <div class="check-chapter">指南3.2节 · 必查</div>
+          </div>
+        </div>
+        <div class="check-item" onclick="toggleCheck(this)">
+          <div class="check-box">✓</div>
+          <div class="check-content">
+            <div class="check-title">3.2 活动数据：入炉煤低位发热量实测报告（有效期≤12个月）</div>
+            <div class="check-chapter">指南3.2节 · 必查</div>
+          </div>
+        </div>
+        <div class="check-item" onclick="toggleCheck(this)">
+          <div class="check-box">✓</div>
+          <div class="check-content">
+            <div class="check-title">3.2 活动数据：元素碳含量实测报告（非工业分析替代）</div>
+            <div class="check-chapter">指南3.2节 · 必查</div>
+          </div>
+        </div>
+        <div class="check-item" onclick="toggleCheck(this)">
+          <div class="check-box">✓</div>
+          <div class="check-content">
+            <div class="check-title">3.2 活动数据：碳氧化率实测值（≥98%缺省值则可接受）</div>
+            <div class="check-chapter">指南3.2节 · 重要</div>
+          </div>
+        </div>
+        <div class="check-item" onclick="toggleCheck(this)">
+          <div class="check-box">✓</div>
+          <div class="check-content">
+            <div class="check-title">3.2 活动数据：石灰石消耗量台账（采购合同+入库记录+耗量统计）</div>
+            <div class="check-chapter">指南3.2节 · 重要</div>
+          </div>
+        </div>
+        <div class="check-item" onclick="toggleCheck(this)">
+          <div class="check-box">✓</div>
+          <div class="check-content">
+            <div class="check-title">3.2 活动数据：购入电量（厂用电中购网电量，非发电量）</div>
+            <div class="check-chapter">指南3.2节 · 重要</div>
+          </div>
+        </div>
+        <div class="check-item" onclick="toggleCheck(this)">
+          <div class="check-box">✓</div>
+          <div class="check-content">
+            <div class="check-title">3.2 活动数据：发电量、上网电量、厂用电量计量表具检定</div>
+            <div class="check-chapter">指南3.2节 · 重要</div>
+          </div>
+        </div>
+        <div class="check-item" onclick="toggleCheck(this)">
+          <div class="check-box">✓</div>
+          <div class="check-content">
+            <div class="check-title">3.3 排放因子：低位发热量缺省值使用条件（无实测数据时）</div>
+            <div class="check-chapter">指南3.3节 · 重要</div>
+          </div>
+        </div>
+        <div class="check-item" onclick="toggleCheck(this)">
+          <div class="check-box">✓</div>
+          <div class="check-content">
+            <div class="check-title">3.3 排放因子：碳含量缺省值使用条件（55%，无实测时）</div>
+            <div class="check-chapter">指南3.3节 · 重要</div>
+          </div>
+        </div>
+        <div class="check-item" onclick="toggleCheck(this)">
+          <div class="check-box">✓</div>
+          <div class="check-content">
+            <div class="check-title">3.3 排放因子：碳氧化率缺省值使用条件（98%，无实测时）</div>
+            <div class="check-chapter">指南3.3节 · 重要</div>
+          </div>
+        </div>
+        <div class="check-item" onclick="toggleCheck(this)">
+          <div class="check-box">✓</div>
+          <div class="check-content">
+            <div class="check-title">3.3 排放因子：电网排放因子使用年度（2021年值 0.5810）</div>
+            <div class="check-chapter">指南3.3节 · 必查</div>
+          </div>
+        </div>
+        <div class="check-item" onclick="toggleCheck(this)">
+          <div class="check-box">✓</div>
+          <div class="check-content">
+            <div class="check-title">3.4 计算方法：公式一只计算燃煤部分，生物质单独处理</div>
+            <div class="check-chapter">指南3.4节 · 重要</div>
+          </div>
+        </div>
+        <div class="check-item" onclick="toggleCheck(this)">
+          <div class="check-box">✓</div>
+          <div class="check-content">
+            <div class="check-title">3.4 计算方法：公式二石灰石消耗量使用台账数据，不用石膏反算</div>
+            <div class="check-chapter">指南3.4节 · 重要</div>
+          </div>
+        </div>
+        <div class="check-item" onclick="toggleCheck(this)">
+          <div class="check-box">✓</div>
+          <div class="check-content">
+            <div class="check-title">3.4 计算方法：公式三购入电量使用购网电量，非发电量</div>
+            <div class="check-chapter">指南3.4节 · 重要</div>
+          </div>
+        </div>
+        <div class="check-item" onclick="toggleCheck(this)">
+          <div class="check-box">✓</div>
+          <div class="check-content">
+            <div class="check-title">3.5 不纳入排放：飞灰、底渣、冷却塔蒸汽不扣除含碳量</div>
+            <div class="check-chapter">指南3.5节 · 重要</div>
+          </div>
+        </div>
+        <div class="check-item" onclick="toggleCheck(this)">
+          <div class="check-box">✓</div>
+          <div class="check-content">
+            <div class="check-title">3.5 不纳入排放：生物质掺烧碳中性处理（仅化石燃料计入）</div>
+            <div class="check-chapter">指南3.5节 · 重要</div>
+          </div>
+        </div>
+        <div class="check-item" onclick="toggleCheck(this)">
+          <div class="check-box">✓</div>
+          <div class="check-content">
+            <div class="check-title">3.6 数据质量：皮带秤等计量设备有效期检定证书</div>
+            <div class="check-chapter">指南3.6节 · 必查</div>
+          </div>
+        </div>
+        <div class="check-item" onclick="toggleCheck(this)">
+          <div class="check-box">✓</div>
+          <div class="check-content">
+            <div class="check-title">3.6 数据质量：化验室资质与检测方法（GB/T476等标准）</div>
+            <div class="check-chapter">指南3.6节 · 重要</div>
+          </div>
+        </div>
+        <div class="check-item" onclick="toggleCheck(this)">
+          <div class="check-box">✓</div>
+          <div class="check-content">
+            <div class="check-title">3.6 数据质量：数据缺失处理（监测频次不足时使用缺省值）</div>
+            <div class="check-chapter">指南3.6节 · 重要</div>
+          </div>
+        </div>
+        <div class="check-item" onclick="toggleCheck(this)">
+          <div class="check-box">✓</div>
+          <div class="check-content">
+            <div class="check-title">3.7 不确定性：识别主要不确定性来源（计量精度、数据代表性）</div>
+            <div class="check-chapter">指南3.7节 · 重要</div>
+          </div>
+        </div>
+        <div class="check-item" onclick="toggleCheck(this)">
+          <div class="check-box">✓</div>
+          <div class="check-content">
+            <div class="check-title">3.7 不确定性：评估排放量相对不确定度是否满足要求</div>
+            <div class="check-chapter">指南3.7节 · 重要</div>
+          </div>
+        </div>
+        <div class="check-item" onclick="toggleCheck(this)">
+          <div class="check-box">✓</div>
+          <div class="check-content">
+            <div class="check-title">综合：交叉验证完成（燃煤三角验证、热效率区间判断、碳氧化率）</div>
+            <div class="check-chapter">综合验证 · 必查</div>
+          </div>
+        </div>
+        <div class="check-item" onclick="toggleCheck(this)">
+          <div class="check-box">✓</div>
+          <div class="check-content">
+            <div class="check-title">综合：排放量与历史数据趋势一致性（异常波动需说明）</div>
+            <div class="check-chapter">综合验证 · 必查</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== 参数速查视图 ===== -->
+    <div class="view-section" id="view-reference">
+      <div class="panel-card" style="max-width:800px;margin:0 auto">
+        <div class="panel-title"><span class="icon">📚</span> 参数速查表</div>
+
+        <table style="width:100%;border-collapse:collapse;font-size:12px;margin-bottom:20px">
+          <thead>
+            <tr style="background:rgba(79,195,247,0.08)">
+              <th style="padding:8px 10px;text-align:left;color:var(--accent);border-bottom:1px solid var(--border)">参数</th>
+              <th style="padding:8px 10px;text-align:center;color:var(--accent);border-bottom:1px solid var(--border)">缺省值</th>
+              <th style="padding:8px 10px;text-align:left;color:var(--accent);border-bottom:1px solid var(--border)">来源要求</th>
+              <th style="padding:8px 10px;text-align:center;color:var(--accent);border-bottom:1px solid var(--border)">监测频次</th>
+            </tr>
+          </thead>
+          <tbody style="color:#b0bec5">
+            <tr><td style="padding:7px 10px;border-bottom:1px solid rgba(255,255,255,0.04)">低位发热量（烟煤）</td><td style="padding:7px 10px;text-align:center;color:#ffb300;font-weight:600">17.6 GJ/t</td><td style="padding:7px 10px">批次化验</td><td style="padding:7px 10px;text-align:center">≥1次/月</td></tr>
+            <tr><td style="padding:7px 10px;border-bottom:1px solid rgba(255,255,255,0.04)">低位发热量（无烟煤）</td><td style="padding:7px 10px;text-align:center;color:#ffb300;font-weight:600">26.7 GJ/t</td><td style="padding:7px 10px">批次化验</td><td style="padding:7px 10px;text-align:center">≥1次/月</td></tr>
+            <tr><td style="padding:7px 10px;border-bottom:1px solid rgba(255,255,255,0.04)">元素碳含量</td><td style="padding:7px 10px;text-align:center;color:#ffb300;font-weight:600">55%</td><td style="padding:7px 10px">元素分析实测</td><td style="padding:7px 10px;text-align:center">≥1次/月</td></tr>
+            <tr><td style="padding:7px 10px;border-bottom:1px solid rgba(255,255,255,0.04)">碳氧化率</td><td style="padding:7px 10px;text-align:center;color:#ffb300;font-weight:600">98%</td><td style="padding:7px 10px">实测（不易测可用缺省）</td><td style="padding:7px 10px;text-align:center">批次化验</td></tr>
+            <tr><td style="padding:7px 10px;border-bottom:1px solid rgba(255,255,255,0.04)">电网排放因子</td><td style="padding:7px 10px;text-align:center;color:#42a5f5;font-weight:600">0.5810</td><td style="padding:7px 10px">生态环境部公告值</td><td style="padding:7px 10px;text-align:center">年度更新</td></tr>
+            <tr><td style="padding:7px 10px;border-bottom:1px solid rgba(255,255,255,0.04)">石灰石排放因子</td><td style="padding:7px 10px;text-align:center;color:#ffb300;font-weight:600">0.44 tCO₂/t</td><td style="padding:7px 10px">固定系数44/100</td><td style="padding:7px 10px;text-align:center">不适用</td></tr>
+            <tr><td style="padding:7px 10px;border-bottom:1px solid rgba(255,255,255,0.04)">供电煤耗（超超临界）</td><td style="padding:7px 10px;text-align:center;color:#66bb6a;font-weight:600">280~300 g/kWh</td><td style="padding:7px 10px">运行数据</td><td style="padding:7px 10px;text-align:center">实时</td></tr>
+          </tbody>
+        </table>
+
+        <table style="width:100%;border-collapse:collapse;font-size:12px">
+          <thead>
+            <tr style="background:rgba(79,195,247,0.08)">
+              <th style="padding:8px 10px;text-align:left;color:var(--accent);border-bottom:1px solid var(--border)">电网区域</th>
+              <th style="padding:8px 10px;text-align:center;color:var(--accent);border-bottom:1px solid var(--border)">排放因子 (tCO₂/MWh)</th>
+              <th style="padding:8px 10px;text-align:left;color:var(--accent);border-bottom:1px solid var(--border)">适用地区</th>
+            </tr>
+          </thead>
+          <tbody style="color:#b0bec5">
+            <tr><td style="padding:7px 10px;border-bottom:1px solid rgba(255,255,255,0.04)">华北区域</td><td style="padding:7px 10px;text-align:center;color:#42a5f5;font-weight:600">0.8042</td><td style="padding:7px 10px">北京/天津/河北/山西/内蒙古/山东</td></tr>
+            <tr><td style="padding:7px 10px;border-bottom:1px solid rgba(255,255,255,0.04)">华东区域</td><td style="padding:7px 10px;text-align:center;color:#42a5f5;font-weight:600">0.7035</td><td style="padding:7px 10px">上海/江苏/浙江/安徽/福建</td></tr>
+            <tr><td style="padding:7px 10px;border-bottom:1px solid rgba(255,255,255,0.04)">华中区域</td><td style="padding:7px 10px;text-align:center;color:#42a5f5;font-weight:600">0.5965</td><td style="padding:7px 10px">湖北/湖南/河南/江西/四川/重庆</td></tr>
+            <tr><td style="padding:7px 10px;border-bottom:1px solid rgba(255,255,255,0.04)">华南区域</td><td style="padding:7px 10px;text-align:center;color:#42a5f5;font-weight:600">0.5257</td><td style="padding:7px 10px">广东/广西/海南/云南/贵州</td></tr>
+            <tr><td style="padding:7px 10px;border-bottom:1px solid rgba(255,255,255,0.04)">西北区域</td><td style="padding:7px 10px;text-align:center;color:#42a5f5;font-weight:600">0.6671</td><td style="padding:7px 10px">陕西/甘肃/青海/宁夏/新疆</td></tr>
+            <tr><td style="padding:7px 10px;border-bottom:1px solid rgba(255,255,255,0.04)">东北区域</td><td style="padding:7px 10px;text-align:center;color:#42a5f5;font-weight:600">0.7754</td><td style="padding:7px 10px">辽宁/吉林/黑龙江</td></tr>
+            <tr><td style="padding:7px 10px">全国平均</td><td style="padding:7px 10px;text-align:center;color:#66bb6a;font-weight:600">0.5810</td><td style="padding:7px 10px">全国公用电网（2021基准）</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<!-- PDF抽屉 -->
+<div id="pdf-drawer">
+  <div class="pdf-header">
+    <div class="pdf-title" id="pdf-title">核算指南原文</div>
+    <button class="pdf-close" onclick="closePDF()">✕</button>
+  </div>
+  <iframe class="pdf-iframe" id="pdf-frame"></iframe>
+</div>
+
+<script>
+// ============================================================
+// 设备数据库
+// ============================================================
+const DEVICES = {
+  boiler: {
+    name: '燃煤锅炉（燃烧系统）', scope: '✅ 纳入核算', level: 'in',
+    desc: '煤粉锅炉燃烧是最主要排放源。排放量 E燃烧 = 燃煤量×热值×碳含量×氧化率×44/12。飞灰含碳已包含在氧化率中，不重复扣除。',
+    tags: [{cls:'tag-in',text:'✅ 纳入核算'}, {cls:'tag-in',text:'排放占比≥95%'}]
+  },
+  chimney1: {
+    name: '烟囱排放口（主）', scope: '✅ 监测点', level: 'in',
+    desc: '安装CEMS连续监测系统。CEMS数据用于交叉验证，不作为核算主数据（核算用入炉煤数据）。偏差超过15%需核查原因。',
+    tags: [{cls:'tag-in',text:'✅ 交叉验证'}, {cls:'tag-warn',text:'⚠️ 非核算主数据'}]
+  },
+  chimney2: {
+    name: '烟囱排放口（2号）', scope: '✅ 监测点', level: 'in',
+    desc: '辅助排放口，与主烟囱共用一套CEMS系统。同样遵循CEMS辅助验证的原则。',
+    tags: [{cls:'tag-in',text:'✅ 交叉验证'}, {cls:'tag-warn',text:'⚠️ 非核算主数据'}]
+  },
+  chimney3: {
+    name: '烟囱排放口（3号）', scope: '✅ 监测点', level: 'in',
+    desc: '辅助排放口。核查时注意三根烟囱的CEMS代表性，确认安装位置符合规范要求。',
+    tags: [{cls:'tag-in',text:'✅ 交叉验证'}, {cls:'tag-warn',text:'⚠️ 非核算主数据'}]
+  },
+  fgd: {
+    name: '石灰石-石膏湿法脱硫（FGD）', scope: '✅ 纳入核算', level: 'in',
+    desc: '石灰石(CaCO₃)脱硫过程产生CO₂。E脱硫 = 石灰石量(t) × 44/100。每消耗1吨石灰石排放0.44吨CO₂。勿用石膏产量反算（误差大）。',
+    tags: [{cls:'tag-in',text:'✅ 纳入核算'}, {cls:'tag-in',text:'🔬 过程排放'}]
+  },
+  scr: {
+    name: 'SCR脱硝装置', scope: '❌ 不纳入核算', level: 'out',
+    desc: '选择性催化还原(SCR)仅喷入氨水/尿素，不产生CO₂。属于NOx控制设施，与碳排放无关。',
+    tags: [{cls:'tag-out',text:'❌ 不纳入碳核算'}, {cls:'tag-in',text:'💡 处理NOx'}]
+  },
+  turbine: {
+    name: '汽轮发电机组', scope: '❌ 本体不纳入（本体）', level: 'key',
+    desc: '汽轮机将蒸汽热能转化为机械能，本体不产生CO₂。发电量/上网电量是关键计量数据，用于购电排放和碳排放强度计算。',
+    tags: [{cls:'tag-out',text:'❌ 本体不排CO₂'}, {cls:'tag-in',text:'📊 关键计量点'}]
+  },
+  generator: {
+    name: '发电机', scope: '❌ 不纳入（本体）', level: 'key',
+    desc: '发电机本体不产生碳排放。发电量由关口表计量，是碳排放强度计算的分母。',
+    tags: [{cls:'tag-out',text:'❌ 本体不排CO₂'}, {cls:'tag-in',text:'📊 发电量计量'}]
+  },
+  transformer: {
+    name: '主变压器', scope: '✅ 电力计量点', level: 'key',
+    desc: '主变高压侧（关口表）是发电量/上网电量计量基准点。厂用电率 = 厂用电量/发电量，应在3%~6%区间（超超临界机组）。',
+    tags: [{cls:'tag-in',text:'✅ 计量基准点'}, {cls:'tag-in',text:'⚡ 上网电量凭证'}]
+  },
+  cooltower1: {
+    name: '冷却塔（循环水）', scope: '❌ 不纳入核算', level: 'out',
+    desc: '冷却塔蒸发的是水蒸气(H₂O)，不是CO₂。核查时需注意区分：烟囱排放CO₂（纳入）vs 冷却塔水蒸气（不纳入）。',
+    tags: [{cls:'tag-out',text:'❌ 不纳入碳核算'}, {cls:'tag-out',text:'💧 H₂O≠CO₂'}]
+  },
+  cooltower2: {
+    name: '冷却塔（2号）', scope: '❌ 不纳入核算', level: 'out',
+    desc: '同1号塔，仅散发水蒸气，不涉及碳排放。但其耗电量（含在厂用电中）间接影响购电排放。',
+    tags: [{cls:'tag-out',text:'❌ 不纳入碳核算'}, {cls:'tag-out',text:'💧 H₂O≠CO₂'}]
+  },
+  coalsilo: {
+    name: '灰仓（粉煤灰收集）', scope: '❌ 不扣除飞灰含碳', level: 'out',
+    desc: '飞灰中未燃尽碳已包含在碳氧化率中，不应从排放量中扣除。这是最高频的错误之一，重复扣除会导致排放量低估3%~5%。',
+    tags: [{cls:'tag-out',text:'❌ 不扣除飞灰含碳'}, {cls:'tag-warn',text:'⚠️ 高频错误'}]
+  }
+};
+
+// ============================================================
+// 交互逻辑
+// ============================================================
+let showParticles = true;
+let showHighlight = false;
+let showAnnotate = false;
+
+function switchTab(tab) {
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.view-section').forEach(v => v.classList.remove('active'));
+  document.querySelector(`.nav-tab[onclick*="${tab}"]`).classList.add('active');
+  document.getElementById('view-' + tab).classList.add('active');
+}
+
+function showDeviceTip(e, id) {
+  const d = DEVICES[id]; if (!d) return;
+  const tip = document.getElementById('device-tip');
+  document.getElementById('tip-name').textContent = d.name;
+  document.getElementById('tip-scope').textContent = d.scope;
+  document.getElementById('tip-desc').textContent = d.desc;
+  const tagsEl = document.getElementById('tip-tags');
+  tagsEl.innerHTML = '';
+  (d.tags||[]).forEach(t => {
+    const s = document.createElement('span');
+    s.className = t.cls; s.textContent = t.text;
+    tagsEl.appendChild(s);
+  });
+  tip.style.display = 'block';
+  const rect = tip.getBoundingClientRect();
+  let x = e.pageX + 15, y = e.pageY - 60;
+  if (x + 260 > window.innerWidth) x = e.pageX - 255;
+  if (y + 200 > window.innerHeight) y = window.innerHeight - 210;
+  tip.style.left = x + 'px'; tip.style.top = y + 'px';
+}
+
+function hideTip() {
+  document.getElementById('device-tip').style.display = 'none';
+}
+
+document.querySelectorAll('[data-device]').forEach(el => {
+  el.addEventListener('mouseenter', e => showDeviceTip(e, el.dataset.device));
+  el.addEventListener('mouseleave', hideTip);
+});
+
+// ============================================================
+// 粒子系统
+// ============================================================
+function spawnParticle(type, x, y) {
+  if (!showParticles) return;
+  const layer = document.getElementById('particle-layer');
+  const p = document.createElement('div');
+  p.className = 'particle ' + type;
+  const size = {co2:'10px',desc:'8px',steam:'12px',ash:'6px'}[type] || '8px';
+  const dx = {co2:'+40px',desc:'-30px',steam:'-10px',ash:'-20px'}[type] || '+20px';
+  const dy = {co2:'-120px',desc:'-80px',steam:'-60px',ash:'-50px'}[type] || '-60px';
+  const dur = {co2:'2.5s',desc:'2s',steam:'3s',ash:'2s'}[type] || '2s';
+  p.style.cssText = `left:${x}px;top:${y}px;width:${size};height:${size};--dx:${dx};--dy:${dy};animation-duration:${dur}`;
+  layer.appendChild(p);
+  setTimeout(() => p.remove(), parseFloat(dur)*1000);
+}
+
+// 烟囱粒子发射点（SVG坐标 → 页面坐标）
+function emitFromSVG(svgId, type) {
+  const svg = document.getElementById('iso-svg');
+  const el = document.getElementById(svgId);
+  if (!svg || !el) return;
+  const rect = el.getBoundingClientRect();
+  const svgRect = svg.getBoundingClientRect();
+  const scaleX = svgRect.width / 900;
+  const scaleY = svgRect.height / 580;
+  const cx = rect.left - svgRect.left + rect.width/2 - svgRect.left;
+  const cy = rect.top - svgRect.top - 10;
+  spawnParticle(type, rect.left + rect.width/2 - svgRect.left, rect.top - svgRect.top);
+}
+
+// 每300ms发射一次
+setInterval(() => {
+  if (!showParticles) return;
+  emitFromSVG('chimney1', 'co2');
+  emitFromSVG('chimney2', 'co2');
+  emitFromSVG('chimney3', 'co2');
+  emitFromSVG('fgd', 'desc');
+  emitFromSVG('cooltower1', 'steam');
+}, 300);
+
+// 页面加载时快速生成
+setTimeout(() => {
+  for(let i=0;i<5;i++){
+    setTimeout(()=>emitFromSVG('chimney1','co2'), i*200);
+    setTimeout(()=>emitFromSVG('fgd','desc'), i*300);
+  }
+}, 500);
+
+function toggleParticles() {
+  showParticles = !showParticles;
+  document.getElementById('btn-particle').classList.toggle('on', showParticles);
+  const layer = document.getElementById('particle-layer');
+  if (!showParticles) layer.innerHTML = '';
+}
+
+function toggleHighlight() {
+  showHighlight = !showHighlight;
+  document.getElementById('btn-highlight').classList.toggle('on', showHighlight);
+  document.querySelectorAll('.scope-in,.scope-out,.scope-key').forEach(el => {
+    if (showHighlight) {
+      if (el.classList.contains('scope-in')) el.style.filter = 'drop-shadow(0 0 8px rgba(102,187,106,0.7)) brightness(1.2)';
+      if (el.classList.contains('scope-out')) el.style.filter = 'drop-shadow(0 0 6px rgba(255,112,67,0.4))';
+      if (el.classList.contains('scope-key')) el.style.filter = 'drop-shadow(0 0 10px rgba(255,179,0,0.7)) brightness(1.15)';
+    } else {
+      el.style.filter = '';
+    }
+  });
+}
+
+function toggleAnnotate() {
+  showAnnotate = !showAnnotate;
+  document.getElementById('btn-annotate').classList.toggle('on', showAnnotate);
+  const annot = document.getElementById('annotations');
+  annot.style.opacity = showAnnotate ? 1 : 0;
+}
+
+// ============================================================
+// 视图切换
+// ============================================================
+function setIsoView(v) {
+  document.querySelectorAll('.view-btn').forEach(b => b.classList.remove('active'));
+  event.target.classList.add('active');
+  const svg = document.getElementById('iso-svg');
+  if (v === 'top') {
+    svg.style.transform = 'scaleY(0.4) translateY(-40%)';
+    svg.style.transition = 'transform 0.6s ease';
+  } else if (v === 'front') {
+    svg.style.transform = 'scaleY(0.5) rotateX(5deg) translateY(-30%)';
+    svg.style.transition = 'transform 0.6s ease';
+  } else {
+    svg.style.transform = 'none';
+    svg.style.transition = 'transform 0.6s ease';
+  }
+}
+
+// ============================================================
+// 碳排放计算
+// ============================================================
+let params = {load:85, heat:20.93, carbon:55, oxid:98, lime:2.5, elec:480};
+let noiseT = 0;
+
+function syncParams() {
+  params.load = +document.getElementById('s-load').value;
+  params.heat = +document.getElementById('s-heat').value;
+  params.carbon = +document.getElementById('s-carbon').value;
+  params.oxid = +document.getElementById('s-oxid').value;
+  params.lime = +document.getElementById('s-lime').value;
+  params.elec = +document.getElementById('s-elec').value;
+  document.getElementById('p-load').textContent = params.load + '%';
+  document.getElementById('p-heat').textContent = params.heat.toFixed(2);
+  document.getElementById('p-carbon').textContent = params.carbon.toFixed(1) + '%';
+  document.getElementById('p-oxid').textContent = params.oxid.toFixed(1) + '%';
+  document.getElementById('p-lime').textContent = params.lime.toFixed(1);
+  document.getElementById('p-elec').textContent = params.elec;
+  updateCalc();
+}
+
+function calcEmissions() {
+  const capacity = 600; // MW
+  const loadMW = capacity * params.load / 100;
+  const coalRate = 290 * (1 + (100-params.load)/250);
+  const coalTonH = loadMW * coalRate / 1000; // t/h
+
+  const heatGJ = params.heat; // MJ/kg → 直接用MJ/kg
+  const E_comb = coalTonH * heatGJ * (params.carbon/100) * (params.oxid/100) * (44/12) / 1000; // tCO₂/h
+  const E_desc = params.lime * (44/100); // tCO₂/h
+  const selfUse = loadMW * 0.04 * 0.15;
+  const E_elec = selfUse * 0.5810; // tCO₂/h
+  const E_total = E_comb + E_desc + E_elec;
+  const intensity = E_total / loadMW;
+  const power = loadMW;
+  return {E_comb, E_desc, E_elec, E_total, intensity, loadMW, coalTonH, power};
+}
+
+function updateCalc() {
+  noiseT += 0.15;
+  const n = 1 + Math.sin(noiseT*3.7)*0.012 + Math.sin(noiseT*1.3)*0.008;
+  const r = calcEmissions();
+  const ec = r.E_comb*n, ed = r.E_desc*n, ee = r.E_elec*n;
+  const et = ec+ed+ee;
+
+  document.getElementById('ov-coal').textContent = r.coalTonH.toFixed(1);
+  document.getElementById('ov-power').textContent = r.loadMW.toFixed(0);
+  document.getElementById('ov-total').textContent = et.toFixed(2);
+  document.getElementById('ov-intensity').textContent = r.intensity.toFixed(4) + ' tCO₂/MWh';
+  document.getElementById('intensity-bar').style.width = Math.min(100,(r.intensity/1.2)*100)+'%';
+
+  // 更新SVG标注
+  document.getElementById('label-e-comb').textContent = ec.toFixed(1) + ' tCO₂/h';
+  document.getElementById('label-e-desc').textContent = ed.toFixed(2) + ' tCO₂/h';
+  document.getElementById('label-e-elec').textContent = ee.toFixed(3) + ' tCO₂/h';
+
+  // 动态调整炉火
+  const fireOp = 0.4 + (params.load/100)*0.6;
+  const fireInner = document.getElementById('fire-inner');
+  if(fireInner) fireInner.setAttribute('opacity', fireOp);
+}
+
+// ============================================================
+// 核查清单
+// ============================================================
+function toggleCheck(el) {
+  el.classList.toggle('checked');
+  updateCheckProgress();
+}
+
+function updateCheckProgress() {
+  const items = document.querySelectorAll('.check-item');
+  const checked = document.querySelectorAll('.check-item.checked').length;
+  document.getElementById('check-count').textContent = checked;
+  document.getElementById('check-total').textContent = items.length;
+  document.getElementById('check-bar').style.width = (checked/items.length*100).toFixed(0) + '%';
+}
+
+function exportChecklist() {
+  const items = document.querySelectorAll('.check-item');
+  const checked = document.querySelectorAll('.check-item.checked').length;
+  alert(`核查清单导出：\n已完成 ${checked}/${items.length} 项\n\n（实际应用中可生成PDF或Excel）`);
+}
+
+// ============================================================
+// 常见错误筛选
+// ============================================================
+function filterErrors(level) {
+  document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+  event.target.classList.add('active');
+  document.querySelectorAll('.error-item').forEach(el => {
+    el.style.display = (level === 'all' || el.dataset.level === level) ? 'block' : 'none';
+  });
+}
+
+// ============================================================
+// PDF抽屉
+// ============================================================
+function openPDF(type) {
+  const drawer = document.getElementById('pdf-drawer');
+  const frame = document.getElementById('pdf-frame');
+  const title = document.getElementById('pdf-title');
+  const urls = {
+    hesuan: 'https://www.mee.gov.cn/xxgk2018/xxgk/xxgk06/202212/W020221221671986519778.pdf',
+    hecha: 'https://www.mee.gov.cn/xxgk2018/xxgk/xxgk06/202212/W020221223393734038231.pdf'
+  };
+  title.textContent = type === 'hesuan' ? '核算指南原文' : '核查指南原文';
+  frame.src = urls[type];
+  drawer.classList.add('open');
+}
+
+function closePDF() {
+  document.getElementById('pdf-drawer').classList.remove('open');
+}
+
+// ============================================================
+// 核算边界导航
+// ============================================================
+function buildScopeNav() {
+  const nav = document.getElementById('scope-nav');
+  const items = [
+    {cls:'scope-in', label:'✅ 纳入核算', color:'#66bb6a'},
+    {cls:'scope-out', label:'❌ 不纳入核算', color:'#ff7043'},
+    {cls:'scope-key', label:'⭐ 关键计量点', color:'#ffb300'},
+  ];
+  nav.innerHTML = items.map(i => `
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;padding:6px 8px;
+                background:rgba(0,0,0,0.12);border-radius:6px;cursor:pointer"
+         onclick="document.querySelector('.nav-tab[onclick*=\\'scene\\']').click()">
+      <div style="width:8px;height:8px;border-radius:50%;background:${i.color};flex-shrink:0"></div>
+      <span style="font-size:11px;color:#b0bec5">${i.label}</span>
+    </div>
+  `).join('');
+}
+
+// ============================================================
+// 星空闪烁
+// ============================================================
+function twinkleStars() {
+  document.querySelectorAll('#stars circle').forEach(s => {
+    s.style.opacity = Math.random()*0.5+0.5;
+  });
+}
+setInterval(twinkleStars, 2000);
+
+// ============================================================
+// 初始化
+// ============================================================
+syncParams();
+buildScopeNav();
+setInterval(updateCalc, 2000);
+
+// 每2s刷新一次计算
+</script>
+</body>
+</html>

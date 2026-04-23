@@ -1,0 +1,1786 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>发电设施碳排放 3D 动态模型</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: #0a0e1a; color: #e0e8f0; font-family: 'Microsoft YaHei', sans-serif; overflow: hidden; }
+
+#canvas-container { position: fixed; inset: 0; }
+
+/* 顶部标题栏 */
+#header {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  background: linear-gradient(180deg, rgba(5,10,25,0.95) 0%, rgba(5,10,25,0) 100%);
+  padding: 12px 20px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+#header h1 {
+  font-size: 18px; font-weight: 700;
+  background: linear-gradient(90deg, #4fc3f7, #81d4fa, #b3e5fc);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  text-shadow: none;
+}
+#header .subtitle { font-size: 12px; color: #78909c; margin-top: 2px; }
+
+/* 左侧控制面板 */
+#control-panel {
+  position: fixed; left: 16px; top: 80px; z-index: 100;
+  background: rgba(10,20,40,0.88);
+  border: 1px solid rgba(79,195,247,0.3);
+  border-radius: 12px; padding: 16px; width: 220px;
+  backdrop-filter: blur(10px);
+}
+#control-panel h3 {
+  font-size: 13px; color: #4fc3f7; margin-bottom: 12px;
+  border-bottom: 1px solid rgba(79,195,247,0.2); padding-bottom: 8px;
+}
+.ctrl-group { margin-bottom: 14px; }
+.ctrl-label { font-size: 11px; color: #90a4ae; margin-bottom: 5px; display: flex; justify-content: space-between; }
+.ctrl-label span { color: #4fc3f7; font-weight: 600; }
+input[type=range] {
+  width: 100%; height: 4px; appearance: none;
+  background: rgba(79,195,247,0.2); border-radius: 2px; outline: none;
+}
+input[type=range]::-webkit-slider-thumb {
+  appearance: none; width: 14px; height: 14px; border-radius: 50%;
+  background: #4fc3f7; cursor: pointer; box-shadow: 0 0 8px #4fc3f7;
+}
+.btn-group { display: flex; gap: 8px; margin-top: 4px; }
+.btn {
+  flex: 1; padding: 6px 10px; border: 1px solid rgba(79,195,247,0.4);
+  border-radius: 6px; background: rgba(79,195,247,0.08); color: #4fc3f7;
+  font-size: 11px; cursor: pointer; transition: all 0.2s; text-align: center;
+}
+.btn:hover { background: rgba(79,195,247,0.2); border-color: #4fc3f7; }
+.btn.active { background: rgba(79,195,247,0.3); border-color: #4fc3f7; box-shadow: 0 0 10px rgba(79,195,247,0.3); }
+
+/* 右侧排放数据面板 */
+#data-panel {
+  position: fixed; right: 16px; top: 80px; z-index: 100;
+  background: rgba(10,20,40,0.88);
+  border: 1px solid rgba(79,195,247,0.3);
+  border-radius: 12px; padding: 16px; width: 240px;
+  max-height: calc(100vh - 250px);
+  overflow-y: auto;
+  backdrop-filter: blur(10px);
+}
+#data-panel h3 {
+  font-size: 13px; color: #4fc3f7; margin-bottom: 12px;
+  border-bottom: 1px solid rgba(79,195,247,0.2); padding-bottom: 8px;
+}
+.data-row {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 10px; padding: 6px 8px;
+  background: rgba(255,255,255,0.03); border-radius: 6px;
+  border-left: 3px solid transparent;
+}
+.data-row.combustion { border-left-color: #ff7043; }
+.data-row.decarb { border-left-color: #ffb300; }
+.data-row.purchase { border-left-color: #42a5f5; }
+.data-row.total { border-left-color: #66bb6a; background: rgba(102,187,106,0.08); }
+.data-label { font-size: 11px; color: #90a4ae; }
+.data-value { font-size: 13px; font-weight: 700; }
+.data-value.combustion { color: #ff7043; }
+.data-value.decarb { color: #ffb300; }
+.data-value.purchase { color: #42a5f5; }
+.data-value.total { color: #66bb6a; }
+.data-unit { font-size: 10px; color: #607d8b; margin-left: 2px; }
+
+/* 实时折线图 */
+#chart-panel {
+  position: fixed; right: 16px; bottom: 16px; z-index: 100;
+  background: rgba(10,20,40,0.88);
+  border: 1px solid rgba(79,195,247,0.3);
+  border-radius: 12px; padding: 14px; width: 240px;
+  max-height: 200px;
+  backdrop-filter: blur(10px);
+}
+#chart-panel h3 { font-size: 11px; color: #4fc3f7; margin-bottom: 6px; }
+#emission-chart { width: 100%; height: 60px; }
+
+/* 底部图例 - 折叠式，紧贴左侧控制面板右侧 */
+#legend {
+  position: fixed; bottom: 16px; left: 252px; z-index: 100;
+  background: rgba(10,20,40,0.88);
+  border: 1px solid rgba(79,195,247,0.3);
+  border-radius: 12px;
+  backdrop-filter: blur(10px);
+  overflow: hidden;
+  transition: max-height 0.3s ease, padding 0.3s ease;
+  max-height: 28px;
+  cursor: pointer;
+}
+#legend.expanded { max-height: 180px; }
+#legend-header {
+  display: flex; align-items: center; gap: 6px;
+  padding: 6px 14px; font-size: 12px; color: #4fc3f7;
+  white-space: nowrap; user-select: none;
+}
+#legend-toggle { font-size: 10px; color: #78909c; margin-left: 4px; }
+#legend-body { padding: 0 14px 10px; }
+#legend h3 { display: none; }
+.legend-item {
+  display: flex; align-items: center; gap: 8px; margin-bottom: 5px; font-size: 11px; color: #90a4ae;
+}
+.legend-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+
+/* 信息浮层 */
+#info-overlay {
+  position: fixed; left: 50%; top: 50%; transform: translate(-50%, -50%);
+  z-index: 200; background: rgba(10,20,40,0.95);
+  border: 1px solid rgba(79,195,247,0.5); border-radius: 16px;
+  padding: 24px; width: 380px; display: none;
+  backdrop-filter: blur(20px); box-shadow: 0 0 40px rgba(79,195,247,0.2);
+}
+#info-overlay h2 { font-size: 16px; color: #4fc3f7; margin-bottom: 4px; }
+#info-overlay .info-sub { font-size: 11px; color: #78909c; margin-bottom: 14px; }
+#info-overlay .info-content { font-size: 12px; color: #b0bec5; line-height: 1.8; }
+#info-overlay .info-tag {
+  display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 10px;
+  margin: 2px; margin-top: 10px;
+}
+#info-overlay .tag-in { background: rgba(102,187,106,0.2); color: #66bb6a; border: 1px solid rgba(102,187,106,0.4); }
+#info-overlay .tag-out { background: rgba(255,112,67,0.2); color: #ff7043; border: 1px solid rgba(255,112,67,0.4); }
+#info-overlay .close-btn {
+  position: absolute; top: 12px; right: 16px;
+  background: none; border: none; color: #78909c; font-size: 18px; cursor: pointer;
+}
+#info-overlay .close-btn:hover { color: #4fc3f7; }
+
+/* 系统标签 */
+.system-label {
+  position: fixed; z-index: 90; pointer-events: none;
+  font-size: 11px; color: rgba(255,255,255,0.7);
+  background: rgba(0,0,0,0.5); padding: 3px 8px; border-radius: 4px;
+  border: 1px solid rgba(255,255,255,0.15);
+  transition: opacity 0.3s;
+}
+
+/* 旋转提示 */
+@keyframes alertBlink { 0%, 100% { box-shadow: 0 0 8px rgba(255,112,67,0.3); } 50% { box-shadow: 0 0 20px rgba(255,112,67,0.6); } }
+#hint {
+  position: fixed; bottom: 140px; left: 50%; transform: translateX(-50%);
+  z-index: 90; font-size: 11px; color: rgba(144,164,174,0.8);
+  background: rgba(0,0,0,0.4); padding: 4px 12px; border-radius: 20px;
+  pointer-events: none;
+}
+</style>
+</head>
+<body>
+
+<div id="canvas-container"></div>
+
+<div id="header">
+  <div>
+    <h1>🏭 发电设施碳排放 3D 动态模型</h1>
+    <div class="subtitle">依据《企业温室气体排放核算与报告指南 发电设施》（2022）</div>
+  </div>
+  <div style="display:flex;gap:8px">
+    <button class="btn active" id="btn-run" onclick="toggleRun()">⏸ 运行中</button>
+    <button class="btn" id="btn-flow" onclick="toggleFlowMode()">🔄 流程仿真</button>
+    <button class="btn" onclick="resetCamera()">📷 重置视角</button>
+  </div>
+</div>
+
+<!-- 流程仿真面板（默认隐藏） -->
+<div id="flow-panel" style="display:none;position:fixed;left:252px;top:80px;z-index:100;background:rgba(10,20,40,0.92);border:1px solid rgba(102,187,106,0.4);border-radius:12px;padding:14px;width:200px;backdrop-filter:blur(10px)">
+  <h3 style="font-size:13px;color:#66bb6a;margin-bottom:10px;border-bottom:1px solid rgba(102,187,106,0.2);padding-bottom:8px">🔄 流程仿真控制</h3>
+  <div class="ctrl-group">
+    <div class="ctrl-label">仿真速度 <span id="flow-speed-val" style="color:#66bb6a">1.0x</span></div>
+    <input type="range" id="flow-speed" min="0.2" max="3" value="1" step="0.1" oninput="setFlowSpeed(+this.value)">
+  </div>
+  <div style="font-size:11px;color:#90a4ae;margin-bottom:6px">流程高亮</div>
+  <div class="btn-group" style="flex-wrap:wrap;gap:5px">
+    <div class="btn active" id="fh-all" onclick="setFlowHighlight('all');setFlowBtn('all')" style="font-size:10px;padding:4px 6px">全部</div>
+    <div class="btn" id="fh-coal" onclick="setFlowHighlight('coal');setFlowBtn('coal')" style="font-size:10px;padding:4px 6px;color:#888">输煤</div>
+    <div class="btn" id="fh-steam" onclick="setFlowHighlight('steam');setFlowBtn('steam')" style="font-size:10px;padding:4px 6px;color:#ff8a80">蒸汽</div>
+    <div class="btn" id="fh-flueGas" onclick="setFlowHighlight('flueGas');setFlowBtn('flueGas')" style="font-size:10px;padding:4px 6px;color:#ff6e40">烟气</div>
+    <div class="btn" id="fh-cooling" onclick="setFlowHighlight('cooling');setFlowBtn('cooling')" style="font-size:10px;padding:4px 6px;color:#82b1ff">冷却</div>
+    <div class="btn" id="fh-power" onclick="setFlowHighlight('power');setFlowBtn('power')" style="font-size:10px;padding:4px 6px;color:#69f0ae">电力</div>
+  </div>
+  <div style="margin-top:10px;font-size:10px;color:#78909c;line-height:1.6">
+    <div>⚫ 输煤：煤场→皮带→磨煤→锅炉</div>
+    <div>🔴 蒸汽：锅炉→过热→汽轮机</div>
+    <div>🟠 烟气：锅炉→脱硝→脱硫→烟囱</div>
+    <div>🔵 冷却：排汽→凝汽→冷却塔</div>
+    <div>🟢 电力：发电机→主变→升压站</div>
+  </div>
+</div>
+
+<!-- 左侧控制 -->
+<div id="control-panel">
+  <h3>⚙️ 工况参数</h3>
+  <div class="ctrl-group">
+    <div class="ctrl-label">发电负荷率 <span id="load-val">85%</span></div>
+    <input type="range" id="load" min="30" max="100" value="85" oninput="updateParams()">
+  </div>
+  <div class="ctrl-group">
+    <div class="ctrl-label">燃煤热值 (MJ/kg) <span id="heat-val">20.93</span></div>
+    <input type="range" id="heat" min="14" max="28" value="20.93" step="0.1" oninput="updateParams()">
+  </div>
+  <div class="ctrl-group">
+    <div class="ctrl-label">元素碳含量 <span id="carbon-val">55.0%</span></div>
+    <input type="range" id="carbon" min="40" max="70" value="55" step="0.5" oninput="updateParams()">
+  </div>
+  <div class="ctrl-group">
+    <div class="ctrl-label">碳氧化率 <span id="oxid-val">98%</span></div>
+    <input type="range" id="oxid" min="90" max="100" value="98" step="0.5" oninput="updateParams()">
+  </div>
+  <div class="ctrl-group">
+    <div class="ctrl-label">脱硫石灰石掺量(t/h) <span id="lime-val">2.5</span></div>
+    <input type="range" id="lime" min="0" max="10" value="2.5" step="0.1" oninput="updateParams()">
+  </div>
+  <div class="ctrl-group" style="margin-top:16px">
+    <div style="font-size:11px;color:#90a4ae;margin-bottom:8px">视图模式</div>
+    <div class="btn-group">
+      <div class="btn active" id="view-full" onclick="setView('full')">全景</div>
+      <div class="btn" id="view-top" onclick="setView('top')">俯视</div>
+      <div class="btn" id="view-side" onclick="setView('side')">侧视</div>
+    </div>
+  </div>
+  <div class="ctrl-group">
+    <div style="font-size:11px;color:#90a4ae;margin-bottom:8px">排放源高亮</div>
+    <div class="btn-group">
+      <div class="btn active" id="hl-all" onclick="setHighlight('all')">全部</div>
+      <div class="btn" id="hl-comb" onclick="setHighlight('comb')">燃烧</div>
+      <div class="btn" id="hl-desc" onclick="setHighlight('desc')">脱碳</div>
+    </div>
+  </div>
+</div>
+
+<!-- 右侧数据 -->
+<div id="data-panel">
+  <h3>📊 实时排放数据 <span style="font-size:10px;color:#78909c">(tCO₂/h)</span></h3>
+  <div class="data-row combustion">
+    <div>
+      <div class="data-label">化石燃料燃烧排放</div>
+      <div style="font-size:10px;color:#607d8b">E燃烧 = 燃料量×热值×碳含量×氧化率×44/12</div>
+    </div>
+    <div><span class="data-value combustion" id="e-comb">--</span><span class="data-unit">tCO₂</span></div>
+  </div>
+  <div class="data-row decarb">
+    <div>
+      <div class="data-label">石灰石脱硫过程排放</div>
+      <div style="font-size:10px;color:#607d8b">E脱硫 = 石灰石量×44/100</div>
+    </div>
+    <div><span class="data-value decarb" id="e-desc">--</span><span class="data-unit">tCO₂</span></div>
+  </div>
+  <div class="data-row purchase">
+    <div>
+      <div class="data-label">购入电力排放</div>
+      <div style="font-size:10px;color:#607d8b">E购电 = 电量×0.5810 (华中网)</div>
+    </div>
+    <div><span class="data-value purchase" id="e-elec">--</span><span class="data-unit">tCO₂</span></div>
+  </div>
+  <div class="data-row total">
+    <div>
+      <div class="data-label" style="font-weight:700;color:#b0bec5">综合碳排放总量</div>
+      <div style="font-size:10px;color:#607d8b">E总 = E燃烧 + E脱硫 + E购电</div>
+    </div>
+    <div><span class="data-value total" id="e-total">--</span><span class="data-unit">tCO₂</span></div>
+  </div>
+  <div style="margin-top:10px;padding:8px;background:rgba(255,255,255,0.03);border-radius:6px">
+    <div style="font-size:10px;color:#90a4ae;margin-bottom:4px">排放强度 (碳排放基准值参考)</div>
+    <div style="display:flex;justify-content:space-between;font-size:12px">
+      <span style="color:#78909c">当前强度</span>
+      <span style="color:#ffb300;font-weight:700" id="e-intensity">-- tCO₂/MWh</span>
+    </div>
+    <div style="margin-top:6px;height:4px;background:rgba(255,255,255,0.1);border-radius:2px">
+      <div id="intensity-bar" style="height:100%;border-radius:2px;background:linear-gradient(90deg,#66bb6a,#ffb300,#ff7043);width:60%;transition:width 0.5s"></div>
+    </div>
+    <div style="display:flex;justify-content:space-between;font-size:10px;color:#546e7a;margin-top:2px">
+      <span>基准 0.7710</span><span>高风险 1.2</span>
+    </div>
+  </div>
+  <!-- 异常预警 -->
+  <div id="anomaly-alert" style="display:none;margin-top:10px;padding:8px;background:rgba(255,112,67,0.15);border:1px solid rgba(255,112,67,0.4);border-radius:6px;font-size:11px;color:#ff7043;font-weight:600;animation:alertBlink 1s ease-in-out 3"></div>
+</div>
+
+<!-- 图例 折叠式 -->
+<div id="legend" onclick="toggleLegend()">
+  <div id="legend-header">
+    <span>🎨 图例说明</span>
+    <span id="legend-toggle">▶ 展开</span>
+  </div>
+  <div id="legend-body">
+    <div class="legend-item"><div class="legend-dot" style="background:#ff7043"></div>化石燃料燃烧 CO₂</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#ffb300"></div>石灰石脱硫 CO₂</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#42a5f5"></div>冷却水蒸汽流</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#78909c"></div>飞灰（不纳入核算）</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#66bb6a"></div>发电输出</div>
+  </div>
+</div>
+
+<!-- 折线图 -->
+<div id="chart-panel">
+  <h3>⚡ 近期碳排放趋势 (tCO₂/h)</h3>
+  <canvas id="emission-chart"></canvas>
+  <!-- 碳足迹追踪条 -->
+  <div style="margin-top:10px;padding-top:8px;border-top:1px solid rgba(79,195,247,0.15)">
+    <div style="font-size:11px;color:#ffb300;margin-bottom:6px">🎯 碳足迹白箱追踪（设备级分解）</div>
+    <canvas id="footprint-chart" width="220" height="55"></canvas>
+  </div>
+</div>
+
+<!-- 信息浮层（设备级能耗监测面板） -->
+<div id="info-overlay" style="width:480px">
+  <button class="close-btn" onclick="closeInfo()">✕</button>
+  <h2 id="info-title"></h2>
+  <div class="info-sub" id="info-sub"></div>
+  <div class="info-content" id="info-content"></div>
+  <div id="info-tags"></div>
+  <!-- 能耗监测面板 -->
+  <div id="energy-panel" style="display:none;margin-top:14px;padding-top:12px;border-top:1px solid rgba(79,195,247,0.2)">
+    <div style="font-size:12px;color:#4fc3f7;margin-bottom:8px">📊 实时能耗监测（数字孪生映射）</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px">
+      <div style="background:rgba(255,112,67,0.1);padding:8px;border-radius:6px;border-left:3px solid #ff7043">
+        <div style="font-size:10px;color:#90a4ae">电力消耗</div>
+        <div style="font-size:14px;font-weight:700;color:#ff7043" id="dev-elec">-- MWh/h</div>
+      </div>
+      <div style="background:rgba(66,165,245,0.1);padding:8px;border-radius:6px;border-left:3px solid #42a5f5">
+        <div style="font-size:10px;color:#90a4ae">蒸汽消耗</div>
+        <div style="font-size:14px;font-weight:700;color:#42a5f5" id="dev-steam">-- t/h</div>
+      </div>
+      <div style="background:rgba(255,179,0,0.1);padding:8px;border-radius:6px;border-left:3px solid #ffb300">
+        <div style="font-size:10px;color:#90a4ae">燃煤消耗</div>
+        <div style="font-size:14px;font-weight:700;color:#ffb300" id="dev-coal">-- t/h</div>
+      </div>
+      <div style="background:rgba(102,187,106,0.1);padding:8px;border-radius:6px;border-left:3px solid #66bb6a">
+        <div style="font-size:10px;color:#90a4ae">碳排放量</div>
+        <div style="font-size:14px;font-weight:700;color:#66bb6a" id="dev-co2">-- tCO₂/h</div>
+      </div>
+    </div>
+    <div style="font-size:10px;color:#78909c;line-height:1.5" id="dev-analysis"></div>
+  </div>
+  <!-- 减排仿真面板 -->
+  <div id="sim-panel" style="display:none;margin-top:14px;padding-top:12px;border-top:1px solid rgba(102,187,106,0.2)">
+    <div style="font-size:12px;color:#66bb6a;margin-bottom:8px">🔬 减排场景仿真</div>
+    <div style="font-size:10px;color:#90a4ae;margin-bottom:6px">调整参数模拟减排效果</div>
+    <div style="display:flex;gap:8px;margin-bottom:10px">
+      <div style="flex:1">
+        <div style="font-size:10px;color:#78909c">效率提升</div>
+        <select id="sim-eff" onchange="runSimulation()" style="width:100%;background:rgba(79,195,247,0.1);border:1px solid rgba(79,195,247,0.3);border-radius:4px;padding:4px;color:#e0e8f0;font-size:11px">
+          <option value="0">无改进</option>
+          <option value="5">+5%</option>
+          <option value="10">+10%</option>
+          <option value="15">+15%</option>
+        </select>
+      </div>
+      <div style="flex:1">
+        <div style="font-size:10px;color:#78909c">绿电替代</div>
+        <select id="sim-green" onchange="runSimulation()" style="width:100%;background:rgba(102,187,106,0.1);border:1px solid rgba(102,187,106,0.3);border-radius:4px;padding:4px;color:#e0e8f0;font-size:11px">
+          <option value="0">0%</option>
+          <option value="20">20%</option>
+          <option value="40">40%</option>
+          <option value="60">60%</option>
+        </select>
+      </div>
+    </div>
+    <div style="background:rgba(102,187,106,0.08);padding:8px;border-radius:6px">
+      <div style="font-size:10px;color:#90a4ae">预估减排效果</div>
+      <div style="font-size:16px;font-weight:700;color:#66bb6a" id="sim-result">-- tCO₂/h (-0%)</div>
+      <div style="font-size:10px;color:#78909c;margin-top:4px" id="sim-detail">选择参数后自动计算</div>
+    </div>
+  </div>
+</div>
+
+<div id="hint">🖱 拖动旋转 · 滚轮缩放 · 点击设备查看详情</div>
+
+<script>
+// ============================================================
+// 场景初始化
+// ============================================================
+const scene = new THREE.Scene();
+scene.fog = new THREE.FogExp2(0x1a2535, 0.005);
+
+const container = document.getElementById('canvas-container');
+const W = window.innerWidth, H = window.innerHeight;
+const renderer = new THREE.WebGLRenderer({ antialias: true });
+renderer.setSize(W, H);
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.15;
+container.appendChild(renderer.domElement);
+
+const camera = new THREE.PerspectiveCamera(45, W/H, 0.1, 500);
+camera.position.set(40, 28, 48);
+camera.lookAt(0, 5, 0);
+
+// 天空穹顶
+var skyCanvas = document.createElement('canvas'); skyCanvas.width=512; skyCanvas.height=512;
+var skyCtx = skyCanvas.getContext('2d');
+var skyGrad = skyCtx.createLinearGradient(0,0,0,512);
+skyGrad.addColorStop(0,'#0a1628'); skyGrad.addColorStop(0.25,'#152540');
+skyGrad.addColorStop(0.5,'#253a55'); skyGrad.addColorStop(0.75,'#354a65'); skyGrad.addColorStop(1,'#1a2535');
+skyCtx.fillStyle = skyGrad; skyCtx.fillRect(0,0,512,512);
+scene.add(new THREE.Mesh(new THREE.SphereGeometry(180,32,32), new THREE.MeshBasicMaterial({map: new THREE.CanvasTexture(skyCanvas), side: THREE.BackSide})));
+
+// 光照系统
+scene.add(new THREE.AmbientLight(0x445566, 0.5));
+const sunLight = new THREE.DirectionalLight(0xfff0d0, 1.4);
+sunLight.position.set(30, 50, 25);
+sunLight.castShadow = true;
+sunLight.shadow.mapSize.width = 4096;
+sunLight.shadow.mapSize.height = 4096;
+sunLight.shadow.camera.near = 1;
+sunLight.shadow.camera.far = 200;
+sunLight.shadow.camera.left = -60;
+sunLight.shadow.camera.right = 60;
+sunLight.shadow.camera.top = 60;
+sunLight.shadow.camera.bottom = -60;
+sunLight.shadow.bias = -0.0005;
+scene.add(sunLight);
+scene.add(new THREE.DirectionalLight(0x6688aa, 0.4));
+scene.add(new THREE.HemisphereLight(0x445577, 0x223322, 0.35));
+
+// 鼠标控制
+let isDragging = false, lastX = 0, lastY = 0;
+let camTheta = Math.atan2(38, 30), camPhi = Math.atan2(22, Math.sqrt(30*30+38*38));
+let camRadius = 50, targetRadius = 50;
+let targetTheta = camTheta, targetPhi = camPhi;
+
+renderer.domElement.addEventListener('mousedown', e => { isDragging = true; lastX = e.clientX; lastY = e.clientY; });
+renderer.domElement.addEventListener('mouseup', () => isDragging = false);
+renderer.domElement.addEventListener('mousemove', e => {
+  if (!isDragging) return;
+  targetTheta -= (e.clientX - lastX) * 0.008;
+  targetPhi = Math.max(0.1, Math.min(1.4, targetPhi - (e.clientY - lastY) * 0.006));
+  lastX = e.clientX; lastY = e.clientY;
+});
+renderer.domElement.addEventListener('wheel', e => {
+  targetRadius = Math.max(15, Math.min(100, targetRadius + e.deltaY * 0.05));
+});
+// 触摸支持
+let lastTouch = null;
+renderer.domElement.addEventListener('touchstart', e => { lastTouch = e.touches[0]; });
+renderer.domElement.addEventListener('touchmove', e => {
+  if (!lastTouch) return;
+  const t = e.touches[0];
+  targetTheta -= (t.clientX - lastTouch.clientX) * 0.008;
+  targetPhi = Math.max(0.1, Math.min(1.4, targetPhi - (t.clientY - lastTouch.clientY) * 0.006));
+  lastTouch = t;
+});
+
+// ============================================================
+// 程序化纹理
+// ============================================================
+function makeTex(w,h,fn){var c=document.createElement('canvas');c.width=w;c.height=h;var ctx=c.getContext('2d');fn(ctx,w,h);var t=new THREE.CanvasTexture(c);t.wrapS=t.wrapT=THREE.RepeatWrapping;return t;}
+var concreteTex=makeTex(256,256,function(ctx,w,h){ctx.fillStyle='#7a8a8a';ctx.fillRect(0,0,w,h);for(var i=0;i<5000;i++){var g=100+Math.random()*60;ctx.fillStyle='rgba('+g+','+(g+5)+','+(g+5)+',0.3)';ctx.fillRect(Math.random()*w,Math.random()*h,1+Math.random()*2,1+Math.random()*2);}});
+concreteTex.repeat.set(6,6);
+var brickTex=makeTex(256,256,function(ctx,w,h){ctx.fillStyle='#6B3510';ctx.fillRect(0,0,w,h);var bw=32,bh=16;for(var row=0;row<h/bh;row++){var off=(row%2)*bw/2;for(var col=-1;col<w/bw+1;col++){var x=col*bw+off,y=row*bh;ctx.fillStyle='rgb('+(130+Math.random()*40)+','+(45+Math.random()*25)+','+(18+Math.random()*18)+')';ctx.fillRect(x+1,y+1,bw-2,bh-2);}}});
+brickTex.repeat.set(3,3);
+var corrugatedTex=makeTex(128,128,function(ctx,w,h){ctx.fillStyle='#5a6672';ctx.fillRect(0,0,w,h);for(var i=0;i<w;i+=6){var b=65+Math.sin(i*0.3)*15;ctx.fillStyle='rgb('+(b+15)+','+(b+20)+','+(b+25)+')';ctx.fillRect(i,0,6,h);}});
+corrugatedTex.repeat.set(4,2);
+var groundTex=makeTex(512,512,function(ctx,w,h){ctx.fillStyle='#2a3540';ctx.fillRect(0,0,w,h);for(var i=0;i<15000;i++){var g=30+Math.random()*30;ctx.fillStyle='rgba('+g+','+(g+5)+','+(g+10)+',0.4)';ctx.fillRect(Math.random()*w,Math.random()*h,1+Math.random()*3,1+Math.random()*3);}});
+groundTex.repeat.set(8,8);
+
+// ============================================================
+// PBR 材质库
+// ============================================================
+function SM(c,r,m){return new THREE.MeshStandardMaterial({color:c,roughness:r,metalness:m});}
+function SMt(tex,r,m,c){var o=new THREE.MeshStandardMaterial({map:tex,roughness:r,metalness:m});if(c)o.color=new THREE.Color(c);return o;}
+const MAT = {
+  concrete: SMt(concreteTex,0.9,0.05),
+  concreteP: SM(0x7a8a8a,0.9,0.05),
+  steel: SM(0x8899aa,0.4,0.7),
+  steelDark: SM(0x556677,0.5,0.6),
+  steelRust: SM(0x8B6914,0.7,0.3),
+  corrugated: SMt(corrugatedTex,0.5,0.6),
+  boilerRed: SM(0xb03020,0.6,0.3),
+  boilerOrange: SM(0xe64a19,0.5,0.3),
+  turbine: SM(0x2a5a9a,0.4,0.5),
+  generator: SM(0x2a7a3a,0.4,0.5),
+  chimney: SMt(concreteTex,0.8,0.05,0x999999),
+  chimneyStripe: SM(0xdd2222,0.6,0.1),
+  tower: SMt(concreteTex,0.85,0.05,0xaab0b0),
+  ground: SMt(groundTex,0.95,0.0),
+  glass: new THREE.MeshStandardMaterial({color:0x88ccff,transparent:true,opacity:0.25,roughness:0.1,metalness:0.9}),
+  coal: SM(0x1a1a1a,0.95,0.0),
+  yellow: SM(0xf0a020,0.5,0.4),
+  pipe: SM(0x8899aa,0.35,0.7),
+  green: SM(0x2a7a2a,0.6,0.2),
+  brick: SMt(brickTex,0.85,0.02),
+  road: SM(0x3a4550,0.9,0.0),
+  fence: SM(0x445566,0.7,0.5),
+  water: new THREE.MeshStandardMaterial({color:0x2a4a6a,roughness:0.2,metalness:0.3,transparent:true,opacity:0.7}),
+  fgd: SM(0x7a8a9a,0.5,0.4),
+  scr: SM(0x5a6aaa,0.5,0.4),
+  rail: SM(0xdddd44,0.5,0.6),
+  chimneyWhite: SM(0xeeeeee,0.7,0.1),
+  insulator: SM(0x886644,0.6,0.2),
+};
+
+// ============================================================
+// 辅助函数
+// ============================================================
+function box(w,h,d,mat,x,y,z,rx,ry,rz) {
+  const m = new THREE.Mesh(new THREE.BoxGeometry(w,h,d), mat);
+  m.position.set(x,y,z);
+  if(rx) m.rotation.x=rx; if(ry) m.rotation.y=ry; if(rz) m.rotation.z=rz;
+  m.castShadow=true; m.receiveShadow=true;
+  scene.add(m); return m;
+}
+function cyl(rt,rb,h,seg,mat,x,y,z,rx,rz) {
+  const m = new THREE.Mesh(new THREE.CylinderGeometry(rt,rb,h,seg), mat);
+  m.position.set(x,y,z);
+  if(rx) m.rotation.x=rx; if(rz) m.rotation.z=rz;
+  m.castShadow=true; m.receiveShadow=true;
+  scene.add(m); return m;
+}
+// 快捷别名
+function bx(w,h,d,mat,x,y,z,rx,ry,rz){ return box(w,h,d,mat,x,y,z,rx,ry,rz); }
+function cy(rt,rb,h,seg,mat,x,y,z,rx,rz){ return cyl(rt,rb,h,seg,mat,x,y,z,rx,rz); }
+
+// ============================================================
+// 地面
+// ============================================================
+const groundGeo = new THREE.PlaneGeometry(200,200);
+const ground = new THREE.Mesh(groundGeo, MAT.ground);
+ground.rotation.x = -Math.PI/2;
+ground.receiveShadow = true;
+scene.add(ground);
+
+// 厂区道路
+bx(80, 0.06, 5, MAT.road, 0, 0.03, 18);
+bx(5, 0.06, 50, MAT.road, -15, 0.03, -5);
+bx(50, 0.06, 4, MAT.road, 10, 0.03, -15);
+// 道路标线
+for(var di=-38;di<40;di+=4){bx(2,0.07,0.12,SM(0x888844,0.9,0),di,0.04,18);}
+
+// 围栏
+for(var fi=-40;fi<=40;fi+=3){cy(0.08,0.08,3,6,MAT.fence,fi,1.5,-25);cy(0.08,0.08,3,6,MAT.fence,fi,1.5,28);}
+for(var fi2=-25;fi2<=28;fi2+=3){cy(0.08,0.08,3,6,MAT.fence,-42,1.5,fi2);cy(0.08,0.08,3,6,MAT.fence,42,1.5,fi2);}
+bx(84,0.08,0.08,MAT.fence,0,2.5,-25);bx(84,0.08,0.08,MAT.fence,0,1.5,-25);
+
+// ============================================================
+// 围墙 / 厂界
+// ============================================================
+[[0, 0.5, -22, 120, 1, 0.4], [0, 0.5, 22, 120, 1, 0.4],
+ [-30, 0.5, 0, 0.4, 1, 44], [30, 0.5, 0, 0.4, 1, 44]].forEach(([x,y,z,w,h,d]) => {
+  box(w,h,d, new THREE.MeshLambertMaterial({color:0x263238}), x,y,z);
+});
+
+// ============================================================
+// 煤场 (右后方)
+// ============================================================
+box(12,1.5,8, MAT.coal, 18, 0.75, -12);
+// 煤堆
+for(let i=0;i<3;i++) {
+  const hh = 1+Math.random()*1.5;
+  const coal = new THREE.Mesh(new THREE.SphereGeometry(2.2,8,6,0,Math.PI*2,0,Math.PI/2), MAT.coal);
+  coal.scale.y=hh/2.2;
+  coal.position.set(14+i*3.5, hh/2, -12);
+  coal.castShadow=true;
+  scene.add(coal);
+}
+
+// 输煤皮带走廊
+const beltPoints = [
+  new THREE.Vector3(18, 3, -10),
+  new THREE.Vector3(12, 5, -8),
+  new THREE.Vector3(0, 7, -6),
+];
+const beltCurve = new THREE.CatmullRomCurve3(beltPoints);
+const beltGeo = new THREE.TubeGeometry(beltCurve, 20, 0.3, 8, false);
+const belt = new THREE.Mesh(beltGeo, MAT.steel);
+belt.castShadow=true; scene.add(belt);
+// 皮带廊支撑
+[[16.5,1.5,-10.5],[14,2.5,-9],[10,3.5,-8]].forEach(([x,y,z]) => {
+  cyl(0.2,0.2,y*2, 6, MAT.steelDark, x,y,z);
+});
+
+// ============================================================
+// 主锅炉房 (核心建筑)
+// ============================================================
+// 基础墙体
+const boilerBuilding = box(14, 18, 12, MAT.boilerRed, -6, 9, 0);
+boilerBuilding.userData = {
+  name: '锅炉燃烧系统',
+  sub: '核算边界：纳入核算 | 数字孪生实时映射',
+  content: '⚡ 煤粉锅炉燃烧是发电设施最主要的排放源。\n\n• 排放量计算：E燃烧 = Σ(燃料量 × 低位发热值 × 含碳量 × 碳氧化率 × 44/12)\n• 数据获取优先序：\n  1. 入炉煤计量（皮带秤或轨道衡）\n  2. 供应商提供的检测数据\n  3. 行业缺省值（55%含碳量，98%碳氧化率）\n• 常见错误：未扣除飞灰中未燃尽碳（已含在碳氧化率中，不重复扣除）\n• 监测频率：每批次入炉煤检测，≥1次/月',
+  tags: [{ cls: 'tag-in', text: '✅ 纳入核算' }, { cls: 'tag-out', text: '排放占比>95%' }],
+  hasEnergyPanel: true,
+  hasSimPanel: true,
+  // 能耗数据模型（数字孪生实时计算）
+  getEnergy: function(load) {
+    var coalRate = 300 * (1 + (100-load)/200);
+    var coalTon = (600 * load / 100) * coalRate / 1e6;
+    return {
+      elec: (2.5 * load / 100).toFixed(2),
+      steam: '自产',
+      coal: coalTon.toFixed(2),
+      co2: (coalTon * 20.93 * 0.55 * 0.98 * 44/12).toFixed(2)
+    };
+  },
+  getAnalysis: function(load) {
+    var eff = 92 + Math.random() * 3;
+    return '🔥 锅炉热效率: ' + eff.toFixed(1) + '% | ' +
+           '炉膛温度: ' + (1200 + load * 5) + '°C | ' +
+           '排烟温度: ' + (130 + Math.random() * 20).toFixed(0) + '°C\n' +
+           '📊 碳排放因子: 2.66 kgCO₂/kg煤 | 实时映射精度: 设备级';
+  }
+};
+
+// 锅炉顶部结构
+box(14, 4, 12, new THREE.MeshStandardMaterial({color:0x8d1515,roughness:0.6,metalness:0.3}), -6, 20, 0);
+// 锅炉内部隐约发光
+box(8, 14, 8, new THREE.MeshStandardMaterial({color:0xbf360c,transparent:true,opacity:0.6,roughness:0.5,metalness:0.3}), -6, 8, 0);
+
+// 锅炉房窗户（工业厂房钢窗）
+for(var wi=0;wi<3;wi++){
+  box(1.5,2,0.2,MAT.glass,-3+wi*3,10,6.1);
+  box(1.5,2,0.2,MAT.glass,-3+wi*3,16,6.1);
+  box(0.2,2,1.5,MAT.glass,1.1,10,0);
+  box(0.2,2,1.5,MAT.glass,1.1,16,0);
+}
+// 锅炉房钢结构平台
+bx(3, 0.3, 3, MAT.steel, 1, 12, 0);
+bx(3, 0.3, 3, MAT.steel, 1, 17, 0);
+// 平台护栏
+for(var ri=0;ri<2;ri++){
+  cy(0.06,0.06,2.5,6,MAT.rail,-0.3,13.5+ri*5,1.2);
+  cy(0.06,0.06,2.5,6,MAT.rail,-0.3,13.5+ri*5,-1.2);
+  cy(0.06,0.06,2.5,6,MAT.rail,2.3,13.5+ri*5,1.2);
+  cy(0.06,0.06,2.5,6,MAT.rail,2.3,13.5+ri*5,-1.2);
+  bx(2.6,0.06,0.06,MAT.rail,1,14.8+ri*5,1.2);
+  bx(2.6,0.06,0.06,MAT.rail,1,14.8+ri*5,-1.2);
+}
+
+// 炉膛发光模拟
+const fireMat = new THREE.MeshStandardMaterial({
+  color: 0xff6d00, emissive: 0xff3d00, emissiveIntensity: 2.5,
+  transparent: true, opacity: 0.7
+});
+const fireCore = new THREE.Mesh(new THREE.SphereGeometry(2.5,16,16), fireMat);
+fireCore.position.set(-6, 5, 0);
+scene.add(fireCore);
+const fireLight = new THREE.PointLight(0xff4400, 3, 20);
+fireLight.position.set(-6, 5, 0);
+scene.add(fireLight);
+
+// ============================================================
+// 脱硫脱硝装置
+// ============================================================
+// SCR (脱硝) - 锅炉顶部烟道中
+const scrUnit = box(5, 3, 4, new THREE.MeshLambertMaterial({color:0x5c6bc0}), -6, 24, 0);
+scrUnit.userData = {
+  name: '脱硝装置（SCR）',
+  sub: '核算边界：不纳入核算 | 数字孪生实时映射',
+  content: '📌 SCR选择性催化还原脱硝装置位于锅炉烟气出口。\n\n• 核算状态：❌ 不纳入排放核算\n• 原因：SCR仅喷入氨水/尿素，不产生CO₂排放\n• 注意事项：该装置用电量不需要单独核算，已包含在厂用电中\n• 与碳排放关系：间接影响（减少NOx，不影响碳核算）',
+  tags: [{ cls: 'tag-out', text: '❌ 不纳入碳核算' }, { cls: 'tag-in', text: '💡 只处理NOx' }],
+  hasEnergyPanel: true,
+  hasSimPanel: false,
+  getEnergy: function(load) {
+    return { elec: (0.3*load/100).toFixed(2), steam: '0.2', coal: '--', co2: '0 (不纳入)' };
+  },
+  getAnalysis: function(load) {
+    var noxIn = (200+load*3).toFixed(0);
+    var noxOut = (20+Math.random()*15).toFixed(0);
+    return '📌 脱硝效率: '+(90+Math.random()*5).toFixed(1)+'% | NOx入口: '+noxIn+' mg/m³ | NOx出口: '+noxOut+' mg/m³\n📊 SCR仅处理NOx，不产生CO₂排放 | 氨逃逸: <3ppm';
+  }
+};
+
+// FGD 脱硫塔 (湿法)
+const fgdTower = box(6, 14, 6, new THREE.MeshLambertMaterial({color:0x607d8b}), -18, 7, 0);
+fgdTower.userData = {
+  name: '石灰石-石膏湿法脱硫（FGD）',
+  sub: '核算边界：纳入核算 | 数字孪生实时映射',
+  content: '🧪 石灰石脱硫过程产生过程排放CO₂。\n\n• 排放量计算：E脱硫 = 石灰石消耗量(t) × 44/100 × 脱硫率\n• 公式来源：CaCO₃ + SO₂ → CaSO₄ + CO₂ ↑\n• 每消耗1吨石灰石(CaCO₃)：排放0.44 tCO₂\n• 数据获取：月度石灰石采购台账、入库记录\n• 常见错误：\n  ① 误用石膏产量反算（误差大）\n  ② 石灰石纯度未校正（标准值≥90%）\n• 核查重点：石灰石采购合同 vs 入库台账交叉验证',
+  tags: [{ cls: 'tag-in', text: '✅ 纳入核算' }, { cls: 'tag-in', text: '🔬 排放源：脱碳过程' }],
+  hasEnergyPanel: true,
+  hasSimPanel: false,
+  getEnergy: function(load, lime) {
+    return { elec: (0.8*load/100).toFixed(2), steam: '0.5', coal: '--', co2: (lime*44/100).toFixed(3) };
+  },
+  getAnalysis: function(load, lime) {
+    var desRate = 95+Math.random()*3;
+    return '🧪 脱硫效率: '+desRate.toFixed(1)+'% | 石灰石耗量: '+lime.toFixed(1)+' t/h | SO₂入口: '+(1800+load*5).toFixed(0)+' mg/m³\n📊 脱硫碳排放因子: 0.44 tCO₂/t CaCO₃ | 过程排放';
+  }
+};
+
+// 脱硫塔喷淋圈
+for(let i=0;i<3;i++) {
+  cyl(2.8, 2.8, 0.3, 16, new THREE.MeshLambertMaterial({color:0x78909c}), -18, 4+i*3, 0);
+}
+
+// 烟道连接
+box(6, 1, 1, MAT.steelDark, -12, 21, 0); // 锅炉→FGD 烟道
+
+// ============================================================
+// 烟囱（3根 - 真实火电厂多管集束烟囱）
+// ============================================================
+const chimneyPositions = [[-26,0,-2], [-26,0,3], [-26,0,8]];
+chimneyPositions.forEach(([cx,cyPos,cz], idx) => {
+  // 主烟囱管（钢制+混凝土外套）
+  var chimneyMain = cyl(1.3, 2.0, 35, 24, MAT.chimney, cx, 17.5, cz);
+  chimneyMain.userData = idx===0 ? {
+    name: '烟囱排放口',
+    sub: '监测点位：连续排放监测系统（CEMS）',
+    content: '📡 烟囱是最终排放出口，安装CEMS系统实时监测。\n\n• CEMS监测数据：用于第三方核查交叉验证（非核算主数据）\n• 核算主数据来源：入炉煤化验×消耗量（非CEMS）\n• 常见误区：用CEMS的CO₂浓度×烟气量直接作为核算结果（不符合要求）\n• 正确用途：CEMS用于异常排放识别、趋势判断、交叉验证\n• 与核算结果偏差>10%时，需核查锅炉效率、计量设备',
+    tags: [{ cls: 'tag-out', text: '⚠️ 非核算主数据来源' }, { cls: 'tag-in', text: '✅ 交叉验证参考' }]
+  } : {};
+
+  // 红白航空警示条纹
+  for(var s=0;s<5;s++){
+    var stripeMat = s%2===0 ? MAT.chimneyStripe : MAT.chimneyWhite;
+    var stripe = cyl(1.35, 2.05-s*0.08, 2.5, 24, stripeMat, cx, 2+s*7, cz);
+    stripe.scale.x=1.015; stripe.scale.z=1.015;
+  }
+  // 烟囱顶部检修平台
+  bx(2.8, 0.25, 2.8, MAT.steel, cx, 35.2, cz);
+  for(var ri=0;ri<4;ri++){
+    cy(0.06,0.06,1.8,6,MAT.rail,cx+Math.cos(ri*Math.PI/2)*1.4,36.2,cz+Math.sin(ri*Math.PI/2)*1.4);
+  }
+});
+
+// ============================================================
+// 汽轮机房
+// ============================================================
+const turbineBuilding = box(16, 10, 10, MAT.turbine, 8, 5, 2);
+turbineBuilding.userData = {
+  name: '汽轮机组',
+  sub: '核算边界：不纳入核算（本体）| 数字孪生实时映射',
+  content: '🔩 汽轮机将高压蒸汽的热能转换为机械能。\n\n• 汽轮机本体：❌ 不产生直接碳排放\n• 厂用电：✅ 若购入电力，需核算间接排放\n• 关键参数：\n  - 发电量（上网+厂用）需从电表读取\n  - 供热量（如果热电联产）需计量并按公式分摊\n• 热电联产分摊规则：碳排放量按发电量/供热量的能量比例分摊\n• 常见错误：发电量只统计上网电量，忽略厂用电',
+  tags: [{ cls: 'tag-out', text: '❌ 本体不排CO₂' }, { cls: 'tag-in', text: '📊 关键计量点' }],
+  hasEnergyPanel: true,
+  hasSimPanel: false,
+  getEnergy: function(load) {
+    var genMW = 600*load/100;
+    return { elec: (genMW*0.02).toFixed(2), steam: (600*load/100*1.8).toFixed(1), coal: '--', co2: '0 (间接)' };
+  },
+  getAnalysis: function(load) {
+    var genMW = 600*load/100;
+    var eff = 38+Math.random()*2;
+    return '⚙️ 汽轮机效率: '+eff.toFixed(1)+'% | 发电负荷: '+genMW.toFixed(0)+' MW | '+
+           '主蒸汽压力: '+(16.7+Math.random()*0.3).toFixed(1)+' MPa | '+
+           '凝汽器真空: '+(0.005+Math.random()*0.002).toFixed(4)+' MPa\n' +
+           '📊 厂用电率: ~5% | 间接排放已纳入E购电核算';
+  }
+};
+
+// 汽轮机外形细节
+box(4, 3, 4, SM(0x1565c0,0.4,0.5), 6, 5.5, 2);
+box(4, 2.5, 3, SM(0x0d47a1,0.4,0.5), 10, 5.2, 2);
+// 旋转轴
+cyl(0.4, 0.4, 14, 8, SM(0xb0bec5,0.3,0.8), 8, 5, 2, null, Math.PI/2);
+// 汽轮机房窗户
+for(var twi=0;twi<4;twi++){
+  box(1.8,2.5,0.15,MAT.glass,2+twi*3.5,7,7.1);
+  box(1.8,2.5,0.15,MAT.glass,2+twi*3.5,7,-3.1);
+}
+// 汽轮机房屋顶桁架
+for(var tri=0;tri<3;tri++){
+  bx(0.15,3,0.15,MAT.steel,3+tri*5,10.5,2);
+  bx(0.15,1.5,0.15,MAT.steel,3+tri*5,11.5,2);
+}
+
+// ============================================================
+// 发电机
+// ============================================================
+const genUnit = box(8, 4, 5, MAT.generator, 18, 2, 2);
+genUnit.userData = {
+  name: '发电机 & 主变压器',
+  sub: '核算边界：电力输出计量点',
+  content: '⚡ 发电机产生电能，经变压器升压后输出。\n\n• 发电量计量：主变高压侧电表（关口表）是核算基准\n• 上网电量 vs 发电量：\n  - 发电量 = 上网电量 + 厂用电量\n  - 厂用电率约3%~8%\n• 购入电力排放：若厂用电有外购，需单独核算\n  E购电 = 购入电量(MWh) × 电网排放因子\n• 电网排放因子（2021年基准）：\n  全国: 0.5810 tCO₂/MWh\n  华北: 0.8042  华东: 0.7035  华南: 0.5257',
+  tags: [{ cls: 'tag-in', text: '✅ 电量计量基准点' }, { cls: 'tag-in', text: '📊 上网电量凭证' }]
+};
+cyl(2, 2, 7.5, 16, SM(0x2e7d32,0.4,0.5), 18, 2, 2, null, Math.PI/2);
+
+// 主变压器（带散热片）
+box(3, 3.5, 3, MAT.yellow, 23, 1.75, 2);
+box(2.5, 0.5, 2.5, MAT.steelDark, 23, 3.6, 2);
+// 变压器散热片
+for(var sfi=0;sfi<4;sfi++){
+  bx(0.1,2.5,2,MAT.steel,21.6,1.75,2+sfi*0.6);
+  bx(0.1,2.5,2,MAT.steel,24.4,1.75,2+sfi*0.6);
+}
+// 高压绝缘子
+for(var ii=0;ii<3;ii++){
+  cy(0.18,0.18,1.5,10,MAT.insulator,22+ii*1,3.8,2);
+  cy(0.22,0.22,0.4,10,MAT.insulator,22+ii*1,4.65,2);
+  cy(0.22,0.22,0.4,10,MAT.insulator,22+ii*1,5.15,2);
+}
+// 高压线（输出）
+var hwPts=[new THREE.Vector3(22,5.5,2),new THREE.Vector3(26,7,2),new THREE.Vector3(30,6,2)];
+var hwCurve=new THREE.CatmullRomCurve3(hwPts);
+var hwGeo=new THREE.TubeGeometry(hwCurve,16,0.05,6,false);
+var hwMesh=new THREE.Mesh(hwGeo,MAT.steel);hwMesh.castShadow=true;scene.add(hwMesh);
+
+// ============================================================
+// 循环水冷却塔 - 双曲面造型（真实发电厂标志性建筑）
+// ============================================================
+function makeCoolingTower(cx, cz) {
+  var layers = 40;
+  for (var i = 0; i < layers; i++) {
+    var t = i / layers;
+    var y = t * 24;
+    // 双曲线半径: 底宽-腰窄-上扩-顶微收
+    var r;
+    if (t < 0.1) { r = 6.0 - t * 12; }
+    else if (t < 0.4) { r = 4.8 - (t - 0.1) * 6.5; }
+    else if (t < 0.85) { r = 2.85 + (t - 0.4) * 5.2; }
+    else { r = 5.18 - (t - 0.85) * 5; }
+    r = Math.max(0.5, r);
+    var h = 24 / layers + 0.06;
+    cyl(r * 0.98, r, h, 32, MAT.tower, cx, y, cz);
+  }
+  // 底部集水池
+  cyl(7, 7.5, 1.5, 32, MAT.concreteP, cx, 0.75, cz);
+  // 水面
+  cyl(6, 6, 0.08, 32, MAT.water, cx, 1.55, cz);
+  // 内部支撑柱
+  for (var a = 0; a < 8; a++) {
+    var angle = (a / 8) * Math.PI * 2;
+    cyl(0.15, 0.15, 20, 6, MAT.steelDark, cx + Math.cos(angle) * 3, 10, cz + Math.sin(angle) * 3);
+  }
+}
+
+makeCoolingTower(10, -14);
+makeCoolingTower(20, -13);
+
+// 保存冷却塔userData（用于点击交互）
+var coolingTowerInfo = {
+  name: '冷却塔（循环水系统）',
+  sub: '核算边界：不纳入碳核算',
+  content: '💧 冷却塔将汽轮机排汽冷凝后的热水散热冷却。\n\n• 冷却塔蒸发的水蒸气：❌ 不是CO₂，不纳入碳核算\n• 对碳排放的影响：仅耗电（含在厂用电中）\n• 注意区分：\n  - 烟囱排放（CO₂ + SO₂ + NOx）→ 纳入排放核算\n  - 冷却塔排放（H₂O蒸汽）→ 不纳入碳排放核算\n• 核查常见混淆：核查员需区分冷却塔水汽与烟囱排烟',
+  tags: [{ cls: 'tag-out', text: '❌ 不纳入碳核算' }, { cls: 'tag-out', text: '💧 水蒸气≠CO₂' }]
+};
+
+// ============================================================
+// 灰仓 & 输灰系统
+// ============================================================
+const ashSilo = cyl(3.5, 3.5, 10, 16, new THREE.MeshLambertMaterial({color:0x455a64}), -8, 5, -12);
+ashSilo.userData = {
+  name: '灰仓（粉煤灰收集）',
+  sub: '核算边界：不纳入核算 | 数字孪生实时映射',
+  content: '🌫 粉煤灰（飞灰）是燃煤锅炉的固体副产物。\n\n• 飞灰中的未燃尽碳：❌ 不从排放量中扣除\n• 原因：碳氧化率（98%~99%）已包含飞灰碳损失\n• 常见错误（高风险）：\n  ① 重复扣除飞灰含碳量 → 会导致排放量低估\n  ② 底灰（炉渣）处理方式影响核算 → 与飞灰相同，不单独扣除\n• 飞灰可作为建材原料销售，但碳核算不因此减少\n• 参考条款：指南第6条公式说明',
+  tags: [{ cls: 'tag-out', text: '❌ 不扣除飞灰含碳' }, { cls: 'tag-out', text: '⚠️ 高频错误点' }],
+  hasEnergyPanel: true,
+  hasSimPanel: false,
+  getEnergy: function(load) {
+    var coalTon = (600*load/100)*300*(1+(100-load)/200)/1e6;
+    return { elec: (0.1*load/100).toFixed(2), steam: '--', coal: '--', co2: '0 (不纳入)' };
+  },
+  getAnalysis: function(load) {
+    var coalTon = (600*load/100)*300*(1+(100-load)/200)/1e6;
+    var ashRate = coalTon * 0.25;
+    return '🌫 飞灰产率: '+(ashRate).toFixed(2)+' t/h | 飞灰含碳量: '+(2+Math.random()*1).toFixed(1)+'%\n📊 飞灰含碳已含在碳氧化率中，不重复扣除 | 可售作建材原料';
+  }
+};
+cyl(2.5, 4, 3, 16, new THREE.MeshLambertMaterial({color:0x37474f}), -8, 0.5, -12);
+
+// ============================================================
+// 管道系统
+// ============================================================
+// 蒸汽主管 (锅炉→汽轮机)
+const steamPipe = [
+  new THREE.Vector3(-2, 18, 0),
+  new THREE.Vector3(0, 16, 1),
+  new THREE.Vector3(4, 12, 2),
+  new THREE.Vector3(8, 8, 2),
+];
+const steamCurve = new THREE.CatmullRomCurve3(steamPipe);
+const steamGeo = new THREE.TubeGeometry(steamCurve, 24, 0.45, 10, false);
+const steamMesh = new THREE.Mesh(steamGeo, new THREE.MeshLambertMaterial({color:0xef9a9a}));
+steamMesh.castShadow=true; scene.add(steamMesh);
+
+// 烟气管道 (锅炉→脱硫)
+box(6, 1.2, 1.2, MAT.steelDark, -12, 20, 0);
+box(1.2, 6, 1.2, MAT.steelDark, -17, 17, 0);
+
+// 排水管道
+for(let i=0;i<3;i++) {
+  cyl(0.25, 0.25, 5, 6, MAT.pipe, -18+i*2, 0.5, 4);
+}
+
+// ============================================================
+// 升压站 / 开关站（GIS设备）
+// ============================================================
+box(8, 4, 6, SM(0x1a3a1a,0.7,0.2), 23, 2, -6);
+for(var gi=0;gi<4;gi++){
+  for(var gj=0;gj<2;gj++){
+    cyl(0.12,0.12,1.8,8,MAT.insulator,20.5+gi*1.8,5.2,-7+gj*2);
+  }
+}
+
+// ============================================================
+// 粒子系统
+// ============================================================
+
+// CO₂ 排放粒子（红橙色，从烟囱喷出）
+const co2Count = 600;
+const co2Pos = new Float32Array(co2Count * 3);
+const co2Vel = new Float32Array(co2Count * 3);
+const co2Life = new Float32Array(co2Count);
+
+for (let i = 0; i < co2Count; i++) {
+  resetCo2(i);
+}
+function resetCo2(i) {
+  const chimIdx = i % 3;
+  const cx = [-26,-26,-26][chimIdx];
+  const cz = [-2,3,8][chimIdx];
+  co2Pos[i*3] = cx + (Math.random()-0.5)*1.8;
+  co2Pos[i*3+1] = 36 + Math.random()*2;
+  co2Pos[i*3+2] = cz + (Math.random()-0.5)*1.8;
+  co2Vel[i*3] = (Math.random()-0.5)*0.08;
+  co2Vel[i*3+1] = 0.08 + Math.random()*0.12;
+  co2Vel[i*3+2] = (Math.random()-0.5)*0.08;
+  co2Life[i] = Math.random();
+}
+
+const co2Geo = new THREE.BufferGeometry();
+co2Geo.setAttribute('position', new THREE.BufferAttribute(co2Pos, 3));
+const co2Mat = new THREE.PointsMaterial({ color: 0xff5722, size: 0.5, transparent: true, opacity: 0.75, sizeAttenuation: true });
+const co2Particles = new THREE.Points(co2Geo, co2Mat);
+scene.add(co2Particles);
+
+// 石灰石脱硫 CO₂ 粒子（黄色，从FGD塔喷出）
+const desCount = 200;
+const desPos = new Float32Array(desCount * 3);
+const desVel = new Float32Array(desCount * 3);
+const desLife = new Float32Array(desCount);
+
+for (let i = 0; i < desCount; i++) resetDes(i);
+function resetDes(i) {
+  desPos[i*3] = -18 + (Math.random()-0.5)*4;
+  desPos[i*3+1] = 14 + Math.random();
+  desPos[i*3+2] = (Math.random()-0.5)*4;
+  desVel[i*3] = (Math.random()-0.5)*0.04;
+  desVel[i*3+1] = 0.06 + Math.random()*0.08;
+  desVel[i*3+2] = (Math.random()-0.5)*0.04;
+  desLife[i] = Math.random();
+}
+
+const desGeo = new THREE.BufferGeometry();
+desGeo.setAttribute('position', new THREE.BufferAttribute(desPos, 3));
+const desMat = new THREE.PointsMaterial({ color: 0xffb300, size: 0.4, transparent: true, opacity: 0.8, sizeAttenuation: true });
+const desParticles = new THREE.Points(desGeo, desMat);
+scene.add(desParticles);
+
+// 冷却塔水蒸气粒子（蓝白色）
+const steamCount = 400;
+const steamPos = new Float32Array(steamCount * 3);
+const steamVel = new Float32Array(steamCount * 3);
+const steamLife = new Float32Array(steamCount);
+
+for (let i = 0; i < steamCount; i++) resetSteam(i);
+function resetSteam(i) {
+  const ctIdx = i % 2;
+  const cx = [10,20][ctIdx];
+  const cz = [-14,-13][ctIdx];
+  steamPos[i*3] = cx + (Math.random()-0.5)*7;
+  steamPos[i*3+1] = 24 + Math.random()*2;
+  steamPos[i*3+2] = cz + (Math.random()-0.5)*7;
+  steamVel[i*3] = (Math.random()-0.5)*0.06;
+  steamVel[i*3+1] = 0.05 + Math.random()*0.07;
+  steamVel[i*3+2] = (Math.random()-0.5)*0.06;
+  steamLife[i] = Math.random();
+}
+
+const steamPGeo = new THREE.BufferGeometry();
+steamPGeo.setAttribute('position', new THREE.BufferAttribute(steamPos, 3));
+const steamPMat = new THREE.PointsMaterial({ color: 0xb3e5fc, size: 0.6, transparent: true, opacity: 0.5, sizeAttenuation: true });
+const steamParticles = new THREE.Points(steamPGeo, steamPMat);
+scene.add(steamParticles);
+
+// 飞灰粒子（灰色，从灰仓管道飞出）
+const ashCount = 150;
+const ashPos = new Float32Array(ashCount * 3);
+const ashVel = new Float32Array(ashCount * 3);
+const ashLife = new Float32Array(ashCount);
+for (let i=0;i<ashCount;i++) resetAsh(i);
+function resetAsh(i) {
+  ashPos[i*3] = -8+(Math.random()-0.5)*3;
+  ashPos[i*3+1] = 10+Math.random();
+  ashPos[i*3+2] = -12+(Math.random()-0.5)*3;
+  ashVel[i*3]=(Math.random()-0.5)*0.05;
+  ashVel[i*3+1]=0.04+Math.random()*0.04;
+  ashVel[i*3+2]=(Math.random()-0.5)*0.05;
+  ashLife[i]=Math.random();
+}
+const ashGeo = new THREE.BufferGeometry();
+ashGeo.setAttribute('position', new THREE.BufferAttribute(ashPos,3));
+const ashPMat = new THREE.PointsMaterial({color:0x78909c,size:0.3,transparent:true,opacity:0.5});
+const ashParticles = new THREE.Points(ashGeo, ashPMat);
+scene.add(ashParticles);
+
+// ============================================================
+// 流程仿真系统
+// ============================================================
+
+// 5大工艺流程路径定义
+const FLOW = {
+  // ① 输煤流程：煤场 → 皮带 → 煤斗 → 磨煤机 → 锅炉
+  coal: {
+    name: '输煤系统',
+    color: 0x1a1a1a,
+    emissive: 0x332200,
+    points: [
+      new THREE.Vector3(18, 3, -10),
+      new THREE.Vector3(12, 5, -8),
+      new THREE.Vector3(0, 7, -6),
+      new THREE.Vector3(-6, 9, -3),
+      new THREE.Vector3(-6, 12, 0),
+    ],
+    particleCount: 120,
+    particleSize: 0.35,
+    particleColor: 0x222222,
+    speed: 0.004,
+  },
+  // ② 蒸汽流程：锅炉 → 过热器 → 主蒸汽管 → 汽轮机
+  steam: {
+    name: '蒸汽系统',
+    color: 0xef5350,
+    emissive: 0x880000,
+    points: [
+      new THREE.Vector3(-6, 16, 0),
+      new THREE.Vector3(-4, 18, 0),
+      new THREE.Vector3(-1, 17, 1),
+      new THREE.Vector3(3, 14, 2),
+      new THREE.Vector3(6, 10, 2),
+      new THREE.Vector3(8, 7, 2),
+    ],
+    particleCount: 100,
+    particleSize: 0.5,
+    particleColor: 0xff8a80,
+    speed: 0.006,
+  },
+  // ③ 烟气流程：锅炉 → SCR脱硝 → 空预器 → 除尘 → 脱硫 → 烟囱
+  flueGas: {
+    name: '烟气净化系统',
+    color: 0xff7043,
+    emissive: 0x662200,
+    points: [
+      new THREE.Vector3(-6, 20, 0),
+      new THREE.Vector3(-6, 24, 0),
+      new THREE.Vector3(-12, 20, 0),
+      new THREE.Vector3(-18, 18, 0),
+      new THREE.Vector3(-18, 14, 0),
+      new THREE.Vector3(-22, 18, -1),
+      new THREE.Vector3(-26, 30, 3),
+    ],
+    particleCount: 150,
+    particleSize: 0.4,
+    particleColor: 0xff6e40,
+    speed: 0.005,
+  },
+  // ④ 冷却水流程：汽轮机排汽 → 凝汽器 → 冷却塔 → 循环水回
+  cooling: {
+    name: '冷却水系统',
+    color: 0x42a5f5,
+    emissive: 0x002266,
+    points: [
+      new THREE.Vector3(10, 4, 2),
+      new THREE.Vector3(12, 2, 0),
+      new THREE.Vector3(12, 1, -5),
+      new THREE.Vector3(12, 1, -10),
+      new THREE.Vector3(10, 2, -14),
+      new THREE.Vector3(10, 12, -14),
+    ],
+    particleCount: 80,
+    particleSize: 0.45,
+    particleColor: 0x82b1ff,
+    speed: 0.003,
+  },
+  // ⑤ 电力输出流程：发电机 → 主变 → 升压站 → 电网
+  power: {
+    name: '电力输出系统',
+    color: 0x66bb6a,
+    emissive: 0x004400,
+    points: [
+      new THREE.Vector3(18, 2, 2),
+      new THREE.Vector3(23, 2, 2),
+      new THREE.Vector3(23, 5, 2),
+      new THREE.Vector3(26, 7, 0),
+      new THREE.Vector3(30, 8, -3),
+      new THREE.Vector3(35, 8, -6),
+    ],
+    particleCount: 60,
+    particleSize: 0.4,
+    particleColor: 0x69f0ae,
+    speed: 0.008,
+  },
+};
+
+// 创建流程曲线和管道可视化
+const flowCurves = {};
+const flowPipes = {};
+const flowParticleSystems = {};
+let activeFlow = 'all'; // 当前高亮的流程
+let flowSpeed = 1.0;
+
+Object.keys(FLOW).forEach(key => {
+  const f = FLOW[key];
+  // 创建曲线
+  flowCurves[key] = new THREE.CatmullRomCurve3(f.points);
+  
+  // 管道可视化（半透明管壁，可见流程走向）
+  var pipeGeo = new THREE.TubeGeometry(flowCurves[key], 48, 0.25, 8, false);
+  var pipeMat = new THREE.MeshStandardMaterial({
+    color: f.color,
+    emissive: f.emissive,
+    emissiveIntensity: 0.3,
+    transparent: true,
+    opacity: 0.45,
+    roughness: 0.4,
+    metalness: 0.5,
+  });
+  flowPipes[key] = new THREE.Mesh(pipeGeo, pipeMat);
+  flowPipes[key].castShadow = true;
+  scene.add(flowPipes[key]);
+  
+  // 流程粒子（沿曲线流动的颗粒）
+  var fPos = new Float32Array(f.particleCount * 3);
+  var fLife = new Float32Array(f.particleCount);
+  var fOffset = new Float32Array(f.particleCount);
+  
+  for (var pi = 0; pi < f.particleCount; pi++) {
+    fOffset[pi] = Math.random(); // 沿曲线的起始位置
+    fLife[pi] = 0.8 + Math.random() * 0.2;
+    var pt = flowCurves[key].getPoint(fOffset[pi]);
+    fPos[pi*3] = pt.x;
+    fPos[pi*3+1] = pt.y;
+    fPos[pi*3+2] = pt.z;
+  }
+  
+  var fGeo = new THREE.BufferGeometry();
+  fGeo.setAttribute('position', new THREE.BufferAttribute(fPos, 3));
+  var fMat = new THREE.PointsMaterial({
+    color: f.particleColor,
+    size: f.particleSize,
+    transparent: true,
+    opacity: 0.85,
+    sizeAttenuation: true,
+  });
+  var fParticles = new THREE.Points(fGeo, fMat);
+  scene.add(fParticles);
+  
+  flowParticleSystems[key] = {
+    positions: fPos,
+    life: fLife,
+    offset: fOffset,
+    geometry: fGeo,
+    material: fMat,
+    count: f.particleCount,
+  };
+});
+
+// 设备运行动画对象
+const animObjects = {};
+
+// 磨煤机（锅炉旁，旋转体）
+var coalMill = cyl(1.5, 1.5, 2.5, 8, SM(0x555555, 0.6, 0.4), -2, 10, -4);
+animObjects.coalMill = coalMill;
+
+// 给水泵（汽轮机房旁，旋转体）
+var feedPump = cyl(0.8, 0.8, 1.5, 8, SM(0x1565c0, 0.4, 0.5), 12, 1.5, 5);
+animObjects.feedPump = feedPump;
+
+// 循环水泵（冷却塔旁）
+var circPump = cyl(0.6, 0.6, 1.2, 8, SM(0x0d47a1, 0.4, 0.5), 10, 1, -8);
+animObjects.circPump = circPump;
+
+// 流程标注（CSS2D风格，用Sprite实现）
+function makeFlowLabel(text, x, y, z, color) {
+  var lc = document.createElement('canvas');
+  lc.width = 256; lc.height = 48;
+  var lctx = lc.getContext('2d');
+  lctx.fillStyle = 'rgba(0,0,0,0.7)';
+  lctx.beginPath();
+  lctx.moveTo(8,0); lctx.lineTo(248,0); lctx.quadraticCurveTo(256,0,256,8);
+  lctx.lineTo(256,40); lctx.quadraticCurveTo(256,48,248,48);
+  lctx.lineTo(8,48); lctx.quadraticCurveTo(0,48,0,40);
+  lctx.lineTo(0,8); lctx.quadraticCurveTo(0,0,8,0);
+  lctx.closePath(); lctx.fill();
+  lctx.strokeStyle = color;
+  lctx.lineWidth = 2;
+  lctx.stroke();
+  lctx.font = 'bold 20px Microsoft YaHei';
+  lctx.fillStyle = color;
+  lctx.textAlign = 'center';
+  lctx.textBaseline = 'middle';
+  lctx.fillText(text, 128, 26);
+  var tex = new THREE.CanvasTexture(lc);
+  var sprite = new THREE.Sprite(new THREE.SpriteMaterial({ map: tex, transparent: true, opacity: 0.9 }));
+  sprite.position.set(x, y, z);
+  sprite.scale.set(4, 0.75, 1);
+  scene.add(sprite);
+  return sprite;
+}
+
+// 流程标注（默认隐藏，流程模式开启时显示）
+var flowLabels = {};
+flowLabels.coal = makeFlowLabel('输煤流程', 6, 8, -8, '#aaaaaa');
+flowLabels.steam = makeFlowLabel('蒸汽流程', 2, 15, 1, '#ff8a80');
+flowLabels.flueGas = makeFlowLabel('烟气净化流程', -16, 22, 0, '#ff6e40');
+flowLabels.cooling = makeFlowLabel('冷却水流程', 11, 2, -8, '#82b1ff');
+flowLabels.power = makeFlowLabel('电力输出流程', 26, 6, -2, '#69f0ae');
+
+// 默认隐藏流程标注和管道
+Object.values(flowPipes).forEach(p => { p.visible = false; });
+Object.values(flowLabels).forEach(l => { l.visible = false; });
+
+// 流程模式控制
+let flowMode = false;
+
+function toggleFlowMode() {
+  flowMode = !flowMode;
+  document.getElementById('btn-flow').classList.toggle('active', flowMode);
+  document.getElementById('flow-panel').style.display = flowMode ? 'block' : 'none';
+  
+  Object.values(flowPipes).forEach(p => { p.visible = flowMode; });
+  Object.values(flowLabels).forEach(l => { l.visible = flowMode; });
+  
+  if (!flowMode) {
+    // 退出流程模式时恢复所有管道透明度
+    Object.values(flowPipes).forEach(p => { p.material.opacity = 0.45; });
+    Object.values(flowParticleSystems).forEach(s => { s.material.opacity = 0.85; });
+    activeFlow = 'all';
+  } else {
+    setFlowHighlight('all');
+  }
+}
+
+function setFlowHighlight(key) {
+  activeFlow = key;
+  Object.keys(flowPipes).forEach(k => {
+    var isActive = (key === 'all' || k === key);
+    flowPipes[k].material.opacity = isActive ? 0.6 : 0.1;
+    flowParticleSystems[k].material.opacity = isActive ? 0.85 : 0.15;
+  });
+}
+
+function setFlowSpeed(val) {
+  flowSpeed = val;
+  document.getElementById('flow-speed-val').textContent = val.toFixed(1) + 'x';
+}
+
+function setFlowBtn(key) {
+  ['all','coal','steam','flueGas','cooling','power'].forEach(k => {
+    var el = document.getElementById('fh-' + k);
+    if (el) el.classList.toggle('active', k === key);
+  });
+}
+
+// ============================================================
+// 点击检测
+// ============================================================
+const raycaster = new THREE.Raycaster();
+const mouse = new THREE.Vector2();
+const clickableObjects = [boilerBuilding, scrUnit, fgdTower, turbineBuilding, genUnit, ashSilo].filter(Boolean);
+
+// 补充冷却塔和烟囱引用
+scene.children.forEach(c => {
+  if (c.userData && c.userData.name) {
+    if (!clickableObjects.includes(c)) clickableObjects.push(c);
+  }
+});
+
+renderer.domElement.addEventListener('click', (e) => {
+  mouse.x = (e.clientX / W) * 2 - 1;
+  mouse.y = -(e.clientY / H) * 2 + 1;
+  raycaster.setFromCamera(mouse, camera);
+  const objs = scene.children.filter(c => c.userData && c.userData.name);
+  const intersects = raycaster.intersectObjects(objs, false);
+  if (intersects.length > 0) {
+    const obj = intersects[0].object;
+    if (obj.userData.name) showInfo(obj.userData);
+  }
+});
+
+function showInfo(data) {
+  document.getElementById('info-title').textContent = data.name;
+  document.getElementById('info-sub').textContent = data.sub;
+  document.getElementById('info-content').textContent = data.content;
+  const tagsEl = document.getElementById('info-tags');
+  tagsEl.innerHTML = '';
+  if (data.tags) {
+    data.tags.forEach(t => {
+      const span = document.createElement('span');
+      span.className = 'info-tag ' + t.cls;
+      span.textContent = t.text;
+      tagsEl.appendChild(span);
+    });
+  }
+  
+  // 能耗监测面板
+  var ep = document.getElementById('energy-panel');
+  if (data.hasEnergyPanel && data.getEnergy) {
+    ep.style.display = 'block';
+    var e = data.getEnergy(params.load, params.lime);
+    document.getElementById('dev-elec').textContent = e.elec + ' MWh/h';
+    document.getElementById('dev-steam').textContent = e.steam + ' t/h';
+    document.getElementById('dev-coal').textContent = e.coal + ' t/h';
+    document.getElementById('dev-co2').textContent = e.co2 + ' tCO₂/h';
+    if (data.getAnalysis) {
+      document.getElementById('dev-analysis').textContent = data.getAnalysis(params.load, params.lime);
+    } else {
+      document.getElementById('dev-analysis').textContent = '';
+    }
+  } else {
+    ep.style.display = 'none';
+  }
+  
+  // 减排仿真面板
+  var sp = document.getElementById('sim-panel');
+  if (data.hasSimPanel) {
+    sp.style.display = 'block';
+    runSimulation();
+  } else {
+    sp.style.display = 'none';
+  }
+  
+  document.getElementById('info-overlay').style.display = 'block';
+}
+
+// 减排场景仿真计算
+function runSimulation() {
+  var eff = +document.getElementById('sim-eff').value;
+  var green = +document.getElementById('sim-green').value;
+  
+  var r = calcEmissions();
+  // 效率提升：降低煤耗
+  var coalSaving = r.coalTonPerHour * eff / 100;
+  var co2Saving = coalSaving * params.heat / 1000 * 1000 * (params.carbon/100) * (params.oxid/100) * (44/12);
+  // 绿电替代：降低购电排放
+  var elecSaving = r.E_elec * green / 100;
+  var totalSaving = co2Saving + elecSaving;
+  var newTotal = r.E_total - totalSaving;
+  var pct = (totalSaving / r.E_total * 100);
+  
+  document.getElementById('sim-result').textContent = newTotal.toFixed(2) + ' tCO₂/h (-' + pct.toFixed(1) + '%)';
+  document.getElementById('sim-detail').textContent = 
+    '效率提升减碳: ' + co2Saving.toFixed(2) + ' tCO₂/h (节煤' + coalSaving.toFixed(1) + ' t/h)\n' +
+    '绿电替代减碳: ' + elecSaving.toFixed(4) + ' tCO₂/h (替代' + green + '%购电)';
+}
+
+function closeInfo() {
+  document.getElementById('info-overlay').style.display = 'none';
+}
+
+// ============================================================
+// 碳排放计算
+// ============================================================
+let params = { load: 85, heat: 20.93, carbon: 55, oxid: 98, lime: 2.5 };
+let running = true;
+let emissionHistory = [];
+const MAX_HISTORY = 40;
+
+function updateParams() {
+  params.load = +document.getElementById('load').value;
+  params.heat = +document.getElementById('heat').value;
+  params.carbon = +document.getElementById('carbon').value;
+  params.oxid = +document.getElementById('oxid').value;
+  params.lime = +document.getElementById('lime').value;
+  document.getElementById('load-val').textContent = params.load + '%';
+  document.getElementById('heat-val').textContent = params.heat.toFixed(2);
+  document.getElementById('carbon-val').textContent = params.carbon.toFixed(1) + '%';
+  document.getElementById('oxid-val').textContent = params.oxid.toFixed(1) + '%';
+  document.getElementById('lime-val').textContent = params.lime.toFixed(1);
+}
+updateParams();
+
+function calcEmissions() {
+  // 装机600MW, 年运行5000h, 供电煤耗约300g/kWh
+  const capacity = 600; // MW
+  const loadMW = capacity * params.load / 100;
+  const coalRate = 300 * (1 + (100-params.load)/200); // g/kWh, 低负荷效率略低
+  const coalTonPerHour = loadMW * coalRate / 1e6; // t/h
+
+  // E_comb = 燃煤量(t) × 热值(GJ/t) × 碳含量 × 氧化率 × 44/12
+  const heatGJ = params.heat / 1000 * 1000; // MJ/kg → GJ/t
+  const E_comb = coalTonPerHour * heatGJ * (params.carbon/100) * (params.oxid/100) * (44/12);
+
+  // E_desc = 石灰石(t/h) × 44/100 (CaCO₃ → CO₂ + CaO, MW:100→44)
+  const E_desc = params.lime * (44/100);
+
+  // 购入厂用电 (约3%厂用电率, 有约10%外购)
+  const selfUseElec = loadMW * 0.03 * 0.1; // MWh/h
+  const gridFactor = 0.5810; // tCO₂/MWh 全国
+  const E_elec = selfUseElec * gridFactor;
+
+  const E_total = E_comb + E_desc + E_elec;
+  const intensity = E_total / loadMW; // tCO₂/MWh
+
+  return { E_comb, E_desc, E_elec, E_total, intensity, loadMW, coalTonPerHour };
+}
+
+let noiseOffset = 0;
+function updateDisplay() {
+  noiseOffset += 0.01;
+  const noise = 1 + (Math.sin(noiseOffset*3.7)*0.012 + Math.sin(noiseOffset*1.3)*0.008);
+  const r = calcEmissions();
+  const ec = r.E_comb * noise, ed = r.E_desc * noise, ee = r.E_elec * noise;
+  const et = ec + ed + ee;
+
+  document.getElementById('e-comb').textContent = ec.toFixed(2);
+  document.getElementById('e-desc').textContent = ed.toFixed(2);
+  document.getElementById('e-elec').textContent = ee.toFixed(3);
+  document.getElementById('e-total').textContent = et.toFixed(2);
+  document.getElementById('e-intensity').textContent = r.intensity.toFixed(4) + ' tCO₂/MWh';
+  
+  const pct = Math.min(100, (r.intensity / 1.2) * 100);
+  document.getElementById('intensity-bar').style.width = pct + '%';
+
+  if (emissionHistory.length >= MAX_HISTORY) emissionHistory.shift();
+  emissionHistory.push(et);
+  drawChart();
+  drawFootprint();
+  checkAnomaly();
+
+  // 动态调整粒子强度
+  const factor = params.load / 85;
+  co2Mat.opacity = 0.5 + factor * 0.35;
+  desMat.opacity = 0.4 + (params.lime / 5) * 0.4;
+  co2Mat.size = 0.3 + factor * 0.3;
+  co2Geo.attributes.position.needsUpdate = true;
+  desGeo.attributes.position.needsUpdate = true;
+}
+
+// ============================================================
+// Canvas 折线图
+// ============================================================
+const chartCanvas = document.getElementById('emission-chart');
+const ctx2d = chartCanvas.getContext('2d');
+chartCanvas.width = 220; chartCanvas.height = 60;
+
+function drawChart() {
+  ctx2d.clearRect(0, 0, 220, 60);
+  ctx2d.fillStyle = 'rgba(0,0,0,0.2)';
+  ctx2d.fillRect(0, 0, 220, 60);
+
+  if (emissionHistory.length < 2) return;
+
+  const min = Math.min(...emissionHistory) * 0.95;
+  const max = Math.max(...emissionHistory) * 1.05;
+  const range = max - min || 1;
+
+  // 网格线
+  ctx2d.strokeStyle = 'rgba(79,195,247,0.1)';
+  ctx2d.lineWidth = 0.5;
+  for (let i=0;i<=4;i++) {
+    const y = 55 - (i/4)*50;
+    ctx2d.beginPath(); ctx2d.moveTo(0,y); ctx2d.lineTo(220,y); ctx2d.stroke();
+    ctx2d.fillStyle='rgba(79,195,247,0.5)';
+    ctx2d.font='8px monospace';
+    ctx2d.fillText((min + i/4*range).toFixed(1), 2, y-2);
+  }
+
+  // 填充渐变
+  const grad = ctx2d.createLinearGradient(0,0,0,60);
+  grad.addColorStop(0,'rgba(102,187,106,0.3)');
+  grad.addColorStop(1,'rgba(102,187,106,0)');
+
+  ctx2d.beginPath();
+  emissionHistory.forEach((v, i) => {
+    const x = (i / (MAX_HISTORY-1)) * 218;
+    const y = 55 - ((v-min)/range)*50;
+    if (i===0) ctx2d.moveTo(x,y); else ctx2d.lineTo(x,y);
+  });
+  ctx2d.lineTo(218, 60); ctx2d.lineTo(0, 60); ctx2d.closePath();
+  ctx2d.fillStyle = grad; ctx2d.fill();
+
+  // 折线
+  ctx2d.beginPath();
+  ctx2d.strokeStyle = '#66bb6a'; ctx2d.lineWidth = 1.5;
+  emissionHistory.forEach((v, i) => {
+    const x = (i / (MAX_HISTORY-1)) * 218;
+    const y = 55 - ((v-min)/range)*50;
+    if (i===0) ctx2d.moveTo(x,y); else ctx2d.lineTo(x,y);
+  });
+  ctx2d.stroke();
+}
+
+// ============================================================
+// 碳足迹白箱追踪图表（设备级分解）
+// ============================================================
+function drawFootprint() {
+  var fc = document.getElementById('footprint-chart');
+  if (!fc) return;
+  var fctx = fc.getContext('2d');
+  fctx.clearRect(0,0,220,55);
+  
+  var r = calcEmissions();
+  var total = r.E_total || 1;
+  
+  var items = [
+    { name: '锅炉燃烧', value: r.E_comb, color: '#ff7043' },
+    { name: '脱硫过程', value: r.E_desc, color: '#ffb300' },
+    { name: '厂用电', value: r.E_elec, color: '#42a5f5' },
+  ];
+  
+  var barY = 4, barH = 14, barX = 68, barW = 145;
+  
+  // 背景条
+  fctx.fillStyle = 'rgba(255,255,255,0.05)';
+  fctx.fillRect(barX, barY, barW, barH);
+  
+  // 堆叠条形图
+  var cx = barX;
+  items.forEach(function(item) {
+    var w = (item.value / total) * barW;
+    fctx.fillStyle = item.color;
+    fctx.fillRect(cx, barY, Math.max(w, 1), barH);
+    cx += w;
+  });
+  
+  // 标签
+  fctx.font = '8px Microsoft YaHei';
+  fctx.fillStyle = '#90a4ae';
+  fctx.textAlign = 'right';
+  items.forEach(function(item, i) {
+    var pct = (item.value / total * 100).toFixed(1);
+    fctx.fillText(item.name + ' ' + pct + '%', 63, barY + 4 + i * 12);
+    fctx.fillStyle = item.color;
+    fctx.fillRect(64, barY + i * 12 - 3, 5, 5);
+    fctx.fillStyle = '#90a4ae';
+  });
+  
+  // 总量
+  fctx.fillStyle = '#66bb6a';
+  fctx.font = 'bold 9px monospace';
+  fctx.textAlign = 'left';
+  fctx.fillText('总计: ' + total.toFixed(2), barX, barY + barH + 12);
+  
+  // 对比标注
+  fctx.fillStyle = '#546e7a';
+  fctx.font = '7px Microsoft YaHei';
+  fctx.fillText('传统±30%', barX + 70, barY + barH + 12);
+  fctx.fillStyle = '#66bb6a';
+  fctx.fillText('孪生±5%', barX + 115, barY + barH + 12);
+}
+
+// ============================================================
+// 异常预警系统
+// ============================================================
+var anomalyLog = [];
+var lastEmission = 0;
+
+function checkAnomaly() {
+  var r = calcEmissions();
+  var curr = r.E_total;
+  
+  if (lastEmission > 0) {
+    var change = (curr - lastEmission) / lastEmission;
+    
+    // 检测异常
+    if (Math.abs(change) > 0.05) {
+      var msg = change > 0 ? '⚠️ 碳排放突增 +' + (change*100).toFixed(1) + '%' : '📉 碳排放下降 ' + (change*100).toFixed(1) + '%';
+      anomalyLog.unshift({ msg: msg, time: new Date().toLocaleTimeString() });
+      if (anomalyLog.length > 5) anomalyLog.pop();
+      
+      // 在数据面板显示预警
+      var alertEl = document.getElementById('anomaly-alert');
+      if (alertEl) {
+        alertEl.textContent = msg;
+        alertEl.style.display = 'block';
+        setTimeout(function() { alertEl.style.display = 'none'; }, 5000);
+      }
+    }
+    
+    // 效率预警
+    if (r.intensity > 0.9) {
+      var alertEl = document.getElementById('anomaly-alert');
+      if (alertEl) {
+        alertEl.textContent = '🔴 排放强度超标: ' + r.intensity.toFixed(4) + ' tCO₂/MWh (基准0.7710)';
+        alertEl.style.display = 'block';
+      }
+    }
+  }
+  lastEmission = curr;
+}
+
+// ============================================================
+// 控制函数
+// ============================================================
+function toggleLegend() {
+  const el = document.getElementById('legend');
+  const tog = document.getElementById('legend-toggle');
+  el.classList.toggle('expanded');
+  tog.textContent = el.classList.contains('expanded') ? '▼ 收起' : '▶ 展开';
+}
+
+function toggleRun() {
+  running = !running;
+  const btn = document.getElementById('btn-run');
+  btn.textContent = running ? '⏸ 运行中' : '▶ 已暂停';
+  btn.classList.toggle('active', running);
+}
+
+function resetCamera() {
+  targetTheta = 0.9; targetPhi = 0.52; targetRadius = 50;
+}
+
+function setView(v) {
+  ['full','top','side'].forEach(id => document.getElementById('view-'+id).classList.remove('active'));
+  document.getElementById('view-'+v).classList.add('active');
+  if (v==='full') { targetTheta=0.9; targetPhi=0.52; targetRadius=50; }
+  else if (v==='top') { targetTheta=0; targetPhi=1.48; targetRadius=55; }
+  else if (v==='side') { targetTheta=Math.PI/2; targetPhi=0.35; targetRadius=55; }
+}
+
+let highlightMode = 'all';
+function setHighlight(mode) {
+  ['all','comb','desc'].forEach(id => document.getElementById('hl-'+id).classList.remove('active'));
+  document.getElementById('hl-'+mode).classList.add('active');
+  highlightMode = mode;
+  if (mode==='all') { co2Mat.opacity=0.75; desMat.opacity=0.8; }
+  else if (mode==='comb') { co2Mat.opacity=0.9; desMat.opacity=0.2; }
+  else if (mode==='desc') { co2Mat.opacity=0.2; desMat.opacity=0.9; }
+}
+
+// ============================================================
+// 星空背景
+// ============================================================
+const starCount = 800;
+const starPos = new Float32Array(starCount*3);
+for(let i=0;i<starCount;i++) {
+  const phi = Math.acos(2*Math.random()-1);
+  const theta = Math.random()*Math.PI*2;
+  const r = 150;
+  starPos[i*3] = r*Math.sin(phi)*Math.cos(theta);
+  starPos[i*3+1] = r*Math.cos(phi);
+  starPos[i*3+2] = r*Math.sin(phi)*Math.sin(theta);
+}
+const starGeo = new THREE.BufferGeometry();
+starGeo.setAttribute('position', new THREE.BufferAttribute(starPos,3));
+const starMat = new THREE.PointsMaterial({color:0xffffff,size:0.4,transparent:true,opacity:0.6});
+scene.add(new THREE.Points(starGeo,starMat));
+
+// ============================================================
+// 动画主循环
+// ============================================================
+let frameCount = 0;
+const clock = new THREE.Clock();
+
+function animate() {
+  requestAnimationFrame(animate);
+  const dt = clock.getDelta();
+  frameCount++;
+
+  if (!running) { renderer.render(scene, camera); return; }
+
+  // 相机平滑跟随
+  camTheta += (targetTheta - camTheta) * 0.05;
+  camPhi += (targetPhi - camPhi) * 0.05;
+  camRadius += (targetRadius - camRadius) * 0.05;
+  
+  camera.position.x = camRadius * Math.cos(camPhi) * Math.sin(camTheta);
+  camera.position.y = camRadius * Math.sin(camPhi);
+  camera.position.z = camRadius * Math.cos(camPhi) * Math.cos(camTheta);
+  camera.lookAt(0, 6, 0);
+
+  // 炉膛发光脉动
+  const pulse = 1.5 + Math.sin(frameCount * 0.05) * 0.8;
+  fireLight.intensity = pulse * (params.load / 100) * 3;
+  fireMat.emissiveIntensity = 1.5 + Math.sin(frameCount * 0.07) * 0.8;
+
+  // CO₂ 粒子
+  const co2SpeedFactor = params.load / 100;
+  for (let i = 0; i < co2Count; i++) {
+    co2Life[i] += 0.008 * co2SpeedFactor;
+    if (co2Life[i] > 1) { resetCo2(i); co2Life[i] = 0; continue; }
+    co2Pos[i*3] += co2Vel[i*3] * co2SpeedFactor;
+    co2Pos[i*3+1] += co2Vel[i*3+1] * co2SpeedFactor;
+    co2Pos[i*3+2] += co2Vel[i*3+2] * co2SpeedFactor;
+    // 风偏
+    co2Pos[i*3] += 0.003 * co2SpeedFactor;
+  }
+  co2Geo.attributes.position.needsUpdate = true;
+
+  // 脱硫 CO₂ 粒子
+  const desSpeedFactor = params.lime / 5;
+  for (let i = 0; i < desCount; i++) {
+    desLife[i] += 0.012 * desSpeedFactor;
+    if (desLife[i] > 1) { resetDes(i); desLife[i] = 0; continue; }
+    desPos[i*3] += desVel[i*3];
+    desPos[i*3+1] += desVel[i*3+1] * desSpeedFactor;
+    desPos[i*3+2] += desVel[i*3+2];
+  }
+  desGeo.attributes.position.needsUpdate = true;
+
+  // 冷却塔水蒸气
+  for (let i = 0; i < steamCount; i++) {
+    steamLife[i] += 0.007;
+    if (steamLife[i] > 1) { resetSteam(i); steamLife[i] = 0; continue; }
+    steamPos[i*3] += steamVel[i*3];
+    steamPos[i*3+1] += steamVel[i*3+1];
+    steamPos[i*3+2] += steamVel[i*3+2];
+    // 扩散
+    steamPos[i*3] += (Math.random()-0.5)*0.02;
+    steamPos[i*3+2] += (Math.random()-0.5)*0.02;
+  }
+  steamPGeo.attributes.position.needsUpdate = true;
+
+  // 飞灰粒子
+  for (let i=0;i<ashCount;i++) {
+    ashLife[i]+=0.015;
+    if(ashLife[i]>1){resetAsh(i);ashLife[i]=0;continue;}
+    ashPos[i*3]+=ashVel[i*3];
+    ashPos[i*3+1]+=ashVel[i*3+1];
+    ashPos[i*3+2]+=ashVel[i*3+2];
+  }
+  ashGeo.attributes.position.needsUpdate = true;
+
+  // 流程仿真粒子动画
+  if (flowMode) {
+    Object.keys(flowParticleSystems).forEach(key => {
+      var sys = flowParticleSystems[key];
+      var curve = flowCurves[key];
+      var spd = FLOW[key].speed * flowSpeed * (params.load / 85);
+      
+      for (var pi = 0; pi < sys.count; pi++) {
+        sys.offset[pi] += spd;
+        if (sys.offset[pi] > 1) sys.offset[pi] -= 1;
+        
+        var t = sys.offset[pi];
+        var pt = curve.getPoint(t);
+        // 添加微小的随机偏移，让粒子看起来更自然
+        sys.positions[pi*3] = pt.x + (Math.random()-0.5)*0.15;
+        sys.positions[pi*3+1] = pt.y + (Math.random()-0.5)*0.15;
+        sys.positions[pi*3+2] = pt.z + (Math.random()-0.5)*0.15;
+      }
+      sys.geometry.attributes.position.needsUpdate = true;
+    });
+  }
+
+  // 设备运行动画
+  // 磨煤机旋转
+  if (animObjects.coalMill) {
+    animObjects.coalMill.rotation.y += 0.02 * (params.load / 100);
+  }
+  // 给水泵旋转
+  if (animObjects.feedPump) {
+    animObjects.feedPump.rotation.y += 0.04 * (params.load / 100);
+  }
+  // 循环水泵旋转
+  if (animObjects.circPump) {
+    animObjects.circPump.rotation.y += 0.03 * (params.load / 100);
+  }
+
+  // 每30帧更新数据
+  if (frameCount % 30 === 0) updateDisplay();
+
+  renderer.render(scene, camera);
+}
+
+// 窗口自适应
+window.addEventListener('resize', () => {
+  const W2 = window.innerWidth, H2 = window.innerHeight;
+  camera.aspect = W2/H2;
+  camera.updateProjectionMatrix();
+  renderer.setSize(W2, H2);
+});
+
+animate();
+updateDisplay();
+</script>
+</body>
+</html>

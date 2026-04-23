@@ -1,0 +1,2037 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>发电设施碳排放管理工具</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <style>
+        :root {
+            --primary: #2c5aa0;
+            --secondary: #4a90d9;
+            --accent: #f59e0b;
+            --success: #10b981;
+            --danger: #ef4444;
+            --bg: #f8fafc;
+            --card-bg: #ffffff;
+            --text: #1e293b;
+            --text-light: #64748b;
+            --border: #e2e8f0;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+        }
+        
+        /* 头部 */
+        .header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 24px 32px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        .header h1 {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        
+        .header p {
+            opacity: 0.9;
+            font-size: 14px;
+        }
+        
+        /* 导航 */
+        .nav-tabs {
+            background: var(--card-bg);
+            padding: 0 32px;
+            display: flex;
+            gap: 8px;
+            border-bottom: 1px solid var(--border);
+            overflow-x: auto;
+        }
+        
+        .nav-tab {
+            padding: 16px 24px;
+            border: none;
+            background: none;
+            color: var(--text-light);
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+        
+        .nav-tab:hover {
+            color: var(--primary);
+        }
+        
+        .nav-tab.active {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+        }
+        
+        /* 主内容 */
+        .main {
+            padding: 24px 32px;
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        /* 卡片 */
+        .card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            border: 1px solid var(--border);
+        }
+        
+        .card-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: var(--text);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .card-title::before {
+            content: '';
+            width: 4px;
+            height: 16px;
+            background: var(--primary);
+            border-radius: 2px;
+        }
+        
+        /* 网格布局 */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        
+        .grid-4 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+        }
+        
+        /* 表单 */
+        .form-group {
+            margin-bottom: 16px;
+        }
+        
+        .form-label {
+            display: block;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text);
+            margin-bottom: 6px;
+        }
+        
+        .form-hint {
+            font-size: 11px;
+            color: var(--text-light);
+            margin-top: 4px;
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(44, 90, 160, 0.1);
+        }
+        
+        .form-select {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 14px;
+            background: white;
+            cursor: pointer;
+        }
+        
+        /* 按钮 */
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #234b85;
+        }
+        
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+        
+        .btn-success:hover {
+            background: #0d9668;
+        }
+        
+        .btn-secondary {
+            background: var(--bg);
+            color: var(--text);
+            border: 1px solid var(--border);
+        }
+        
+        .btn-secondary:hover {
+            background: #e2e8f0;
+        }
+        
+        .btn-group {
+            display: flex;
+            gap: 12px;
+            margin-top: 20px;
+        }
+        
+        /* 统计卡片 */
+        .stat-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid var(--border);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+        }
+        
+        .stat-card.emissions::before { background: var(--danger); }
+        .stat-card.fuel::before { background: var(--accent); }
+        .stat-card.power::before { background: var(--secondary); }
+        .stat-card.desulfurization::before { background: var(--success); }
+        
+        .stat-label {
+            font-size: 13px;
+            color: var(--text-light);
+            margin-bottom: 8px;
+        }
+        
+        .stat-value {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--text);
+        }
+        
+        .stat-unit {
+            font-size: 14px;
+            font-weight: 400;
+            color: var(--text-light);
+            margin-left: 4px;
+        }
+        
+        .stat-change {
+            font-size: 12px;
+            margin-top: 8px;
+        }
+        
+        .stat-change.up { color: var(--danger); }
+        .stat-change.down { color: var(--success); }
+        
+        /* 表格 */
+        .table-wrapper {
+            overflow-x: auto;
+        }
+        
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+        
+        .data-table th,
+        .data-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .data-table th {
+            background: var(--bg);
+            font-weight: 600;
+            color: var(--text);
+            white-space: nowrap;
+        }
+        
+        .data-table tbody tr:hover {
+            background: #f1f5f9;
+        }
+        
+        .data-table input {
+            width: 100%;
+            padding: 6px 8px;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            font-size: 13px;
+        }
+        
+        .data-table input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+        
+        /* 图表容器 */
+        .chart-container {
+            position: relative;
+            height: 300px;
+            margin-top: 16px;
+        }
+        
+        .chart-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        @media (max-width: 900px) {
+            .chart-row {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        /* 公式展示 */
+        .formula-box {
+            background: linear-gradient(135deg, #f0f9ff, #e0f2fe);
+            border: 1px solid #bae6fd;
+            border-radius: 8px;
+            padding: 16px 20px;
+            font-family: 'Times New Roman', serif;
+            text-align: center;
+            margin: 16px 0;
+        }
+        
+        .formula-main {
+            font-size: 18px;
+            color: var(--primary);
+            font-weight: 600;
+        }
+        
+        .formula-items {
+            font-size: 13px;
+            color: var(--text-light);
+            margin-top: 8px;
+        }
+        
+        /* 参考数据表 */
+        .ref-table {
+            width: 100%;
+            font-size: 12px;
+            border-collapse: collapse;
+        }
+        
+        .ref-table th,
+        .ref-table td {
+            padding: 8px 10px;
+            border: 1px solid var(--border);
+            text-align: center;
+        }
+        
+        .ref-table th {
+            background: var(--bg);
+            font-weight: 600;
+        }
+        
+        /* 步骤指示器 */
+        .step-indicator {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 32px;
+        }
+        
+        .step {
+            display: flex;
+            align-items: center;
+        }
+        
+        .step-number {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--border);
+            color: var(--text-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 14px;
+        }
+        
+        .step.active .step-number {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .step.completed .step-number {
+            background: var(--success);
+            color: white;
+        }
+        
+        .step-line {
+            width: 60px;
+            height: 2px;
+            background: var(--border);
+            margin: 0 12px;
+        }
+        
+        .step.completed + .step .step-line,
+        .step.active .step-line {
+            background: var(--primary);
+        }
+        
+        /* 燃料类型选择 */
+        .fuel-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        
+        .fuel-option {
+            padding: 12px 16px;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+        }
+        
+        .fuel-option:hover {
+            border-color: var(--secondary);
+            background: #f0f9ff;
+        }
+        
+        .fuel-option.selected {
+            border-color: var(--primary);
+            background: #e0f2fe;
+        }
+        
+        .fuel-option input {
+            display: none;
+        }
+        
+        /* 标签页样式 */
+        .inner-tabs {
+            display: flex;
+            gap: 4px;
+            margin-bottom: 16px;
+            background: var(--bg);
+            padding: 4px;
+            border-radius: 8px;
+        }
+        
+        .inner-tab {
+            flex: 1;
+            padding: 8px 16px;
+            border: none;
+            background: none;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-light);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .inner-tab.active {
+            background: var(--card-bg);
+            color: var(--primary);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        .inner-content {
+            display: none;
+        }
+        
+        .inner-content.active {
+            display: block;
+        }
+        
+        /* 报告样式 */
+        .report-section {
+            margin-bottom: 32px;
+            page-break-inside: avoid;
+        }
+        
+        .report-section h3 {
+            font-size: 16px;
+            color: var(--primary);
+            margin-bottom: 16px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid var(--border);
+        }
+        
+        .report-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 16px;
+        }
+        
+        .report-table th,
+        .report-table td {
+            padding: 10px 12px;
+            border: 1px solid #ddd;
+            text-align: center;
+            font-size: 13px;
+        }
+        
+        .report-table th {
+            background: #f5f5f5;
+            font-weight: 600;
+        }
+        
+        .report-header {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+        
+        .report-header h1 {
+            font-size: 24px;
+            margin-bottom: 8px;
+        }
+        
+        .report-header p {
+            color: var(--text-light);
+        }
+        
+        /* 打印样式 */
+        @media print {
+            .header, .nav-tabs, .btn, .no-print {
+                display: none !important;
+            }
+            
+            .card {
+                box-shadow: none;
+                border: 1px solid #ddd;
+            }
+            
+            .main {
+                padding: 0;
+            }
+        }
+        
+        /* 工具提示 */
+        .tooltip {
+            position: relative;
+            cursor: help;
+            border-bottom: 1px dashed var(--text-light);
+        }
+        
+        .tooltip::after {
+            content: attr(data-tip);
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--text);
+            color: white;
+            padding: 6px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            white-space: nowrap;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.2s;
+            z-index: 100;
+        }
+        
+        .tooltip:hover::after {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        /* 加载动画 */
+        .loading {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+        }
+        
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid var(--border);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        /* 空状态 */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-light);
+        }
+        
+        .empty-state svg {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 16px;
+            opacity: 0.5;
+        }
+        
+        /* 响应式 */
+        @media (max-width: 768px) {
+            .header {
+                padding: 16px 20px;
+            }
+            
+            .main {
+                padding: 16px;
+            }
+            
+            .nav-tabs {
+                padding: 0 16px;
+            }
+            
+            .stat-value {
+                font-size: 22px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 头部 -->
+    <header class="header">
+        <h1>🏭 发电设施碳排放管理工具</h1>
+        <p>基于《企业温室气体排放核算与报告指南 发电设施》(2023年修订版)</p>
+    </header>
+    
+    <!-- 导航 -->
+    <nav class="nav-tabs">
+        <button class="nav-tab active" data-tab="dashboard">📊 数据概览</button>
+        <button class="nav-tab" data-tab="input">📝 数据录入</button>
+        <button class="nav-tab" data-tab="fuel">🔥 燃料燃烧排放</button>
+        <button class="nav-tab" data-tab="desulfurization">🧪 脱硫排放</button>
+        <button class="nav-tab" data-tab="power">⚡ 净购入电力</button>
+        <button class="nav-tab" data-tab="report">📋 排放报告</button>
+        <button class="nav-tab" data-tab="reference">📚 参考数据</button>
+    </nav>
+    
+    <!-- 主内容 -->
+    <main class="main">
+        <!-- 数据概览 -->
+        <div id="dashboard" class="tab-content active">
+            <div class="grid-4" style="margin-bottom: 24px;">
+                <div class="stat-card emissions">
+                    <div class="stat-label">化石燃料燃烧排放</div>
+                    <div class="stat-value" id="stat-fuel-emissions">0<span class="stat-unit">tCO₂</span></div>
+                    <div class="stat-change" id="fuel-percent">占比 0%</div>
+                </div>
+                <div class="stat-card desulfurization">
+                    <div class="stat-label">脱硫过程排放</div>
+                    <div class="stat-value" id="stat-desul-emissions">0<span class="stat-unit">tCO₂</span></div>
+                    <div class="stat-change" id="desul-percent">占比 0%</div>
+                </div>
+                <div class="stat-card power">
+                    <div class="stat-label">净购入电力排放</div>
+                    <div class="stat-value" id="stat-power-emissions">0<span class="stat-unit">tCO₂</span></div>
+                    <div class="stat-change" id="power-percent">占比 0%</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">排放总量</div>
+                    <div class="stat-value" id="stat-total-emissions" style="color: var(--danger);">0<span class="stat-unit">tCO₂</span></div>
+                    <div class="stat-change">综合排放强度：<span id="stat-intensity">0</span> tCO₂/MWh</div>
+                </div>
+            </div>
+            
+            <div class="grid-2">
+                <div class="card">
+                    <div class="card-title">排放构成分析</div>
+                    <div class="chart-container">
+                        <canvas id="pieChart"></canvas>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-title">月度排放趋势</div>
+                    <div class="chart-container">
+                        <canvas id="trendChart"></canvas>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-title">排放核算公式</div>
+                <div class="formula-box">
+                    <div class="formula-main">
+                        E = E<sub>燃烧</sub> + E<sub>脱硫</sub> + E<sub>电力</sub>
+                    </div>
+                    <div class="formula-items">
+                        E<sub>燃烧</sub> = Σ(AD<sub>i</sub> × EF<sub>i</sub>) &nbsp;|&nbsp;
+                        E<sub>脱硫</sub> = M<sub>脱硫</sub> × η × 44/12 &nbsp;|&nbsp;
+                        E<sub>电力</sub> = AD<sub>电力</sub> × EF<sub>电力</sub>
+                    </div>
+                </div>
+                <div class="grid-3">
+                    <div style="padding: 12px; background: var(--bg); border-radius: 8px;">
+                        <strong>燃料燃烧排放</strong><br>
+                        <small>活动数据 × 排放因子</small>
+                    </div>
+                    <div style="padding: 12px; background: var(--bg); border-radius: 8px;">
+                        <strong>脱硫过程排放</strong><br>
+                        <small>脱硫剂量 × 脱硫效率 × 44/12</small>
+                    </div>
+                    <div style="padding: 12px; background: var(--bg); border-radius: 8px;">
+                        <strong>净购入电力排放</strong><br>
+                        <small>购电量 × 电网排放因子</small>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-title">最近录入记录</div>
+                <div class="table-wrapper">
+                    <table class="data-table" id="recentRecords">
+                        <thead>
+                            <tr>
+                                <th>日期</th>
+                                <th>燃料类型</th>
+                                <th>消耗量</th>
+                                <th>燃烧排放</th>
+                                <th>脱硫排放</th>
+                                <th>购电排放</th>
+                                <th>总排放</th>
+                            </tr>
+                        </thead>
+                        <tbody id="recentRecordsBody">
+                            <tr><td colspan="7" style="text-align: center; color: var(--text-light);">暂无数据，请先录入数据</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 数据录入 -->
+        <div id="input" class="tab-content">
+            <div class="card">
+                <div class="card-title">基本信息</div>
+                <div class="grid-3">
+                    <div class="form-group">
+                        <label class="form-label">报告年份</label>
+                        <select class="form-select" id="input-year">
+                            <option value="2026">2026</option>
+                            <option value="2025">2025</option>
+                            <option value="2024">2024</option>
+                            <option value="2023">2023</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">报告月份</label>
+                        <select class="form-select" id="input-month">
+                            <option value="1">1月</option>
+                            <option value="2">2月</option>
+                            <option value="3">3月</option>
+                            <option value="4">4月</option>
+                            <option value="5">5月</option>
+                            <option value="6">6月</option>
+                            <option value="7">7月</option>
+                            <option value="8">8月</option>
+                            <option value="9">9月</option>
+                            <option value="10">10月</option>
+                            <option value="11">11月</option>
+                            <option value="12">12月</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">设施名称</label>
+                        <input type="text" class="form-input" id="input-facility" placeholder="如：1号发电机组">
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-title">燃料消耗数据</div>
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label class="form-label">燃料类型</label>
+                        <select class="form-select" id="input-fuel-type" onchange="updateFuelParams()">
+                            <option value="">请选择燃料类型</option>
+                            <option value="natural_gas">天然气</option>
+                            <option value="lpg">液化石油气</option>
+                            <option value="diesel">柴油</option>
+                            <option value="heavy_oil">重油</option>
+                            <option value="bituminous">烟煤</option>
+                            <option value="anthracite">无烟煤</option>
+                            <option value="lignite">褐煤</option>
+                            <option value="coke">焦炭</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">燃料消耗量 (吨或万立方米)</label>
+                        <input type="number" class="form-input" id="input-fuel-consumption" placeholder="请输入消耗量" step="0.01">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">低位发热量 (GJ/t 或 GJ/万m³)</label>
+                        <input type="number" class="form-input" id="input-ncv" placeholder="见参考数据表" step="0.01">
+                        <div class="form-hint" id="ncv-hint">选择燃料后自动填充参考值</div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">单位热值含碳量 (tC/GJ)</label>
+                        <input type="number" class="form-input" id="input-cc" placeholder="见参考数据表" step="0.00001">
+                        <div class="form-hint" id="cc-hint">选择燃料后自动填充参考值</div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">碳氧化率</label>
+                        <input type="number" class="form-input" id="input-oxidation" placeholder="默认0.98" step="0.01" value="0.98">
+                        <div class="form-hint">燃料中碳被氧化的比例</div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">排放因子 (tCO₂/GJ)</label>
+                        <input type="number" class="form-input" id="input-ef" placeholder="计算得出" step="0.0001">
+                        <div class="form-hint" id="ef-hint">自动计算：EF = CC × Ox × 44/12</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-title">脱硫数据</div>
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label class="form-label">脱硫剂类型</label>
+                        <select class="form-select" id="input-desul-type">
+                            <option value="limestone">石灰石</option>
+                            <option value="lime">石灰</option>
+                            <option value="other">其他</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">脱硫剂消耗量 (吨)</label>
+                        <input type="number" class="form-input" id="input-desul-consumption" placeholder="请输入消耗量" step="0.01">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">脱硫剂纯度 (%)</label>
+                        <input type="number" class="form-input" id="input-desul-purity" placeholder="默认95" step="0.1" value="95">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">脱硫效率 (%)</label>
+                        <input type="number" class="form-input" id="input-desul-efficiency" placeholder="默认80" step="0.1" value="80">
+                        <div class="form-hint">CaCO₃ + SO₂ → CaSO₄ + CO₂</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-title">净购入电力数据</div>
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label class="form-label">净购入电量 (MWh)</label>
+                        <input type="number" class="form-input" id="input-power-consumption" placeholder="购入电量 - 售出电量" step="0.01">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">电网排放因子 (tCO₂/MWh)</label>
+                        <input type="number" class="form-input" id="input-grid-ef" placeholder="默认0.5810" step="0.0001" value="0.5810">
+                        <div class="form-hint">生态环境部发布的中国区域电网基准线排放因子</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="btn-group">
+                <button class="btn btn-primary" onclick="calculateEmissions()">📊 计算排放量</button>
+                <button class="btn btn-success" onclick="saveRecord()">💾 保存记录</button>
+                <button class="btn btn-secondary" onclick="resetForm()">🔄 重置表单</button>
+            </div>
+            
+            <div class="card" id="result-card" style="display: none; margin-top: 24px;">
+                <div class="card-title">计算结果</div>
+                <div class="formula-box">
+                    <div class="formula-main" id="result-formula">E = 0 tCO₂</div>
+                </div>
+                <div class="grid-3" style="margin-top: 20px;">
+                    <div class="stat-card fuel">
+                        <div class="stat-label">燃料燃烧排放</div>
+                        <div class="stat-value" id="result-fuel">0<span class="stat-unit">tCO₂</span></div>
+                    </div>
+                    <div class="stat-card desulfurization">
+                        <div class="stat-label">脱硫过程排放</div>
+                        <div class="stat-value" id="result-desul">0<span class="stat-unit">tCO₂</span></div>
+                    </div>
+                    <div class="stat-card power">
+                        <div class="stat-label">净购入电力排放</div>
+                        <div class="stat-value" id="result-power">0<span class="stat-unit">tCO₂</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 燃料燃烧排放 -->
+        <div id="fuel" class="tab-content">
+            <div class="card">
+                <div class="card-title">排放因子计算说明</div>
+                <div class="formula-box">
+                    <div class="formula-main">EF<sub>i</sub> = CC<sub>i</sub> × Ox<sub>i</sub> × 44/12</div>
+                    <div class="formula-items">
+                        EF = 排放因子 (tCO₂/GJ) &nbsp;|&nbsp; CC = 单位热值含碳量 (tC/GJ) &nbsp;|&nbsp; Ox = 碳氧化率 &nbsp;|&nbsp; 44/12 = CO₂/C 分子量比
+                    </div>
+                </div>
+            </div>
+            
+            <div class="grid-2">
+                <div class="card">
+                    <div class="card-title">排放量计算</div>
+                    <div class="formula-box" style="background: linear-gradient(135deg, #fff7ed, #ffedd5); border-color: #fed7aa;">
+                        <div class="formula-main" style="color: var(--accent);">E<sub>燃烧</sub> = AD × EF</div>
+                        <div class="formula-items">
+                            AD = 活动数据 (GJ) = 消耗量 × 低位发热量
+                        </div>
+                    </div>
+                    <div class="grid-2" style="margin-top: 16px;">
+                        <div class="form-group">
+                            <label class="form-label">活动数据 AD (GJ)</label>
+                            <input type="number" class="form-input" id="fuel-ad" placeholder="自动计算" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">排放因子 EF (tCO₂/GJ)</label>
+                            <input type="number" class="form-input" id="fuel-ef" placeholder="自动计算" readonly>
+                        </div>
+                    </div>
+                    <div style="padding: 16px; background: var(--bg); border-radius: 8px; text-align: center;">
+                        <div style="font-size: 14px; color: var(--text-light);">燃料燃烧排放量</div>
+                        <div style="font-size: 32px; font-weight: 700; color: var(--accent);" id="fuel-result">0 tCO₂</div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-title">各燃料排放占比</div>
+                    <div class="chart-container">
+                        <canvas id="fuelPieChart"></canvas>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-title">多燃料燃烧排放记录</div>
+                <div class="btn-group" style="margin-bottom: 16px;">
+                    <button class="btn btn-primary" onclick="addFuelRecord()">➕ 添加燃料</button>
+                </div>
+                <div class="table-wrapper">
+                    <table class="data-table" id="fuelTable">
+                        <thead>
+                            <tr>
+                                <th>序号</th>
+                                <th>燃料类型</th>
+                                <th>消耗量</th>
+                                <th>低位发热量</th>
+                                <th>活动数据(GJ)</th>
+                                <th>排放因子</th>
+                                <th>排放量(tCO₂)</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody id="fuelTableBody">
+                            <tr><td colspan="8" style="text-align: center; color: var(--text-light);">点击"添加燃料"开始录入</td></tr>
+                        </tbody>
+                        <tfoot>
+                            <tr style="font-weight: 600; background: var(--bg);">
+                                <td colspan="6" style="text-align: right;">合计</td>
+                                <td id="fuelTotal">0 tCO₂</td>
+                                <td></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 脱硫排放 -->
+        <div id="desulfurization" class="tab-content">
+            <div class="card">
+                <div class="card-title">脱硫过程排放原理</div>
+                <div class="formula-box" style="background: linear-gradient(135deg, #f0fdf4, #dcfce7); border-color: #86efac;">
+                    <div class="formula-main" style="color: var(--success);">E<sub>脱硫</sub> = M<sub>脱硫</sub> × η × 44/12</div>
+                    <div class="formula-items">
+                        M<sub>脱硫</sub> = 脱硫剂量 × 纯度 &nbsp;|&nbsp; η = 脱硫效率 &nbsp;|&nbsp; 44/12 = CO₂/C 分子量比
+                    </div>
+                </div>
+                <div style="padding: 16px; background: #f0fdf4; border-radius: 8px; margin-top: 16px;">
+                    <strong>化学反应方程式：</strong><br>
+                    CaCO₃ + SO₂ + ½O₂ → CaSO₄ + CO₂<br>
+                    每脱除1mol SO₂，生成1mol CO₂
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-title">石灰石脱硫排放计算</div>
+                <div class="inner-tabs">
+                    <button class="inner-tab active" onclick="switchDesulTab('calc')">计算器</button>
+                    <button class="inner-tab" onclick="switchDesulTab('history')">历史记录</button>
+                </div>
+                
+                <div id="desul-calc" class="inner-content active">
+                    <div class="grid-2">
+                        <div class="form-group">
+                            <label class="form-label">脱硫剂消耗量 (吨)</label>
+                            <input type="number" class="form-input" id="desul-input-consumption" placeholder="如：100" step="0.01">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">脱硫剂纯度 (%)</label>
+                            <input type="number" class="form-input" id="desul-input-purity" placeholder="如：95" step="0.1" value="95">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">脱硫效率 (%)</label>
+                            <input type="number" class="form-input" id="desul-input-efficiency" placeholder="如：85" step="0.1" value="85">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">运行时间 (小时)</label>
+                            <input type="number" class="form-input" id="desul-input-hours" placeholder="如：720" step="1" value="720">
+                        </div>
+                    </div>
+                    <button class="btn btn-primary" onclick="calculateDesul()">计算脱硫排放</button>
+                    
+                    <div class="grid-3" style="margin-top: 24px;">
+                        <div class="stat-card desulfurization">
+                            <div class="stat-label">纯CaCO₃消耗量</div>
+                            <div class="stat-value" id="desul-ca">0<span class="stat-unit">吨</span></div>
+                        </div>
+                        <div class="stat-card desulfurization">
+                            <div class="stat-label">脱硫效率系数</div>
+                            <div class="stat-value" id="desul-factor">0</div>
+                        </div>
+                        <div class="stat-card desulfurization">
+                            <div class="stat-label">脱硫排放量</div>
+                            <div class="stat-value" id="desul-result" style="color: var(--success);">0<span class="stat-unit">tCO₂</span></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="desul-history" class="inner-content">
+                    <div class="table-wrapper">
+                        <table class="data-table" id="desulHistoryTable">
+                            <thead>
+                                <tr>
+                                    <th>日期</th>
+                                    <th>脱硫剂量(吨)</th>
+                                    <th>纯度(%)</th>
+                                    <th>效率(%)</th>
+                                    <th>排放量(tCO₂)</th>
+                                </tr>
+                            </thead>
+                            <tbody id="desulHistoryBody">
+                                <tr><td colspan="5" style="text-align: center; color: var(--text-light);">暂无历史记录</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 净购入电力 -->
+        <div id="power" class="tab-content">
+            <div class="card">
+                <div class="card-title">净购入电力排放原理</div>
+                <div class="formula-box" style="background: linear-gradient(135deg, #eff6ff, #dbeafe); border-color: #93c5fd;">
+                    <div class="formula-main" style="color: var(--secondary);">E<sub>电力</sub> = AD<sub>电力</sub> × EF<sub>电力</sub></div>
+                    <div class="formula-items">
+                        AD<sub>电力</sub> = 净购入电量 (MWh) &nbsp;|&nbsp; EF<sub>电力</sub> = 电网排放因子 (tCO₂/MWh)
+                    </div>
+                </div>
+            </div>
+            
+            <div class="grid-2">
+                <div class="card">
+                    <div class="card-title">电网排放因子参考</div>
+                    <div class="table-wrapper">
+                        <table class="ref-table">
+                            <thead>
+                                <tr>
+                                    <th>电网区域</th>
+                                    <th>排放因子<br>(tCO₂/MWh)</th>
+                                    <th>适用年份</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr><td>华北区域电网</td><td>0.8843</td><td>2022</td></tr>
+                                <tr><td>东北区域电网</td><td>0.7769</td><td>2022</td></tr>
+                                <tr><td>华东区域电网</td><td>0.7035</td><td>2022</td></tr>
+                                <tr><td>华中区域电网</td><td>0.5271</td><td>2022</td></tr>
+                                <tr><td>西北区域电网</td><td>0.6671</td><td>2022</td></tr>
+                                <tr><td>南方区域电网</td><td>0.5810</td><td>2022</td></tr>
+                                <tr><td>西南区域电网</td><td>0.2372</td><td>2022</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <p style="font-size: 12px; color: var(--text-light); margin-top: 8px;">
+                        * 数据来源：生态环境部应对气候变化司发布的2022年度中国区域电网基准线排放因子
+                    </p>
+                </div>
+                
+                <div class="card">
+                    <div class="card-title">净购入电量计算</div>
+                    <div class="formula-box" style="background: var(--bg); border-color: var(--border);">
+                        <div class="formula-main" style="color: var(--text);">净购入电量 = 购入电量 - 售出电量</div>
+                    </div>
+                    <div class="grid-2" style="margin-top: 16px;">
+                        <div class="form-group">
+                            <label class="form-label">购入电量 (MWh)</label>
+                            <input type="number" class="form-input" id="power-bought" placeholder="从电网购入" step="0.01">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">售出电量 (MWh)</label>
+                            <input type="number" class="form-input" id="power-sold" placeholder="向电网售出" step="0.01" value="0">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">净购入电量 (MWh)</label>
+                            <input type="number" class="form-input" id="power-net" placeholder="自动计算" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">电网排放因子 (tCO₂/MWh)</label>
+                            <select class="form-select" id="power-grid-select" onchange="updateGridEF()">
+                                <option value="0.8843">华北区域电网 (0.8843)</option>
+                                <option value="0.7769">东北区域电网 (0.7769)</option>
+                                <option value="0.7035">华东区域电网 (0.7035)</option>
+                                <option value="0.5271">华中区域电网 (0.5271)</option>
+                                <option value="0.6671">西北区域电网 (0.6671)</option>
+                                <option value="0.5810" selected>南方区域电网 (0.5810)</option>
+                                <option value="0.2372">西南区域电网 (0.2372)</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div style="padding: 16px; background: var(--bg); border-radius: 8px; text-align: center;">
+                        <div style="font-size: 14px; color: var(--text-light);">净购入电力排放量</div>
+                        <div style="font-size: 32px; font-weight: 700; color: var(--secondary);" id="power-result">0 tCO₂</div>
+                    </div>
+                    <button class="btn btn-primary" style="width: 100%; margin-top: 16px;" onclick="calculatePowerEmissions()">计算排放</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 排放报告 -->
+        <div id="report" class="tab-content">
+            <div class="card">
+                <div class="card-title">排放报告生成</div>
+                <div class="btn-group">
+                    <button class="btn btn-primary" onclick="generateReport()">📄 生成报告</button>
+                    <button class="btn btn-success" onclick="exportExcel()">📊 导出Excel</button>
+                    <button class="btn btn-secondary" onclick="window.print()">🖨️ 打印</button>
+                </div>
+            </div>
+            
+            <div class="card" id="reportContent">
+                <div class="report-header">
+                    <h1>企业温室气体排放报告</h1>
+                    <p>发电设施 · <span id="report-year">2026</span>年度</p>
+                </div>
+                
+                <div class="report-section">
+                    <h3>一、基本信息</h3>
+                    <table class="report-table">
+                        <tr><th>企业名称</th><td id="report-company">—</td></tr>
+                        <tr><th>报告期间</th><td id="report-period">—</td></tr>
+                        <tr><th>设施名称</th><td id="report-facility">—</td></tr>
+                        <tr><th>报告日期</th><td id="report-date">—</td></tr>
+                    </table>
+                </div>
+                
+                <div class="report-section">
+                    <h3>二、排放总量汇总</h3>
+                    <table class="report-table">
+                        <thead>
+                            <tr>
+                                <th>排放源类别</th>
+                                <th>排放量(tCO₂)</th>
+                                <th>占比</th>
+                            </tr>
+                        </thead>
+                        <tbody id="report-emissions-summary">
+                        </tbody>
+                        <tfoot>
+                            <tr style="font-weight: 600; background: #f5f5f5;">
+                                <td>排放总量</td>
+                                <td id="report-total">0</td>
+                                <td>100%</td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+                
+                <div class="report-section">
+                    <h3>三、排放强度指标</h3>
+                    <table class="report-table">
+                        <tr><th>综合排放强度</th><td id="report-intensity">0 tCO₂/MWh</td></tr>
+                        <tr><th>发电量</th><td id="report-generation">0 MWh</td></tr>
+                        <tr><th>供热比</th><td id="report-heat-ratio">—</td></tr>
+                    </table>
+                </div>
+                
+                <div class="report-section">
+                    <h3>四、活动数据与排放因子</h3>
+                    <table class="report-table">
+                        <thead>
+                            <tr>
+                                <th>燃料类型</th>
+                                <th>消耗量</th>
+                                <th>低位发热量</th>
+                                <th>排放因子</th>
+                                <th>排放量</th>
+                            </tr>
+                        </thead>
+                        <tbody id="report-fuel-detail">
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="report-section">
+                    <h3>五、核算方法说明</h3>
+                    <p style="font-size: 13px; line-height: 1.8;">
+                        本报告依据《企业温室气体排放核算与报告指南 发电设施》(2023年修订版)编制。排放量核算采用以下公式：
+                    </p>
+                    <div class="formula-box" style="margin: 16px 0;">
+                        <div style="font-size: 14px;">
+                            E<sub>总</sub> = E<sub>燃烧</sub> + E<sub>脱硫</sub> + E<sub>电力</sub><br><br>
+                            E<sub>燃烧</sub> = Σ(AD<sub>i</sub> × EF<sub>i</sub>) = Σ(消耗量<sub>i</sub> × NCV<sub>i</sub> × CC<sub>i</sub> × Ox<sub>i</sub> × 44/12)<br>
+                            E<sub>脱硫</sub> = M<sub>CaCO₃</sub> × η × 44/12<br>
+                            E<sub>电力</sub> = AD<sub>电力</sub> × EF<sub>电网</sub>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="report-section">
+                    <h3>六、数据质量保证</h3>
+                    <p style="font-size: 13px; line-height: 1.8;">
+                        本报告中的数据来源于企业能源管理系统和监测设备，所有活动数据均经过校验，排放因子采用国家标准或默认值，确保数据的完整性、准确性和可比性。
+                    </p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 参考数据 -->
+        <div id="reference" class="tab-content">
+            <div class="card">
+                <div class="card-title">燃料相关参数参考表</div>
+                <div class="table-wrapper">
+                    <table class="ref-table">
+                        <thead>
+                            <tr>
+                                <th>燃料类型</th>
+                                <th>低位发热量<br>(GJ/t或GJ/万m³)</th>
+                                <th>单位热值含碳量<br>(tC/GJ)</th>
+                                <th>碳氧化率</th>
+                                <th>排放因子<br>(tCO₂/GJ)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="fuelRefTable">
+                        </tbody>
+                    </table>
+                </div>
+                <p style="font-size: 12px; color: var(--text-light); margin-top: 12px;">
+                    * 数据来源：GB/T 32150-2015《工业其他行业企业温室气体排放核算方法与报告指南》<br>
+                    * 排放因子 = 单位热值含碳量 × 碳氧化率 × 44/12
+                </p>
+            </div>
+            
+            <div class="card">
+                <div class="card-title">常见能源折标煤系数</div>
+                <div class="table-wrapper">
+                    <table class="ref-table">
+                        <thead>
+                            <tr>
+                                <th>能源品种</th>
+                                <th>单位</th>
+                                <th>参考折标煤系数</th>
+                                <th>备注</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>天然气</td><td>万m³</td><td>12.14 tce/万m³</td><td>低位发热量36.89 MJ/m³</td></tr>
+                            <tr><td>液化石油气</td><td>吨</td><td>1.7143 tce/吨</td><td>高位发热量50.18 MJ/kg</td></tr>
+                            <tr><td>柴油</td><td>吨</td><td>1.4571 tce/吨</td><td>低位发热量42.65 MJ/kg</td></tr>
+                            <tr><td>重油</td><td>吨</td><td>1.4286 tce/吨</td><td>低位发热量41.82 MJ/kg</td></tr>
+                            <tr><td>焦炭</td><td>吨</td><td>0.9714 tce/吨</td><td>低位发热量28.47 MJ/kg</td></tr>
+                            <tr><td>标准煤</td><td>吨</td><td>1.0 tce/吨</td><td>低位发热量29.27 MJ/kg</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-title">排放因子快速查询</div>
+                <div class="grid-2">
+                    <div>
+                        <h4 style="margin-bottom: 12px;">电网排放因子</h4>
+                        <div class="chart-container" style="height: 200px;">
+                            <canvas id="gridEFChart"></canvas>
+                        </div>
+                    </div>
+                    <div>
+                        <h4 style="margin-bottom: 12px;">固体燃料排放因子对比</h4>
+                        <div class="chart-container" style="height: 200px;">
+                            <canvas id="solidFuelEFChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-title">核算要点速查</div>
+                <div class="grid-2">
+                    <div style="padding: 16px; background: #fff7ed; border-radius: 8px; border-left: 4px solid var(--accent);">
+                        <h4 style="margin-bottom: 8px;">⚠️ 注意事项</h4>
+                        <ul style="font-size: 13px; line-height: 1.8; padding-left: 16px;">
+                            <li>化石燃料燃烧排放是发电行业最主要的排放源</li>
+                            <li>脱硫排放仅针对使用石灰石/石灰脱硫的设施</li>
+                            <li>净购入电力排放需使用最新电网排放因子</li>
+                            <li>所有数据需保留原始凭证以备核查</li>
+                        </ul>
+                    </div>
+                    <div style="padding: 16px; background: #f0fdf4; border-radius: 8px; border-left: 4px solid var(--success);">
+                        <h4 style="margin-bottom: 8px;">📋 报告要求</h4>
+                        <ul style="font-size: 13px; line-height: 1.8; padding-left: 16px;">
+                            <li>报告周期：自然年</li>
+                            <li>数据保留期限：不少于5年</li>
+                            <li>排放因子应优先使用实测值</li>
+                            <li>报告需经企业负责人签字盖章</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <script>
+        // ===== 全局数据存储 =====
+        let emissionRecords = JSON.parse(localStorage.getItem('emissionRecords')) || [];
+        let fuelRecords = [];
+        let currentYear = new Date().getFullYear();
+        
+        // ===== 燃料参数数据 =====
+        const fuelData = {
+            natural_gas: { name: '天然气', ncv: 36.89, cc: 0.0153, unit: '万m³' },
+            lpg: { name: '液化石油气', ncv: 50.18, cc: 0.0172, unit: '吨' },
+            diesel: { name: '柴油', ncv: 42.65, cc: 0.0200, unit: '吨' },
+            heavy_oil: { name: '重油', ncv: 41.82, cc: 0.0211, unit: '吨' },
+            bituminous: { name: '烟煤', ncv: 20.91, cc: 0.0263, unit: '吨' },
+            anthracite: { name: '无烟煤', ncv: 26.34, cc: 0.0280, unit: '吨' },
+            lignite: { name: '褐煤', ncv: 11.90, cc: 0.0270, unit: '吨' },
+            coke: { name: '焦炭', ncv: 28.47, cc: 0.0295, unit: '吨' }
+        };
+        
+        // 电网排放因子
+        const gridEF = {
+            north: { name: '华北区域电网', ef: 0.8843 },
+            northeast: { name: '东北区域电网', ef: 0.7769 },
+            east: { name: '华东区域电网', ef: 0.7035 },
+            central: { name: '华中区域电网', ef: 0.5271 },
+            northwest: { name: '西北区域电网', ef: 0.6671 },
+            south: { name: '南方区域电网', ef: 0.5810 },
+            southwest: { name: '西南区域电网', ef: 0.2372 }
+        };
+        
+        // ===== 图表实例 =====
+        let pieChart, trendChart, fuelPieChart, gridEFChart, solidFuelEFChart;
+        
+        // ===== 初始化 =====
+        document.addEventListener('DOMContentLoaded', function() {
+            initTabs();
+            initCharts();
+            loadFuelReferenceTable();
+            initPowerCalculation();
+            updateDashboard();
+        });
+        
+        // ===== 标签页切换 =====
+        function initTabs() {
+            const tabs = document.querySelectorAll('.nav-tab');
+            tabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    const tabId = this.dataset.tab;
+                    
+                    tabs.forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                    document.getElementById(tabId).classList.add('active');
+                });
+            });
+        }
+        
+        // ===== 初始化图表 =====
+        function initCharts() {
+            // 排放构成饼图
+            const pieCtx = document.getElementById('pieChart').getContext('2d');
+            pieChart = new Chart(pieCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['燃料燃烧排放', '脱硫过程排放', '净购入电力排放'],
+                    datasets: [{
+                        data: [0, 0, 0],
+                        backgroundColor: ['#f59e0b', '#10b981', '#4a90d9'],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'right',
+                            labels: { font: { size: 12 } }
+                        }
+                    }
+                }
+            });
+            
+            // 趋势图
+            const trendCtx = document.getElementById('trendChart').getContext('2d');
+            trendChart = new Chart(trendCtx, {
+                type: 'line',
+                data: {
+                    labels: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'],
+                    datasets: [
+                        {
+                            label: '燃料燃烧排放',
+                            data: new Array(12).fill(0),
+                            borderColor: '#f59e0b',
+                            backgroundColor: 'rgba(245, 158, 11, 0.1)',
+                            fill: true,
+                            tension: 0.3
+                        },
+                        {
+                            label: '脱硫排放',
+                            data: new Array(12).fill(0),
+                            borderColor: '#10b981',
+                            backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                            fill: true,
+                            tension: 0.3
+                        },
+                        {
+                            label: '购电排放',
+                            data: new Array(12).fill(0),
+                            borderColor: '#4a90d9',
+                            backgroundColor: 'rgba(74, 144, 217, 0.1)',
+                            fill: true,
+                            tension: 0.3
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'top' }
+                    },
+                    scales: {
+                        y: { beginAtZero: true }
+                    }
+                }
+            });
+            
+            // 燃料排放饼图
+            const fuelPieCtx = document.getElementById('fuelPieChart').getContext('2d');
+            fuelPieChart = new Chart(fuelPieCtx, {
+                type: 'pie',
+                data: {
+                    labels: [],
+                    datasets: [{
+                        data: [],
+                        backgroundColor: ['#ef4444', '#f97316', '#f59e0b', '#eab308', '#84cc16', '#22c55e', '#14b8a6', '#06b6d4'],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'right', labels: { font: { size: 11 } } }
+                    }
+                }
+            });
+            
+            // 电网排放因子图
+            const gridCtx = document.getElementById('gridEFChart').getContext('2d');
+            gridEFChart = new Chart(gridCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['华北', '东北', '华东', '华中', '西北', '南方', '西南'],
+                    datasets: [{
+                        label: '排放因子',
+                        data: [0.8843, 0.7769, 0.7035, 0.5271, 0.6671, 0.5810, 0.2372],
+                        backgroundColor: ['#ef4444', '#f97316', '#f59e0b', '#84cc16', '#22c55e', '#14b8a6', '#06b6d4']
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: { y: { beginAtZero: true } }
+                }
+            });
+            
+            // 固体燃料排放因子图
+            const solidCtx = document.getElementById('solidFuelEFChart').getContext('2d');
+            solidFuelEFChart = new Chart(solidCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['烟煤', '无烟煤', '褐煤', '焦炭'],
+                    datasets: [{
+                        label: '排放因子(tCO₂/GJ)',
+                        data: [0.90, 0.96, 0.93, 1.01],
+                        backgroundColor: ['#64748b', '#475569', '#334155', '#1e293b']
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: { y: { beginAtZero: true } }
+                }
+            });
+        }
+        
+        // ===== 加载燃料参考表 =====
+        function loadFuelReferenceTable() {
+            const tbody = document.getElementById('fuelRefTable');
+            tbody.innerHTML = '';
+            
+            for (const [key, fuel] of Object.entries(fuelData)) {
+                const ef = (fuel.cc * 0.98 * 44 / 12).toFixed(4);
+                tbody.innerHTML += `
+                    <tr>
+                        <td>${fuel.name}</td>
+                        <td>${fuel.ncv}</td>
+                        <td>${fuel.cc}</td>
+                        <td>0.98</td>
+                        <td>${ef}</td>
+                    </tr>
+                `;
+            }
+        }
+        
+        // ===== 更新燃料参数 =====
+        function updateFuelParams() {
+            const fuelType = document.getElementById('input-fuel-type').value;
+            if (fuelType && fuelData[fuelType]) {
+                const fuel = fuelData[fuelType];
+                document.getElementById('input-ncv').value = fuel.ncv;
+                document.getElementById('input-cc').value = fuel.cc;
+                document.getElementById('ncv-hint').textContent = `参考值（${fuel.unit}）`;
+                document.getElementById('cc-hint').textContent = '选择燃料后自动填充';
+                
+                // 自动计算排放因子
+                const ef = (fuel.cc * 0.98 * 44 / 12).toFixed(4);
+                document.getElementById('input-ef').value = ef;
+            }
+        }
+        
+        // ===== 计算排放量 =====
+        function calculateEmissions() {
+            const fuelType = document.getElementById('input-fuel-type').value;
+            const consumption = parseFloat(document.getElementById('input-fuel-consumption').value) || 0;
+            const ncv = parseFloat(document.getElementById('input-ncv').value) || 0;
+            const cc = parseFloat(document.getElementById('input-cc').value) || 0;
+            const oxidation = parseFloat(document.getElementById('input-oxidation').value) || 0.98;
+            
+            const desulConsumption = parseFloat(document.getElementById('input-desul-consumption').value) || 0;
+            const desulPurity = parseFloat(document.getElementById('input-desul-purity').value) || 0;
+            const desulEfficiency = parseFloat(document.getElementById('input-desul-efficiency').value) || 0;
+            
+            const powerConsumption = parseFloat(document.getElementById('input-power-consumption').value) || 0;
+            const gridEF = parseFloat(document.getElementById('input-grid-ef').value) || 0;
+            
+            // 燃料燃烧排放
+            // E燃烧 = 消耗量 × NCV × CC × Ox × 44/12
+            // 注意：如果燃料单位是万立方米，NCV单位是GJ/万m³，则活动数据 = 消耗量 × NCV
+            // 如果燃料单位是吨，NCV单位是GJ/t，则活动数据 = 消耗量 × NCV
+            let fuelEmission = 0;
+            if (fuelType && consumption > 0 && ncv > 0 && cc > 0) {
+                const AD = consumption * ncv; // 活动数据 (GJ)
+                const EF = cc * oxidation * 44 / 12; // 排放因子 (tCO₂/GJ)
+                fuelEmission = AD * EF;
+                
+                // 更新燃料页面的数据
+                document.getElementById('fuel-ad').value = AD.toFixed(2);
+                document.getElementById('fuel-ef').value = EF.toFixed(4);
+            }
+            
+            // 脱硫排放
+            // E脱硫 = M_CaCO3 × η × 44/12
+            // M_CaCO3 = 脱硫剂量 × 纯度/100
+            let desulEmission = 0;
+            if (desulConsumption > 0 && desulPurity > 0 && desulEfficiency > 0) {
+                const mCaco3 = desulConsumption * (desulPurity / 100); // 纯CaCO3量(吨)
+                desulEmission = mCaco3 * (desulEfficiency / 100) * (44 / 12);
+            }
+            
+            // 净购入电力排放
+            // E电力 = 净购电量 × EF电网
+            let powerEmission = 0;
+            if (powerConsumption > 0 && gridEF > 0) {
+                powerEmission = powerConsumption * gridEF;
+            }
+            
+            // 显示结果
+            document.getElementById('result-card').style.display = 'block';
+            document.getElementById('result-fuel').innerHTML = fuelEmission.toFixed(2) + '<span class="stat-unit">tCO₂</span>';
+            document.getElementById('result-desul').innerHTML = desulEmission.toFixed(2) + '<span class="stat-unit">tCO₂</span>';
+            document.getElementById('result-power').innerHTML = powerEmission.toFixed(2) + '<span class="stat-unit">tCO₂</span>';
+            
+            const total = fuelEmission + desulEmission + powerEmission;
+            document.getElementById('result-formula').textContent = `E = ${total.toFixed(2)} tCO₂`;
+            
+            document.getElementById('fuel-result').textContent = fuelEmission.toFixed(2) + ' tCO₂';
+            
+            return { fuelEmission, desulEmission, powerEmission, total };
+        }
+        
+        // ===== 保存记录 =====
+        function saveRecord() {
+            const year = document.getElementById('input-year').value;
+            const month = document.getElementById('input-month').value;
+            const facility = document.getElementById('input-facility').value || '发电设施';
+            
+            const fuelType = document.getElementById('input-fuel-type').value;
+            const consumption = parseFloat(document.getElementById('input-fuel-consumption').value) || 0;
+            const ncv = parseFloat(document.getElementById('input-ncv').value) || 0;
+            
+            const results = calculateEmissions();
+            
+            const record = {
+                id: Date.now(),
+                date: `${year}-${month.padStart(2, '0')}`,
+                facility: facility,
+                fuelType: fuelType,
+                fuelName: fuelData[fuelType]?.name || '未知',
+                consumption: consumption,
+                ncv: ncv,
+                fuelEmission: results.fuelEmission,
+                desulEmission: results.desulEmission,
+                powerEmission: results.powerEmission,
+                totalEmission: results.total
+            };
+            
+            emissionRecords.push(record);
+            localStorage.setItem('emissionRecords', JSON.stringify(emissionRecords));
+            
+            updateDashboard();
+            alert('记录已保存！');
+        }
+        
+        // ===== 更新仪表板 =====
+        function updateDashboard() {
+            let totalFuel = 0, totalDesul = 0, totalPower = 0;
+            
+            emissionRecords.forEach(r => {
+                totalFuel += r.fuelEmission;
+                totalDesul += r.desulEmission;
+                totalPower += r.powerEmission;
+            });
+            
+            const total = totalFuel + totalDesul + totalPower;
+            
+            document.getElementById('stat-fuel-emissions').innerHTML = totalFuel.toFixed(2) + '<span class="stat-unit">tCO₂</span>';
+            document.getElementById('stat-desul-emissions').innerHTML = totalDesul.toFixed(2) + '<span class="stat-unit">tCO₂</span>';
+            document.getElementById('stat-power-emissions').innerHTML = totalPower.toFixed(2) + '<span class="stat-unit">tCO₂</span>';
+            document.getElementById('stat-total-emissions').innerHTML = total.toFixed(2) + '<span class="stat-unit">tCO₂</span>';
+            
+            if (total > 0) {
+                document.getElementById('fuel-percent').textContent = `占比 ${((totalFuel/total)*100).toFixed(1)}%`;
+                document.getElementById('desul-percent').textContent = `占比 ${((totalDesul/total)*100).toFixed(1)}%`;
+                document.getElementById('power-percent').textContent = `占比 ${((totalPower/total)*100).toFixed(1)}%`;
+            }
+            
+            // 更新饼图
+            pieChart.data.datasets[0].data = [totalFuel, totalDesul, totalPower];
+            pieChart.update();
+            
+            // 更新趋势图
+            updateTrendChart();
+            
+            // 更新最近记录
+            updateRecentRecords();
+        }
+        
+        // ===== 更新趋势图 =====
+        function updateTrendChart() {
+            const monthlyData = {};
+            
+            for (let i = 1; i <= 12; i++) {
+                monthlyData[i] = { fuel: 0, desul: 0, power: 0 };
+            }
+            
+            emissionRecords.forEach(r => {
+                const month = parseInt(r.date.split('-')[1]);
+                monthlyData[month].fuel += r.fuelEmission;
+                monthlyData[month].desul += r.desulEmission;
+                monthlyData[month].power += r.powerEmission;
+            });
+            
+            trendChart.data.datasets[0].data = Object.values(monthlyData).map(d => d.fuel);
+            trendChart.data.datasets[1].data = Object.values(monthlyData).map(d => d.desul);
+            trendChart.data.datasets[2].data = Object.values(monthlyData).map(d => d.power);
+            trendChart.update();
+        }
+        
+        // ===== 更新最近记录 =====
+        function updateRecentRecords() {
+            const tbody = document.getElementById('recentRecordsBody');
+            
+            if (emissionRecords.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; color: var(--text-light);">暂无数据，请先录入数据</td></tr>';
+                return;
+            }
+            
+            const recent = emissionRecords.slice(-10).reverse();
+            tbody.innerHTML = recent.map(r => `
+                <tr>
+                    <td>${r.date}</td>
+                    <td>${r.fuelName}</td>
+                    <td>${r.consumption}</td>
+                    <td>${r.fuelEmission.toFixed(2)}</td>
+                    <td>${r.desulEmission.toFixed(2)}</td>
+                    <td>${r.powerEmission.toFixed(2)}</td>
+                    <td>${r.totalEmission.toFixed(2)}</td>
+                </tr>
+            `).join('');
+        }
+        
+        // ===== 重置表单 =====
+        function resetForm() {
+            document.querySelectorAll('#input input, #input select').forEach(el => {
+                if (el.type === 'number') el.value = '';
+                else if (el.tagName === 'SELECT') el.selectedIndex = 0;
+            });
+            document.getElementById('input-oxidation').value = '0.98';
+            document.getElementById('input-desul-purity').value = '95';
+            document.getElementById('input-desul-efficiency').value = '80';
+            document.getElementById('input-grid-ef').value = '0.5810';
+            document.getElementById('result-card').style.display = 'none';
+        }
+        
+        // ===== 脱硫计算 =====
+        function switchDesulTab(tab) {
+            document.querySelectorAll('#desulfurization .inner-tab').forEach(t => t.classList.remove('active'));
+            event.target.classList.add('active');
+            document.getElementById('desul-calc').classList.toggle('active', tab === 'calc');
+            document.getElementById('desul-history').classList.toggle('active', tab === 'history');
+        }
+        
+        function calculateDesul() {
+            const consumption = parseFloat(document.getElementById('desul-input-consumption').value) || 0;
+            const purity = parseFloat(document.getElementById('desul-input-purity').value) || 0;
+            const efficiency = parseFloat(document.getElementById('desul-input-efficiency').value) || 0;
+            
+            if (consumption <= 0 || purity <= 0 || efficiency <= 0) {
+                alert('请输入有效的数值');
+                return;
+            }
+            
+            const mCaco3 = consumption * (purity / 100); // 纯CaCO3量(吨)
+            const factor = efficiency / 100;
+            const emission = mCaco3 * factor * (44 / 12); // 排放量(tCO₂)
+            
+            document.getElementById('desul-ca').innerHTML = mCaco3.toFixed(2) + '<span class="stat-unit">吨</span>';
+            document.getElementById('desul-factor').textContent = factor.toFixed(4);
+            document.getElementById('desul-result').innerHTML = emission.toFixed(2) + '<span class="stat-unit">tCO₂</span>';
+            
+            // 保存到历史记录
+            const historyRecord = {
+                date: new Date().toLocaleDateString(),
+                consumption: consumption,
+                purity: purity,
+                efficiency: efficiency,
+                emission: emission
+            };
+            
+            let history = JSON.parse(localStorage.getItem('desulHistory')) || [];
+            history.push(historyRecord);
+            localStorage.setItem('desulHistory', JSON.stringify(history));
+            
+            updateDesulHistory();
+        }
+        
+        function updateDesulHistory() {
+            const tbody = document.getElementById('desulHistoryBody');
+            const history = JSON.parse(localStorage.getItem('desulHistory')) || [];
+            
+            if (history.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: var(--text-light);">暂无历史记录</td></tr>';
+                return;
+            }
+            
+            tbody.innerHTML = history.reverse().map(h => `
+                <tr>
+                    <td>${h.date}</td>
+                    <td>${h.consumption.toFixed(2)}</td>
+                    <td>${h.purity}</td>
+                    <td>${h.efficiency}</td>
+                    <td>${h.emission.toFixed(2)}</td>
+                </tr>
+            `).join('');
+        }
+        
+        // ===== 电力计算 =====
+        function initPowerCalculation() {
+            const bought = document.getElementById('power-bought');
+            const sold = document.getElementById('power-sold');
+            
+            [bought, sold].forEach(el => {
+                el.addEventListener('input', calculateNetPower);
+            });
+        }
+        
+        function calculateNetPower() {
+            const bought = parseFloat(document.getElementById('power-bought').value) || 0;
+            const sold = parseFloat(document.getElementById('power-sold').value) || 0;
+            const net = bought - sold;
+            document.getElementById('power-net').value = net.toFixed(2);
+        }
+        
+        function updateGridEF() {
+            const ef = document.getElementById('power-grid-select').value;
+            document.getElementById('input-grid-ef').value = ef;
+        }
+        
+        function calculatePowerEmissions() {
+            const net = parseFloat(document.getElementById('power-net').value) || 0;
+            const gridEF = parseFloat(document.getElementById('power-grid-select').value) || 0;
+            
+            const emission = net * gridEF;
+            document.getElementById('power-result').textContent = emission.toFixed(2) + ' tCO₂';
+        }
+        
+        // ===== 燃料记录管理 =====
+        function addFuelRecord() {
+            const fuelType = prompt('请选择燃料类型编号：\n1-天然气 2-液化石油气 3-柴油 4-重油 5-烟煤 6-无烟煤 7-褐煤 8-焦炭');
+            if (!fuelType) return;
+            
+            const fuelKeys = ['', 'natural_gas', 'lpg', 'diesel', 'heavy_oil', 'bituminous', 'anthracite', 'lignite', 'coke'];
+            const key = fuelKeys[parseInt(fuelType)];
+            
+            if (!key) {
+                alert('无效的选择');
+                return;
+            }
+            
+            const consumption = parseFloat(prompt('请输入消耗量：'));
+            if (isNaN(consumption)) return;
+            
+            const fuel = fuelData[key];
+            const AD = consumption * fuel.ncv;
+            const EF = fuel.cc * 0.98 * 44 / 12;
+            const emission = AD * EF;
+            
+            fuelRecords.push({
+                type: key,
+                name: fuel.name,
+                consumption: consumption,
+                ncv: fuel.ncv,
+                AD: AD,
+                EF: EF,
+                emission: emission
+            });
+            
+            updateFuelTable();
+        }
+        
+        function updateFuelTable() {
+            const tbody = document.getElementById('fuelTableBody');
+            
+            if (fuelRecords.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="8" style="text-align: center; color: var(--text-light);">点击"添加燃料"开始录入</td></tr>';
+                return;
+            }
+            
+            tbody.innerHTML = fuelRecords.map((r, i) => `
+                <tr>
+                    <td>${i + 1}</td>
+                    <td>${r.name}</td>
+                    <td>${r.consumption}</td>
+                    <td>${r.ncv}</td>
+                    <td>${r.AD.toFixed(2)}</td>
+                    <td>${r.EF.toFixed(4)}</td>
+                    <td>${r.emission.toFixed(2)}</td>
+                    <td><button class="btn btn-secondary" onclick="removeFuelRecord(${i})">删除</button></td>
+                </tr>
+            `).join('');
+            
+            const total = fuelRecords.reduce((sum, r) => sum + r.emission, 0);
+            document.getElementById('fuelTotal').textContent = total.toFixed(2) + ' tCO₂';
+            document.getElementById('fuel-result').textContent = total.toFixed(2) + ' tCO₂';
+            
+            // 更新饼图
+            fuelPieChart.data.labels = fuelRecords.map(r => r.name);
+            fuelPieChart.data.datasets[0].data = fuelRecords.map(r => r.emission);
+            fuelPieChart.update();
+        }
+        
+        function removeFuelRecord(index) {
+            fuelRecords.splice(index, 1);
+            updateFuelTable();
+        }
+        
+        // ===== 生成报告 =====
+        function generateReport() {
+            let totalFuel = 0, totalDesul = 0, totalPower = 0;
+            const fuelDetails = {};
+            
+            emissionRecords.forEach(r => {
+                totalFuel += r.fuelEmission;
+                totalDesul += r.desulEmission;
+                totalPower += r.powerEmission;
+                
+                if (!fuelDetails[r.fuelType]) {
+                    fuelDetails[r.fuelType] = {
+                        name: r.fuelName,
+                        consumption: 0,
+                        emission: 0
+                    };
+                }
+                fuelDetails[r.fuelType].consumption += r.consumption;
+                fuelDetails[r.fuelType].emission += r.fuelEmission;
+            });
+            
+            const total = totalFuel + totalDesul + totalPower;
+            
+            document.getElementById('report-year').textContent = currentYear;
+            document.getElementById('report-period').textContent = `${currentYear}年1月1日至${currentYear}年12月31日`;
+            document.getElementById('report-facility').textContent = emissionRecords.length > 0 ? emissionRecords[0].facility : '发电设施';
+            document.getElementById('report-date').textContent = new Date().toLocaleDateString('zh-CN');
+            document.getElementById('report-company').textContent = '某发电企业';
+            
+            // 排放汇总
+            document.getElementById('report-emissions-summary').innerHTML = `
+                <tr><td>化石燃料燃烧排放</td><td>${totalFuel.toFixed(2)}</td><td>${total > 0 ? ((totalFuel/total)*100).toFixed(1) : 0}%</td></tr>
+                <tr><td>脱硫过程排放</td><td>${totalDesul.toFixed(2)}</td><td>${total > 0 ? ((totalDesul/total)*100).toFixed(1) : 0}%</td></tr>
+                <tr><td>净购入电力排放</td><td>${totalPower.toFixed(2)}</td><td>${total > 0 ? ((totalPower/total)*100).toFixed(1) : 0}%</td></tr>
+            `;
+            document.getElementById('report-total').textContent = total.toFixed(2);
+            
+            // 排放强度
+            const totalPowerGen = emissionRecords.reduce((sum, r) => sum + (r.consumption || 0), 0) * 3; // 估算
+            document.getElementById('report-intensity').textContent = totalPowerGen > 0 ? (total / totalPowerGen * 1000).toFixed(4) : '0';
+            document.getElementById('report-generation').textContent = totalPowerGen.toFixed(2);
+            
+            // 燃料明细
+            const fuelDetailBody = document.getElementById('report-fuel-detail');
+            if (Object.keys(fuelDetails).length > 0) {
+                fuelDetailBody.innerHTML = Object.values(fuelDetails).map(f => `
+                    <tr>
+                        <td>${f.name}</td>
+                        <td>${f.consumption.toFixed(2)}</td>
+                        <td>${fuelData[Object.keys(fuelDetails).find(k => fuelDetails[k] === f)]?.ncv || '-'}</td>
+                        <td>${(f.emission / (f.consumption * (fuelData[Object.keys(fuelDetails).find(k => fuelDetails[k] === f)]?.ncv || 1))).toFixed(4) || '-'}</td>
+                        <td>${f.emission.toFixed(2)}</td>
+                    </tr>
+                `).join('');
+            } else {
+                fuelDetailBody.innerHTML = '<tr><td colspan="5">暂无数据</td></tr>';
+            }
+            
+            // 切换到报告标签
+            document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            document.querySelector('[data-tab="report"]').classList.add('active');
+            document.getElementById('report').classList.add('active');
+        }
+        
+        // ===== 导出Excel =====
+        function exportExcel() {
+            if (emissionRecords.length === 0) {
+                alert('暂无数据可导出');
+                return;
+            }
+            
+            const data = emissionRecords.map(r => ({
+                '报告期': r.date,
+                '设施名称': r.facility,
+                '燃料类型': r.fuelName,
+                '消耗量': r.consumption,
+                '低位发热量': r.ncv,
+                '燃料燃烧排放(tCO₂)': r.fuelEmission.toFixed(2),
+                '脱硫排放(tCO₂)': r.desulEmission.toFixed(2),
+                '购电排放(tCO₂)': r.powerEmission.toFixed(2),
+                '总排放量(tCO₂)': r.totalEmission.toFixed(2)
+            }));
+            
+            const ws = XLSX.utils.json_to_sheet(data);
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, '排放记录');
+            
+            // 添加汇总表
+            let totalFuel = 0, totalDesul = 0, totalPower = 0;
+            emissionRecords.forEach(r => {
+                totalFuel += r.fuelEmission;
+                totalDesul += r.desulEmission;
+                totalPower += r.powerEmission;
+            });
+            const total = totalFuel + totalDesul + totalPower;
+            
+            const summary = [
+                ['排放类别', '排放量(tCO₂)', '占比'],
+                ['化石燃料燃烧排放', totalFuel.toFixed(2), total > 0 ? ((totalFuel/total)*100).toFixed(1) + '%' : '0%'],
+                ['脱硫过程排放', totalDesul.toFixed(2), total > 0 ? ((totalDesul/total)*100).toFixed(1) + '%' : '0%'],
+                ['净购入电力排放', totalPower.toFixed(2), total > 0 ? ((totalPower/total)*100).toFixed(1) + '%' : '0%'],
+                ['排放总量', total.toFixed(2), '100%']
+            ];
+            
+            const wsSummary = XLSX.utils.aoa_to_sheet(summary);
+            XLSX.utils.book_append_sheet(wb, wsSummary, '排放汇总');
+            
+            XLSX.writeFile(wb, `发电设施碳排放报告_${new Date().toISOString().split('T')[0]}.xlsx`);
+        }
+    </script>
+</body>
+</html>

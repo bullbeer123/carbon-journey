@@ -364,6 +364,26 @@ a:hover { color: var(--accent-green); }
     border-color: var(--accent-green);
 }
 
+.btn-toolbox {
+    background: linear-gradient(135deg, #0d6e3d 0%, #1a9a5c 50%, #0ea5a0 100%);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    color: #fff;
+    font-weight: 600;
+    box-shadow: 0 4px 20px rgba(13, 110, 61, 0.25);
+    animation: toolboxPulse 2.5s ease-in-out infinite;
+}
+
+.btn-toolbox:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 30px rgba(13, 110, 61, 0.35);
+    border-color: rgba(255, 255, 255, 0.5);
+}
+
+@keyframes toolboxPulse {
+    0%, 100% { box-shadow: 0 4px 20px rgba(13, 110, 61, 0.25); }
+    50% { box-shadow: 0 6px 28px rgba(13, 110, 61, 0.4); }
+}
+
 .btn-large {
     padding: 16px 48px;
     font-size: 17px;
@@ -2459,6 +2479,276 @@ a:hover { color: var(--accent-green); }
 }
 
 .ct-text strong { color: var(--text-primary); }
+
+/* ==================== 碳排放工具箱 ==================== */
+.carbon-tools-section {
+    padding: 100px 0 80px;
+    position: relative;
+    background: var(--gradient-section-alt);
+    overflow: hidden;
+}
+
+.carbon-tools-section::before {
+    content: '';
+    position: absolute;
+    top: -120px;
+    right: -80px;
+    width: 400px;
+    height: 400px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(26, 154, 92, 0.06) 0%, transparent 70%);
+    pointer-events: none;
+}
+
+.carbon-tools-section::after {
+    content: '';
+    position: absolute;
+    bottom: -100px;
+    left: -60px;
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(27, 136, 216, 0.05) 0%, transparent 70%);
+    pointer-events: none;
+}
+
+.tools-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+    gap: 24px;
+    margin-top: 48px;
+    position: relative;
+    z-index: 1;
+}
+
+.tool-card {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 28px 24px;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    text-decoration: none;
+    color: inherit;
+    transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow: hidden;
+    backdrop-filter: blur(8px);
+}
+
+.tool-card-glow {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+    opacity: 0;
+    transition: opacity 0.35s ease;
+}
+
+.tool-card-3d .tool-card-glow { background: linear-gradient(90deg, #1a9a5c, #00d4aa, #38bdf8); }
+.tool-card-calc .tool-card-glow { background: linear-gradient(90deg, #1b88d8, #38bdf8, #7dd3fc); }
+.tool-card-boundary .tool-card-glow { background: linear-gradient(90deg, #d97706, #f59e0b, #fbbf24); }
+.tool-card-manage .tool-card-glow { background: linear-gradient(90deg, #0d6e3d, #1a9a5c, #52c97d); }
+.tool-card-verify .tool-card-glow { background: linear-gradient(90deg, #0ea5a0, #06aed4, #38bdf8); }
+
+.tool-card:hover {
+    transform: translateY(-6px);
+    border-color: var(--accent-green);
+    box-shadow: var(--shadow-card-hover);
+    background: var(--bg-card-hover);
+}
+
+.tool-card:hover .tool-card-glow { opacity: 1; }
+
+.tool-card-icon {
+    font-size: 42px;
+    flex-shrink: 0;
+    width: 64px;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--radius-md);
+    background: linear-gradient(135deg, rgba(26, 154, 92, 0.08), rgba(0, 212, 170, 0.06));
+}
+
+.tool-card-3d .tool-card-icon { background: linear-gradient(135deg, rgba(26, 154, 92, 0.1), rgba(0, 212, 170, 0.08)); }
+.tool-card-calc .tool-card-icon { background: linear-gradient(135deg, rgba(27, 136, 216, 0.1), rgba(56, 189, 248, 0.08)); }
+.tool-card-boundary .tool-card-icon { background: linear-gradient(135deg, rgba(217, 119, 6, 0.1), rgba(251, 191, 36, 0.08)); }
+.tool-card-manage .tool-card-icon { background: linear-gradient(135deg, rgba(13, 110, 61, 0.1), rgba(82, 201, 125, 0.08)); }
+.tool-card-verify .tool-card-icon { background: linear-gradient(135deg, rgba(14, 165, 160, 0.1), rgba(6, 174, 212, 0.08)); }
+
+.tool-card-body { flex: 1; min-width: 0; }
+
+.tool-card-title {
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 8px;
+    line-height: 1.3;
+}
+
+.tool-card-desc {
+    font-size: 13px;
+    color: var(--text-muted);
+    line-height: 1.6;
+    margin-bottom: 10px;
+}
+
+.tool-card-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.tool-tag {
+    font-size: 11px;
+    padding: 2px 10px;
+    border-radius: 20px;
+    background: rgba(26, 154, 92, 0.08);
+    color: var(--accent-green);
+    border: 1px solid rgba(26, 154, 92, 0.15);
+    white-space: nowrap;
+}
+
+.tool-card-calc .tool-tag { background: rgba(27, 136, 216, 0.08); color: var(--accent-blue); border-color: rgba(27, 136, 216, 0.15); }
+.tool-card-boundary .tool-tag { background: rgba(217, 119, 6, 0.08); color: var(--accent-gold); border-color: rgba(217, 119, 6, 0.15); }
+.tool-card-verify .tool-tag { background: rgba(14, 165, 160, 0.08); color: var(--accent-cyan); border-color: rgba(14, 165, 160, 0.15); }
+
+.tool-card-arrow {
+    font-size: 22px;
+    color: var(--accent-green);
+    flex-shrink: 0;
+    opacity: 0;
+    transform: translateX(-8px);
+    transition: all 0.35s ease;
+}
+
+.tool-card:hover .tool-card-arrow {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+/* 推荐使用流程 */
+.tools-workflow {
+    margin-top: 56px;
+    padding: 32px;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    position: relative;
+    z-index: 1;
+}
+
+.workflow-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 24px;
+    text-align: center;
+}
+
+.workflow-steps {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.workflow-step {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 20px;
+    border-radius: var(--radius-md);
+    background: linear-gradient(135deg, rgba(26, 154, 92, 0.06), rgba(0, 212, 170, 0.04));
+    border: 1px solid rgba(26, 154, 92, 0.1);
+    transition: all 0.3s ease;
+}
+
+.workflow-step:hover {
+    background: linear-gradient(135deg, rgba(26, 154, 92, 0.12), rgba(0, 212, 170, 0.08));
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(26, 154, 92, 0.1);
+}
+
+.wf-num {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: var(--gradient-green);
+    color: #fff;
+    font-weight: 700;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.wf-text {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-primary);
+    line-height: 1.3;
+}
+
+.wf-text small {
+    font-weight: 400;
+    color: var(--text-muted);
+    font-size: 12px;
+}
+
+.workflow-connector {
+    color: var(--accent-green-light);
+    font-size: 20px;
+    font-weight: 300;
+    flex-shrink: 0;
+}
+
+/* 响应式 */
+@media (max-width: 768px) {
+    .tools-grid {
+        grid-template-columns: 1fr;
+    }
+    .tool-card {
+        padding: 20px 18px;
+        gap: 14px;
+    }
+    .tool-card-icon {
+        font-size: 32px;
+        width: 52px;
+        height: 52px;
+    }
+    .workflow-steps {
+        flex-direction: column;
+        gap: 4px;
+    }
+    .workflow-connector {
+        transform: rotate(90deg);
+    }
+    .workflow-step {
+        width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .carbon-tools-section {
+        padding: 60px 0 50px;
+    }
+    .tool-card-icon {
+        width: 44px;
+        height: 44px;
+        font-size: 26px;
+    }
+    .tool-card-desc {
+        font-size: 12px;
+    }
+}
 
 /* ==================== 页脚 ==================== */
 .footer {
