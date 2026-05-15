@@ -819,6 +819,8 @@ function initGlobalSearch() {
         { type: 'policy', title: '双碳目标', desc: '2030年前碳达峰、2060年前碳中和——中国向世界的庄严承诺', category: '政策体系', targetId: 'policy', icon: '🎯' },
         { type: 'policy', title: '"1+N"政策体系', desc: '顶层设计与落地措施相结合，构建完整的碳达峰碳中和制度框架', category: '政策体系', targetId: 'policy', icon: '📜' },
         { type: 'policy', title: '全国碳市场', desc: '全球覆盖温室气体排放量最大的碳市场，2025年扩围至钢铁、水泥、铝冶炼', category: '碳市场', targetId: 'market', icon: '⚖️' },
+        { type: 'policy', title: '2026年碳市场工作通知', desc: '生态环境部发布年度通知：钢铁、水泥、铝冶炼正式纳入配额管理，石化等6行业纳入报告核查', category: '碳市场', targetId: 'market', icon: '📋' },
+        { type: 'policy', title: '碳市场配额清缴', desc: '2026年12月31日前完成2025年度配额清缴，新扩围行业配额预分配4月10日前完成', category: '碳市场', targetId: 'market', icon: '⏰' },
         { type: 'policy', title: '白皮书', desc: '2025年11月《碳达峰碳中和的中国行动》白皮书发布，全面介绍五年成就', category: '政策动态', targetId: 'global', icon: '📰' },
         { type: 'policy', title: 'CCER重启', desc: '自愿减排市场2024年重启，支持全社会自愿减排行动', category: '碳市场', targetId: 'market', icon: '🍃' },
         // 企业/成果关键词

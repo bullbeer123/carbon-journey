@@ -2072,6 +2072,80 @@ a:hover { color: var(--accent-green); }
     font-size: 12px;
 }
 
+/* 碳市场2026关键时间线 */
+.market-timeline {
+    margin-top: 40px;
+    padding: 32px;
+    background: rgba(255,255,255,0.92);
+    border: 1px solid rgba(26,154,92,0.12);
+    border-radius: var(--radius-md);
+}
+
+.mt-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: #065f46;
+    margin-bottom: 4px;
+}
+
+.mt-subtitle {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-bottom: 24px;
+    padding-left: 2px;
+}
+
+.mt-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+}
+
+.mt-item {
+    display: flex;
+    gap: 14px;
+    background: linear-gradient(135deg, rgba(13,110,61,0.04), rgba(26,154,92,0.02));
+    border: 1px solid rgba(26,154,92,0.1);
+    border-radius: 12px;
+    padding: 16px 18px;
+    transition: all 0.25s ease;
+}
+
+.mt-item:hover {
+    border-color: var(--accent-green);
+    box-shadow: 0 4px 16px rgba(13,110,61,0.08);
+}
+
+.mt-date {
+    flex-shrink: 0;
+    min-width: 72px;
+    text-align: center;
+    padding: 6px 10px;
+    background: linear-gradient(135deg, var(--primary-green), var(--accent-green));
+    color: #fff;
+    font-size: 12px;
+    font-weight: 700;
+    border-radius: 8px;
+    height: fit-content;
+    line-height: 1.3;
+}
+
+.mt-body h5 {
+    font-size: 14px;
+    color: #065f46;
+    margin-bottom: 4px;
+}
+
+.mt-body p {
+    font-size: 12px;
+    color: var(--text-secondary);
+    line-height: 1.5;
+}
+
+@media (max-width: 768px) {
+    .mt-grid { grid-template-columns: 1fr; }
+}
+
 /* ==================== 第七屏：政策体系 ==================== */
 .policy-section {
     background: linear-gradient(180deg, #071220 0%, var(--bg-primary) 100%);
