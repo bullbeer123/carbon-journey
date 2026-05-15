@@ -845,6 +845,7 @@ function initGlobalSearch() {
         { type: 'toolbox', title: '核算边界可视化模型', desc: '7大功能页签·核算边界SVG可点击·核算公式推导·数据优先序·交叉验证·核查清单', category: '碳排放工具', targetId: 'carbon-tools', icon: '🎯' },
         { type: 'toolbox', title: '碳排放管理工具', desc: '多设施统一管理·年度排放数据录入·排放趋势分析·多年份对比·配额盈亏评估·报告生成', category: '碳排放工具', targetId: 'carbon-tools', icon: '⚙️' },
         { type: 'toolbox', title: '碳排放管理工具（核查版）', desc: '核查全流程管理·数据一致性校验·不符合项追踪·核查报告自动生成·支持第三方核查对接', category: '碳排放工具', targetId: 'carbon-tools', icon: '🔍' },
+        { type: 'toolbox', title: '碳市场交易可视化平台', desc: '上交所CEA行情+K线图+交易量分析+CCER价格追踪+实时行情面板·1130条实际交易数据', category: '碳排放工具', targetId: 'carbon-tools', icon: '🏦' },
     ];
     
     // 加入服务平台数据（含功能标签）
