@@ -735,9 +735,12 @@ function initSideNav() {
         { id: 'tech', label: '技术创新' },
         { id: 'achievements', label: '降碳成果' },
         { id: 'market', label: '碳市场' },
+        { id: 'carbon-footprint', label: '碳足迹·园区' },
         { id: 'policy', label: '政策推动' },
         { id: 'global', label: '全球贡献' },
         { id: 'platforms', label: '服务平台' },
+        { id: 'ai-tools', label: 'AI工具' },
+        { id: 'carbon-tools', label: '工具箱' },
     ];
 
     window.addEventListener('scroll', () => {
@@ -836,6 +839,12 @@ function initGlobalSearch() {
         { type: 'footprint', title: '远景赤峰零碳产业园', desc: '全球首个零碳产业园，风光储绿色能源+绿色电池产业链', category: '零碳园区', targetId: 'carbon-footprint', icon: '🏆' },
         { type: 'footprint', title: '宁德时代零碳工厂', desc: '全球首批灯塔工厂+零碳工厂，光伏+储能+绿证实现运营碳中和', category: '零碳园区', targetId: 'carbon-footprint', icon: '🔋' },
         { type: 'footprint', title: '雄安新区零碳园区', desc: '全域绿色建筑、100%清洁能源供应、智慧能源管理平台', category: '零碳园区', targetId: 'carbon-footprint', icon: '🏛️' },
+        // 碳排放工具箱
+        { type: 'toolbox', title: '3D数字孪生平台', desc: '燃煤电厂全场景3D仿真·流程粒子动画·设备级能耗监测·碳足迹白箱追踪', category: '碳排放工具', targetId: 'carbon-tools', icon: '🏭' },
+        { type: 'toolbox', title: '碳排放核算工作台', desc: '基于生态环境部核算指南·化石燃料燃烧+脱硫+购入电力三大排放源·自动计算排放量与配额', category: '碳排放工具', targetId: 'carbon-tools', icon: '📊' },
+        { type: 'toolbox', title: '核算边界可视化模型', desc: '7大功能页签·核算边界SVG可点击·核算公式推导·数据优先序·交叉验证·核查清单', category: '碳排放工具', targetId: 'carbon-tools', icon: '🎯' },
+        { type: 'toolbox', title: '碳排放管理工具', desc: '多设施统一管理·年度排放数据录入·排放趋势分析·多年份对比·配额盈亏评估·报告生成', category: '碳排放工具', targetId: 'carbon-tools', icon: '⚙️' },
+        { type: 'toolbox', title: '碳排放管理工具（核查版）', desc: '核查全流程管理·数据一致性校验·不符合项追踪·核查报告自动生成·支持第三方核查对接', category: '碳排放工具', targetId: 'carbon-tools', icon: '🔍' },
     ];
     
     // 加入服务平台数据（含功能标签）
@@ -938,6 +947,7 @@ function initGlobalSearch() {
                 achievement: '📊 成果',
                 platform: '🔧 平台',
                 footprint: '👣 碳足迹',
+                toolbox: '🧰 工具箱',
             };
             
             searchResults.innerHTML = results.map(item => `
