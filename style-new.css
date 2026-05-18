@@ -683,6 +683,86 @@ img {
 
 /* ==================== 十三、响应式断点（移动端优先） ==================== */
 
+/* --- 移动端优化（≤767px）--- */
+@media (max-width: 767px) {
+    .hero-content {
+        padding: var(--space-6);
+        margin: var(--space-4);
+    }
+
+    .hero-title {
+        font-size: 48px;
+    }
+
+    .hero-actions {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .btn {
+        width: 100%;
+        max-width: 280px;
+        justify-content: center;
+    }
+
+    .qe-cards {
+        grid-template-columns: 1fr;
+    }
+
+    .journey-map {
+        grid-template-columns: 1fr;
+    }
+
+    .tech-dashboard {
+        grid-template-columns: 1fr;
+    }
+
+    .projects-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .market-overview {
+        grid-template-columns: 1fr;
+    }
+
+    .tech-panel-body {
+        grid-template-columns: 1fr;
+    }
+
+    .fp-concept-row {
+        grid-template-columns: 1fr;
+    }
+
+    .tools-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .platforms-full {
+        grid-template-columns: 1fr;
+    }
+
+    .nav-links {
+        display: none;
+    }
+
+    .nav-toggle {
+        display: block;
+    }
+
+    /* 确保触摸目标大小适合移动端 */
+    .nav-links a,
+    .btn,
+    .filter-btn,
+    .tech-tab,
+    .fp-tab,
+    .pf-btn {
+        min-height: 44px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+}
+
 /* --- 平板（≥768px） --- */
 @media (min-width: 768px) {
     .container {
@@ -702,6 +782,14 @@ img {
 
     .section {
         padding: 120px 0 80px;
+    }
+
+    .qe-cards {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .journey-map {
+        grid-template-columns: repeat(3, 1fr);
     }
 }
 
