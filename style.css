@@ -2691,6 +2691,14 @@ a:hover { color: var(--accent-green); }
 .tool-card-calc .tool-tag { background: rgba(27, 136, 216, 0.08); color: var(--accent-blue); border-color: rgba(27, 136, 216, 0.15); }
 .tool-card-boundary .tool-tag { background: rgba(217, 119, 6, 0.08); color: var(--accent-gold); border-color: rgba(217, 119, 6, 0.15); }
 .tool-card-verify .tool-tag { background: rgba(14, 165, 160, 0.08); color: var(--accent-cyan); border-color: rgba(14, 165, 160, 0.15); }
+.tool-card-market .tool-tag { background: rgba(139, 92, 246, 0.08); color: #7c3aed; border-color: rgba(139, 92, 246, 0.15); }
+.tool-card-report .tool-tag { background: rgba(239, 68, 68, 0.08); color: #dc2626; border-color: rgba(239, 68, 68, 0.15); }
+
+.tool-card-market .tool-card-glow { background: linear-gradient(90deg, #7c3aed, #a855f7, #c084fc); }
+.tool-card-report .tool-card-glow { background: linear-gradient(90deg, #dc2626, #ef4444, #f87171); }
+
+.tool-card-market .tool-card-icon { background: linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(168, 85, 247, 0.08)); }
+.tool-card-report .tool-card-icon { background: linear-gradient(135deg, rgba(239, 68, 68, 0.1), rgba(248, 113, 113, 0.08)); }
 
 .tool-card-arrow {
     font-size: 22px;

@@ -1,0 +1,2455 @@
+var ccerRawData = [
+  {
+    "date": "2025-03-07",
+    "volume": 748800.0,
+    "amount": 60241797.62,
+    "totalVolume": 1124115.0,
+    "totalAmount": 84077077.62,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20250307/174500101.shtml",
+    "price": 80.45
+  },
+  {
+    "date": "2025-03-10",
+    "volume": 148136.0,
+    "amount": 15903820.12,
+    "totalVolume": 1272251.0,
+    "totalAmount": 99980897.74,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20250310/181750807.shtml",
+    "price": 107.36
+  },
+  {
+    "date": "2025-03-11",
+    "volume": 100.0,
+    "amount": 10600.0,
+    "totalVolume": 1272351.0,
+    "totalAmount": 99991497.74,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20250311/155755259.shtml",
+    "price": 106.0
+  },
+  {
+    "date": "2025-03-12",
+    "volume": 8518.0,
+    "amount": 819485.8,
+    "totalVolume": 1280869.0,
+    "totalAmount": 100810983.54,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20250312/164231148.shtml",
+    "price": 96.21
+  },
+  {
+    "date": "2025-03-13",
+    "volume": 5460.0,
+    "amount": 397542.6,
+    "totalVolume": 1286329.0,
+    "totalAmount": 101208526.14,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20250313/171619368.shtml",
+    "price": 72.81
+  },
+  {
+    "date": "2025-03-14",
+    "volume": 26836.0,
+    "amount": 2485834.56,
+    "totalVolume": 1313165.0,
+    "totalAmount": 103694360.7,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20250314/152539911.shtml",
+    "price": 92.63
+  },
+  {
+    "date": "2025-03-17",
+    "volume": 14260.0,
+    "amount": 1449280.2,
+    "totalVolume": 1327425.0,
+    "totalAmount": 105143640.9,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20250317/185153909.shtml",
+    "price": 101.63
+  },
+  {
+    "date": "2025-03-18",
+    "volume": 2014.0,
+    "amount": 213444.52,
+    "totalVolume": 1329439.0,
+    "totalAmount": 105357085.42,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20250318/164253661.shtml",
+    "price": 105.98
+  },
+  {
+    "date": "2025-03-19",
+    "volume": 600.0,
+    "amount": 55200.0,
+    "totalVolume": 1330039.0,
+    "totalAmount": 105412285.42,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20250319/165707246.shtml",
+    "price": 92.0
+  },
+  {
+    "date": "2025-03-21",
+    "volume": 500.0,
+    "amount": 42749.0,
+    "totalVolume": 1332669.0,
+    "totalAmount": 105673442.82,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20250321/175233282.shtml",
+    "price": 85.5
+  },
+  {
+    "date": "2025-03-24",
+    "volume": 300.0,
+    "amount": 27120.0,
+    "totalVolume": 1332969.0,
+    "totalAmount": 105700562.82,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20250324/170555180.shtml",
+    "price": 90.4
+  },
+  {
+    "date": "2025-03-25",
+    "volume": 100.0,
+    "amount": 9550.0,
+    "totalVolume": 1333069.0,
+    "totalAmount": 105710112.82,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20250325/163609247.shtml",
+    "price": 95.5
+  },
+  {
+    "date": "2025-03-26",
+    "volume": 101.0,
+    "amount": 9558.0,
+    "totalVolume": 1333170.0,
+    "totalAmount": 105719670.82,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20250326/172837367.shtml",
+    "price": 94.63
+  },
+  {
+    "date": "2025-03-27",
+    "volume": 2210.0,
+    "amount": 226414.9,
+    "totalVolume": 1335380.0,
+    "totalAmount": 105946085.72,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20250327/151952140.shtml",
+    "price": 102.45
+  },
+  {
+    "date": "2025-03-28",
+    "volume": 45100.0,
+    "amount": 4271265.0,
+    "totalVolume": 1380480.0,
+    "totalAmount": 110217350.72,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20250328/171555569.shtml",
+    "price": 94.71
+  },
+  {
+    "date": "2025-03-31",
+    "volume": 10000.0,
+    "amount": 936700.0,
+    "totalVolume": 1390480.0,
+    "totalAmount": 111154050.72,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20250411/104708691.shtml",
+    "price": 93.67
+  },
+  {
+    "date": "2025-04-01",
+    "volume": 9.0,
+    "amount": 900.9,
+    "totalVolume": 1390489.0,
+    "totalAmount": 111154951.62,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20250401/154652853.shtml",
+    "price": 100.1
+  },
+  {
+    "date": "2025-04-02",
+    "volume": 40.0,
+    "amount": 3920.0,
+    "totalVolume": 1390529.0,
+    "totalAmount": 111158871.62,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20250402/163527044.shtml",
+    "price": 98.0
+  },
+  {
+    "date": "2025-04-03",
+    "volume": 100.0,
+    "amount": 9300.0,
+    "totalVolume": 1390629.0,
+    "totalAmount": 111168171.62,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20250403/162334010.shtml",
+    "price": 93.0
+  },
+  {
+    "date": "2025-04-07",
+    "volume": 2.0,
+    "amount": 187.34,
+    "totalVolume": 1390631.0,
+    "totalAmount": 111168358.96,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20250407/172347763.shtml",
+    "price": 93.67
+  },
+  {
+    "date": "2025-04-08",
+    "volume": 60100.0,
+    "amount": 6039367.0,
+    "totalVolume": 1450731.0,
+    "totalAmount": 117207725.96,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20250408/151539877.shtml",
+    "price": 100.49
+  },
+  {
+    "date": "2025-04-09",
+    "volume": 202.0,
+    "amount": 19155.12,
+    "totalVolume": 1450933.0,
+    "totalAmount": 117226881.08,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20250409/165308913.shtml",
+    "price": 94.83
+  },
+  {
+    "date": "2025-04-10",
+    "volume": 20272.0,
+    "amount": 1915712.1,
+    "totalVolume": 1471205.0,
+    "totalAmount": 119142593.18,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20250410/154028038.shtml",
+    "price": 94.5
+  },
+  {
+    "date": "2025-04-11",
+    "volume": 100.0,
+    "amount": 9390.0,
+    "totalVolume": 1471305.0,
+    "totalAmount": 119151983.18,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20250411/162528617.shtml",
+    "price": 93.9
+  },
+  {
+    "date": "2025-04-14",
+    "volume": 65303.0,
+    "amount": 6543442.29,
+    "totalVolume": 1536608.0,
+    "totalAmount": 125695425.47,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20250414/172929578.shtml",
+    "price": 100.2
+  },
+  {
+    "date": "2025-04-15",
+    "volume": 100.0,
+    "amount": 9387.0,
+    "totalVolume": 1536708.0,
+    "totalAmount": 125704812.47,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20250415/152447979.shtml",
+    "price": 93.87
+  },
+  {
+    "date": "2025-04-16",
+    "volume": 100.0,
+    "amount": 9380.0,
+    "totalVolume": 1536808.0,
+    "totalAmount": 125714192.47,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20250416/173411412.shtml",
+    "price": 93.8
+  },
+  {
+    "date": "2025-04-17",
+    "volume": 100.0,
+    "amount": 9360.0,
+    "totalVolume": 1536908.0,
+    "totalAmount": 125723552.47,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20250417/161452971.shtml",
+    "price": 93.6
+  },
+  {
+    "date": "2025-04-18",
+    "volume": 1.0,
+    "amount": 101.22,
+    "totalVolume": 1536909.0,
+    "totalAmount": 125723653.69,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20250418/163247969.shtml",
+    "price": 101.22
+  },
+  {
+    "date": "2025-04-21",
+    "volume": 40100.0,
+    "amount": 4029500.0,
+    "totalVolume": 1577009.0,
+    "totalAmount": 129753153.69,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20250421/152106240.shtml",
+    "price": 100.49
+  },
+  {
+    "date": "2025-04-22",
+    "volume": 3.0,
+    "amount": 294.0,
+    "totalVolume": 1577012.0,
+    "totalAmount": 129753447.69,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20250422/165104789.shtml",
+    "price": 98.0
+  },
+  {
+    "date": "2025-04-23",
+    "volume": 1015.0,
+    "amount": 96425.0,
+    "totalVolume": 1578027.0,
+    "totalAmount": 129849872.69,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20250423/164403926.shtml",
+    "price": 95.0
+  },
+  {
+    "date": "2025-04-24",
+    "volume": 100.0,
+    "amount": 9400.0,
+    "totalVolume": 1578127.0,
+    "totalAmount": 129859272.69,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20250424/161540568.shtml",
+    "price": 94.0
+  },
+  {
+    "date": "2025-04-25",
+    "volume": 40002.0,
+    "amount": 4020172.6,
+    "totalVolume": 1618129.0,
+    "totalAmount": 133879445.29,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20250425/165856745.shtml",
+    "price": 100.5
+  },
+  {
+    "date": "2025-04-28",
+    "volume": 71632.0,
+    "amount": 6765080.5,
+    "totalVolume": 1689761.0,
+    "totalAmount": 140644525.79,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20250429/164233583.shtml",
+    "price": 94.44
+  },
+  {
+    "date": "2025-04-29",
+    "volume": 20.0,
+    "amount": 1900.0,
+    "totalVolume": 1689781.0,
+    "totalAmount": 140646425.79,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20250429/160534436.shtml",
+    "price": 95.0
+  },
+  {
+    "date": "2025-04-30",
+    "volume": 26.0,
+    "amount": 2499.5,
+    "totalVolume": 1689807.0,
+    "totalAmount": 140648925.29,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20250430/154358510.shtml",
+    "price": 96.13
+  },
+  {
+    "date": "2025-05-06",
+    "volume": 10.0,
+    "amount": 950.0,
+    "totalVolume": 1689817.0,
+    "totalAmount": 140649875.29,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20250506/174627624.shtml",
+    "price": 95.0
+  },
+  {
+    "date": "2025-05-07",
+    "volume": 10.0,
+    "amount": 950.0,
+    "totalVolume": 1689827.0,
+    "totalAmount": 140650825.29,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20250507/183234494.shtml",
+    "price": 95.0
+  },
+  {
+    "date": "2025-05-08",
+    "volume": 20030.0,
+    "amount": 1822970.0,
+    "totalVolume": 1709857.0,
+    "totalAmount": 142473795.29,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20250508/172514314.shtml",
+    "price": 91.01
+  },
+  {
+    "date": "2025-05-09",
+    "volume": 40000.0,
+    "amount": 3600000.0,
+    "totalVolume": 1749857.0,
+    "totalAmount": 146073795.29,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20250512/152531034.shtml",
+    "price": 90.0
+  },
+  {
+    "date": "2025-05-12",
+    "volume": 100.0,
+    "amount": 9200.0,
+    "totalVolume": 1749957.0,
+    "totalAmount": 146082995.29,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20250512/163208994.shtml",
+    "price": 92.0
+  },
+  {
+    "date": "2025-05-13",
+    "volume": 24.0,
+    "amount": 2208.0,
+    "totalVolume": 1749981.0,
+    "totalAmount": 146085203.29,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20250514/093530526.shtml",
+    "price": 92.0
+  },
+  {
+    "date": "2025-05-14",
+    "volume": 1101.0,
+    "amount": 99095.5,
+    "totalVolume": 1751082.0,
+    "totalAmount": 146184298.79,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20250514/170924767.shtml",
+    "price": 90.0
+  },
+  {
+    "date": "2025-05-15",
+    "volume": 2300.0,
+    "amount": 200057.0,
+    "totalVolume": 1753382.0,
+    "totalAmount": 146384355.79,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20250515/165704437.shtml",
+    "price": 86.98
+  },
+  {
+    "date": "2025-05-16",
+    "volume": 4201.0,
+    "amount": 361209.0,
+    "totalVolume": 1757583.0,
+    "totalAmount": 146745564.79,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20250516/163707822.shtml",
+    "price": 85.98
+  },
+  {
+    "date": "2025-05-19",
+    "volume": 100.0,
+    "amount": 8800.0,
+    "totalVolume": 1757683.0,
+    "totalAmount": 146754364.79,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20250519/163826855.shtml",
+    "price": 88.0
+  },
+  {
+    "date": "2025-05-20",
+    "volume": 1000.0,
+    "amount": 84000.0,
+    "totalVolume": 1758683.0,
+    "totalAmount": 146838364.79,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20250520/161821018.shtml",
+    "price": 84.0
+  },
+  {
+    "date": "2025-05-21",
+    "volume": 100.0,
+    "amount": 8800.0,
+    "totalVolume": 1758783.0,
+    "totalAmount": 146847164.79,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20250521/172942641.shtml",
+    "price": 88.0
+  },
+  {
+    "date": "2025-05-22",
+    "volume": 300.0,
+    "amount": 26007.0,
+    "totalVolume": 1759083.0,
+    "totalAmount": 146873171.79,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20250522/154541397.shtml",
+    "price": 86.69
+  },
+  {
+    "date": "2025-05-23",
+    "volume": 35039.0,
+    "amount": 3153559.0,
+    "totalVolume": 1794122.0,
+    "totalAmount": 150026730.79,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20250523/151942237.shtml",
+    "price": 90.0
+  },
+  {
+    "date": "2025-05-26",
+    "volume": 35000.0,
+    "amount": 3099950.0,
+    "totalVolume": 1829122.0,
+    "totalAmount": 153126680.79,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20250526/163731425.shtml",
+    "price": 88.57
+  },
+  {
+    "date": "2025-05-27",
+    "volume": 30000.0,
+    "amount": 2550000.0,
+    "totalVolume": 1859122.0,
+    "totalAmount": 155676680.79,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20250527/165838941.shtml",
+    "price": 85.0
+  },
+  {
+    "date": "2025-05-28",
+    "volume": 10000.0,
+    "amount": 870000.0,
+    "totalVolume": 1869122.0,
+    "totalAmount": 156546680.79,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20250528/164816144.shtml",
+    "price": 87.0
+  },
+  {
+    "date": "2025-05-29",
+    "volume": 130.0,
+    "amount": 11120.0,
+    "totalVolume": 1869252.0,
+    "totalAmount": 156557800.79,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20250529/170122841.shtml",
+    "price": 85.54
+  },
+  {
+    "date": "2025-05-30",
+    "volume": 10000.0,
+    "amount": 855000.0,
+    "totalVolume": 1879252.0,
+    "totalAmount": 157412800.79,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20250530/164736299.shtml",
+    "price": 85.5
+  },
+  {
+    "date": "2025-06-03",
+    "volume": 100.0,
+    "amount": 8800.0,
+    "totalVolume": 1879352.0,
+    "totalAmount": 157421600.79,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20250603/163045296.shtml",
+    "price": 88.0
+  },
+  {
+    "date": "2025-06-04",
+    "volume": 100.0,
+    "amount": 8600.0,
+    "totalVolume": 1879452.0,
+    "totalAmount": 157430200.79,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20250604/163230474.shtml",
+    "price": 86.0
+  },
+  {
+    "date": "2025-06-05",
+    "volume": 1000.0,
+    "amount": 85000.0,
+    "totalVolume": 1880452.0,
+    "totalAmount": 157515200.79,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20250605/155759448.shtml",
+    "price": 85.0
+  },
+  {
+    "date": "2025-06-06",
+    "volume": 100.0,
+    "amount": 8500.0,
+    "totalVolume": 1880552.0,
+    "totalAmount": 157523700.79,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20250606/162104446.shtml",
+    "price": 85.0
+  },
+  {
+    "date": "2025-06-09",
+    "volume": 101030.0,
+    "amount": 8747158.0,
+    "totalVolume": 1981582.0,
+    "totalAmount": 166270858.79,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20250609/171239821.shtml",
+    "price": 86.58
+  },
+  {
+    "date": "2025-06-10",
+    "volume": 20001.0,
+    "amount": 1760088.5,
+    "totalVolume": 2001583.0,
+    "totalAmount": 168030947.29,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20250610/165415409.shtml",
+    "price": 88.0
+  },
+  {
+    "date": "2025-06-11",
+    "volume": 8050.0,
+    "amount": 644400.0,
+    "totalVolume": 2009633.0,
+    "totalAmount": 168675347.29,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20250611/163112023.shtml",
+    "price": 80.05
+  },
+  {
+    "date": "2025-06-12",
+    "volume": 77932.0,
+    "amount": 6801917.16,
+    "totalVolume": 2087565.0,
+    "totalAmount": 175477264.45,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20250612/163607205.shtml",
+    "price": 87.28
+  },
+  {
+    "date": "2025-06-13",
+    "volume": 1112.0,
+    "amount": 99324.0,
+    "totalVolume": 2088677.0,
+    "totalAmount": 175576588.45,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20250613/171444381.shtml",
+    "price": 89.32
+  },
+  {
+    "date": "2025-06-16",
+    "volume": 10.0,
+    "amount": 904.5,
+    "totalVolume": 2088687.0,
+    "totalAmount": 175577492.95,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20250616/170002502.shtml",
+    "price": 90.45
+  },
+  {
+    "date": "2025-06-17",
+    "volume": 20201.0,
+    "amount": 1757863.5,
+    "totalVolume": 2108888.0,
+    "totalAmount": 177335356.45,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20250617/183348453.shtml",
+    "price": 87.02
+  },
+  {
+    "date": "2025-06-18",
+    "volume": 16310.0,
+    "amount": 1417577.0,
+    "totalVolume": 2125198.0,
+    "totalAmount": 178752933.45,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20250618/165051408.shtml",
+    "price": 86.91
+  },
+  {
+    "date": "2025-06-19",
+    "volume": 21010.0,
+    "amount": 1827925.0,
+    "totalVolume": 2146208.0,
+    "totalAmount": 180580858.45,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20250619/171446130.shtml",
+    "price": 87.0
+  },
+  {
+    "date": "2025-06-20",
+    "volume": 3310.0,
+    "amount": 287670.0,
+    "totalVolume": 2149518.0,
+    "totalAmount": 180868528.45,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20250623/102314500.shtml",
+    "price": 86.91
+  },
+  {
+    "date": "2025-06-23",
+    "volume": 211.0,
+    "amount": 17893.01,
+    "totalVolume": 2149729.0,
+    "totalAmount": 180886421.46,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20250623/165505842.shtml",
+    "price": 84.8
+  },
+  {
+    "date": "2025-06-24",
+    "volume": 620.0,
+    "amount": 54720.2,
+    "totalVolume": 2150349.0,
+    "totalAmount": 180941141.66,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20250624/170135985.shtml",
+    "price": 88.26
+  },
+  {
+    "date": "2025-06-25",
+    "volume": 10030.0,
+    "amount": 872856.0,
+    "totalVolume": 2160379.0,
+    "totalAmount": 181813997.66,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20250625/164559177.shtml",
+    "price": 87.02
+  },
+  {
+    "date": "2025-06-26",
+    "volume": 10071.0,
+    "amount": 876018.5,
+    "totalVolume": 2170450.0,
+    "totalAmount": 182690016.16,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20250626/164509930.shtml",
+    "price": 86.98
+  },
+  {
+    "date": "2025-06-27",
+    "volume": 22760.0,
+    "amount": 1981580.0,
+    "totalVolume": 2193210.0,
+    "totalAmount": 184671596.16,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20250627/165144651.shtml",
+    "price": 87.06
+  },
+  {
+    "date": "2025-06-30",
+    "volume": 600.0,
+    "amount": 53100.0,
+    "totalVolume": 2193810.0,
+    "totalAmount": 184724696.16,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20250630/165152015.shtml",
+    "price": 88.5
+  },
+  {
+    "date": "2025-07-01",
+    "volume": 601.0,
+    "amount": 53180.0,
+    "totalVolume": 2194411.0,
+    "totalAmount": 184777876.16,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20250701/170330466.shtml",
+    "price": 88.49
+  },
+  {
+    "date": "2025-07-02",
+    "volume": 100602.0,
+    "amount": 8753277.0,
+    "totalVolume": 2295013.0,
+    "totalAmount": 193531153.16,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20250702/164928937.shtml",
+    "price": 87.01
+  },
+  {
+    "date": "2025-07-03",
+    "volume": 600.0,
+    "amount": 53100.0,
+    "totalVolume": 2295613.0,
+    "totalAmount": 193584253.16,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20250703/164037842.shtml",
+    "price": 88.5
+  },
+  {
+    "date": "2025-07-04",
+    "volume": 600.0,
+    "amount": 53100.0,
+    "totalVolume": 2296213.0,
+    "totalAmount": 193637353.16,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20250704/163102900.shtml",
+    "price": 88.5
+  },
+  {
+    "date": "2025-07-07",
+    "volume": 712.0,
+    "amount": 62503.3,
+    "totalVolume": 2296925.0,
+    "totalAmount": 193699856.46,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20250707/162304234.shtml",
+    "price": 87.79
+  },
+  {
+    "date": "2025-07-08",
+    "volume": 10060.0,
+    "amount": 890061.8,
+    "totalVolume": 2306985.0,
+    "totalAmount": 194589918.26,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20250708/151311386.shtml",
+    "price": 88.48
+  },
+  {
+    "date": "2025-07-09",
+    "volume": 66484.0,
+    "amount": 5850592.0,
+    "totalVolume": 2373469.0,
+    "totalAmount": 200440510.26,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20250709/152847986.shtml",
+    "price": 88.0
+  },
+  {
+    "date": "2025-07-10",
+    "volume": 190.0,
+    "amount": 16311.2,
+    "totalVolume": 2373659.0,
+    "totalAmount": 200456821.46,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20250710/154814406.shtml",
+    "price": 85.85
+  },
+  {
+    "date": "2025-07-11",
+    "volume": 1400.0,
+    "amount": 116859.0,
+    "totalVolume": 2375059.0,
+    "totalAmount": 200573680.46,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20250711/152719443.shtml",
+    "price": 83.47
+  },
+  {
+    "date": "2025-07-14",
+    "volume": 1501.0,
+    "amount": 124651.01,
+    "totalVolume": 2376560.0,
+    "totalAmount": 200698331.47,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20250714/163735632.shtml",
+    "price": 83.05
+  },
+  {
+    "date": "2025-07-15",
+    "volume": 2100.0,
+    "amount": 173372.0,
+    "totalVolume": 2378660.0,
+    "totalAmount": 200871703.47,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20250715/153142050.shtml",
+    "price": 82.56
+  },
+  {
+    "date": "2025-07-16",
+    "volume": 100.0,
+    "amount": 8650.0,
+    "totalVolume": 2378760.0,
+    "totalAmount": 200880353.47,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20250716/163307986.shtml",
+    "price": 86.5
+  },
+  {
+    "date": "2025-07-17",
+    "volume": 20.0,
+    "amount": 1640.0,
+    "totalVolume": 2378780.0,
+    "totalAmount": 200881993.47,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20250717/151027913.shtml",
+    "price": 82.0
+  },
+  {
+    "date": "2025-07-18",
+    "volume": 230.0,
+    "amount": 18910.0,
+    "totalVolume": 2379010.0,
+    "totalAmount": 200900903.47,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20250718/152106186.shtml",
+    "price": 82.22
+  },
+  {
+    "date": "2025-07-21",
+    "volume": 4800.0,
+    "amount": 399820.0,
+    "totalVolume": 2383810.0,
+    "totalAmount": 201300723.47,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20250721/151139996.shtml",
+    "price": 83.3
+  },
+  {
+    "date": "2025-07-22",
+    "volume": 3000.0,
+    "amount": 246750.0,
+    "totalVolume": 2386810.0,
+    "totalAmount": 201547473.47,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20250722/152741198.shtml",
+    "price": 82.25
+  },
+  {
+    "date": "2025-07-23",
+    "volume": 2250.0,
+    "amount": 183531.0,
+    "totalVolume": 2389060.0,
+    "totalAmount": 201731004.47,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20250723/151123364.shtml",
+    "price": 81.57
+  },
+  {
+    "date": "2025-07-24",
+    "volume": 1600.0,
+    "amount": 131100.0,
+    "totalVolume": 2390660.0,
+    "totalAmount": 201862104.47,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20250724/150939788.shtml",
+    "price": 81.94
+  },
+  {
+    "date": "2025-07-25",
+    "volume": 2580.0,
+    "amount": 211475.7,
+    "totalVolume": 2393240.0,
+    "totalAmount": 202073580.17,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20250725/152326000.shtml",
+    "price": 81.97
+  },
+  {
+    "date": "2025-07-28",
+    "volume": 5745.0,
+    "amount": 472751.5,
+    "totalVolume": 2398985.0,
+    "totalAmount": 202546331.67,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20250728/151616324.shtml",
+    "price": 82.29
+  },
+  {
+    "date": "2025-07-29",
+    "volume": 1850.0,
+    "amount": 148282.0,
+    "totalVolume": 2400835.0,
+    "totalAmount": 202694613.67,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20250729/151556512.shtml",
+    "price": 80.15
+  },
+  {
+    "date": "2025-07-30",
+    "volume": 58989.0,
+    "amount": 5053609.5,
+    "totalVolume": 2459824.0,
+    "totalAmount": 207748223.17,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20250730/151036601.shtml",
+    "price": 85.67
+  },
+  {
+    "date": "2025-07-31",
+    "volume": 500.0,
+    "amount": 39000.0,
+    "totalVolume": 2460324.0,
+    "totalAmount": 207787223.17,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20250731/150853480.shtml",
+    "price": 78.0
+  },
+  {
+    "date": "2025-08-01",
+    "volume": 1620.0,
+    "amount": 132329.6,
+    "totalVolume": 2461944.0,
+    "totalAmount": 207919552.77,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20250801/152112818.shtml",
+    "price": 81.68
+  },
+  {
+    "date": "2025-08-04",
+    "volume": 3190.0,
+    "amount": 261254.9,
+    "totalVolume": 2465134.0,
+    "totalAmount": 208180807.67,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20250804/151520388.shtml",
+    "price": 81.9
+  },
+  {
+    "date": "2025-08-05",
+    "volume": 1590.0,
+    "amount": 125995.8,
+    "totalVolume": 2466724.0,
+    "totalAmount": 208306803.47,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20250805/151604303.shtml",
+    "price": 79.24
+  },
+  {
+    "date": "2025-08-06",
+    "volume": 1000.0,
+    "amount": 78000.0,
+    "totalVolume": 2467724.0,
+    "totalAmount": 208384803.47,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20250806/152450888.shtml",
+    "price": 78.0
+  },
+  {
+    "date": "2025-08-07",
+    "volume": 8700.0,
+    "amount": 716800.0,
+    "totalVolume": 2476424.0,
+    "totalAmount": 209101603.47,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20250807/151340792.shtml",
+    "price": 82.39
+  },
+  {
+    "date": "2025-08-08",
+    "volume": 700.0,
+    "amount": 54600.0,
+    "totalVolume": 2477124.0,
+    "totalAmount": 209156203.47,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20250808/151824785.shtml",
+    "price": 78.0
+  },
+  {
+    "date": "2025-08-11",
+    "volume": 751.0,
+    "amount": 59306.0,
+    "totalVolume": 2477875.0,
+    "totalAmount": 209215509.47,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20250811/152903665.shtml",
+    "price": 78.97
+  },
+  {
+    "date": "2025-08-12",
+    "volume": 2126.0,
+    "amount": 175041.0,
+    "totalVolume": 2480001.0,
+    "totalAmount": 209390550.47,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20250812/151144986.shtml",
+    "price": 82.33
+  },
+  {
+    "date": "2025-08-13",
+    "volume": 810.0,
+    "amount": 65006.0,
+    "totalVolume": 2480811.0,
+    "totalAmount": 209455556.47,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20250813/153229510.shtml",
+    "price": 80.25
+  },
+  {
+    "date": "2025-08-14",
+    "volume": 1650.0,
+    "amount": 134700.0,
+    "totalVolume": 2482461.0,
+    "totalAmount": 209590256.47,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20250814/150937286.shtml",
+    "price": 81.64
+  },
+  {
+    "date": "2025-08-15",
+    "volume": 700.0,
+    "amount": 54600.0,
+    "totalVolume": 2483161.0,
+    "totalAmount": 209644856.47,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20250815/151842009.shtml",
+    "price": 78.0
+  },
+  {
+    "date": "2025-08-18",
+    "volume": 600.0,
+    "amount": 46800.0,
+    "totalVolume": 2483761.0,
+    "totalAmount": 209691656.47,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20250818/150814787.shtml",
+    "price": 78.0
+  },
+  {
+    "date": "2025-08-19",
+    "volume": 2550.0,
+    "amount": 210900.0,
+    "totalVolume": 2486311.0,
+    "totalAmount": 209902556.47,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20250819/151226855.shtml",
+    "price": 82.71
+  },
+  {
+    "date": "2025-08-20",
+    "volume": 3600.0,
+    "amount": 292210.0,
+    "totalVolume": 2489911.0,
+    "totalAmount": 210194766.47,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20250820/150933805.shtml",
+    "price": 81.17
+  },
+  {
+    "date": "2025-08-21",
+    "volume": 2700.0,
+    "amount": 222900.0,
+    "totalVolume": 2492611.0,
+    "totalAmount": 210417666.47,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20250821/151636030.shtml",
+    "price": 82.56
+  },
+  {
+    "date": "2025-08-22",
+    "volume": 1008.0,
+    "amount": 77680.0,
+    "totalVolume": 2493619.0,
+    "totalAmount": 210495346.47,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20250822/151548999.shtml",
+    "price": 77.06
+  },
+  {
+    "date": "2025-08-25",
+    "volume": 2700.0,
+    "amount": 221000.0,
+    "totalVolume": 2496319.0,
+    "totalAmount": 210716346.47,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20250825/150950382.shtml",
+    "price": 81.85
+  },
+  {
+    "date": "2025-08-26",
+    "volume": 3100.0,
+    "amount": 254150.0,
+    "totalVolume": 2499419.0,
+    "totalAmount": 210970496.47,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20250826/150919405.shtml",
+    "price": 81.98
+  },
+  {
+    "date": "2025-08-27",
+    "volume": 2200.0,
+    "amount": 176000.0,
+    "totalVolume": 2501619.0,
+    "totalAmount": 211146496.47,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20250827/164305727.shtml",
+    "price": 80.0
+  },
+  {
+    "date": "2025-08-28",
+    "volume": 2360.0,
+    "amount": 191093.6,
+    "totalVolume": 2503979.0,
+    "totalAmount": 211337590.07,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20250828/153117745.shtml",
+    "price": 80.97
+  },
+  {
+    "date": "2025-08-29",
+    "volume": 202095.0,
+    "amount": 17174010.0,
+    "totalVolume": 2706074.0,
+    "totalAmount": 228511600.07,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20250829/151714964.shtml",
+    "price": 84.98
+  },
+  {
+    "date": "2025-09-01",
+    "volume": 600.0,
+    "amount": 47505.0,
+    "totalVolume": 2706674.0,
+    "totalAmount": 228559105.07,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20250901/163239691.shtml",
+    "price": 79.18
+  },
+  {
+    "date": "2025-09-02",
+    "volume": 500.0,
+    "amount": 39010.0,
+    "totalVolume": 2707174.0,
+    "totalAmount": 228598115.07,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20250902/154107560.shtml",
+    "price": 78.02
+  },
+  {
+    "date": "2025-09-03",
+    "volume": 8985.0,
+    "amount": 718867.5,
+    "totalVolume": 2716159.0,
+    "totalAmount": 229316982.57,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20250903/151256294.shtml",
+    "price": 80.01
+  },
+  {
+    "date": "2025-09-04",
+    "volume": 2600.0,
+    "amount": 203530.0,
+    "totalVolume": 2718759.0,
+    "totalAmount": 229520512.57,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20250904/154146699.shtml",
+    "price": 78.28
+  },
+  {
+    "date": "2025-09-05",
+    "volume": 48930.0,
+    "amount": 4046007.84,
+    "totalVolume": 2767689.0,
+    "totalAmount": 233566520.41,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20250905/151740611.shtml",
+    "price": 82.69
+  },
+  {
+    "date": "2025-09-08",
+    "volume": 16728.0,
+    "amount": 1371896.48,
+    "totalVolume": 2784417.0,
+    "totalAmount": 234938416.89,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20250908/151737249.shtml",
+    "price": 82.01
+  },
+  {
+    "date": "2025-09-09",
+    "volume": 14050.0,
+    "amount": 1012129.0,
+    "totalVolume": 2798467.0,
+    "totalAmount": 235950545.89,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20250909/154256440.shtml",
+    "price": 72.04
+  },
+  {
+    "date": "2025-09-10",
+    "volume": 5071.0,
+    "amount": 374910.5,
+    "totalVolume": 2803538.0,
+    "totalAmount": 236325456.39,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20250910/152731966.shtml",
+    "price": 73.93
+  },
+  {
+    "date": "2025-09-11",
+    "volume": 78951.0,
+    "amount": 6294470.1,
+    "totalVolume": 2882489.0,
+    "totalAmount": 242619926.49,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20250911/153809852.shtml",
+    "price": 79.73
+  },
+  {
+    "date": "2025-09-12",
+    "volume": 11000.0,
+    "amount": 803000.0,
+    "totalVolume": 2893489.0,
+    "totalAmount": 243422926.49,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20250912/151948330.shtml",
+    "price": 73.0
+  },
+  {
+    "date": "2025-09-15",
+    "volume": 3500.0,
+    "amount": 249000.0,
+    "totalVolume": 2896989.0,
+    "totalAmount": 243671926.49,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20250915/150852942.shtml",
+    "price": 71.14
+  },
+  {
+    "date": "2025-09-16",
+    "volume": 50100.0,
+    "amount": 3908100.0,
+    "totalVolume": 2947089.0,
+    "totalAmount": 247580026.49,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20250916/151130178.shtml",
+    "price": 78.01
+  },
+  {
+    "date": "2025-09-17",
+    "volume": 6454.0,
+    "amount": 496968.0,
+    "totalVolume": 2953543.0,
+    "totalAmount": 248076994.49,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20250917/151815895.shtml",
+    "price": 77.0
+  },
+  {
+    "date": "2025-09-18",
+    "volume": 500.0,
+    "amount": 39000.0,
+    "totalVolume": 2954043.0,
+    "totalAmount": 248115994.49,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20250918/153632363.shtml",
+    "price": 78.0
+  },
+  {
+    "date": "2025-09-19",
+    "volume": 2200.0,
+    "amount": 167212.0,
+    "totalVolume": 2956243.0,
+    "totalAmount": 248283206.49,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20250919/152434924.shtml",
+    "price": 76.01
+  },
+  {
+    "date": "2025-09-22",
+    "volume": 29301.0,
+    "amount": 2289438.0,
+    "totalVolume": 2985544.0,
+    "totalAmount": 250572644.49,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20250922/151000131.shtml",
+    "price": 78.14
+  },
+  {
+    "date": "2025-09-23",
+    "volume": 1143.0,
+    "amount": 93083.0,
+    "totalVolume": 2986687.0,
+    "totalAmount": 250665727.49,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20250923/150920495.shtml",
+    "price": 81.44
+  },
+  {
+    "date": "2025-09-24",
+    "volume": 33972.0,
+    "amount": 3210254.0,
+    "totalVolume": 3020659.0,
+    "totalAmount": 253875981.49,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20250924/151111330.shtml",
+    "price": 94.5
+  },
+  {
+    "date": "2025-09-25",
+    "volume": 139830.0,
+    "amount": 10948477.0,
+    "totalVolume": 3160489.0,
+    "totalAmount": 264824458.49,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20250925/153718119.shtml",
+    "price": 78.3
+  },
+  {
+    "date": "2025-09-26",
+    "volume": 4700.0,
+    "amount": 338630.0,
+    "totalVolume": 3165189.0,
+    "totalAmount": 265163088.49,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20250926/161915420.shtml",
+    "price": 72.05
+  },
+  {
+    "date": "2025-09-29",
+    "volume": 18873.0,
+    "amount": 1438740.2,
+    "totalVolume": 3184062.0,
+    "totalAmount": 266601828.69,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20250929/155856047.shtml",
+    "price": 76.23
+  },
+  {
+    "date": "2025-09-30",
+    "volume": 3000.0,
+    "amount": 204000.0,
+    "totalVolume": 3187062.0,
+    "totalAmount": 266805828.69,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20250930/163653804.shtml",
+    "price": 68.0
+  },
+  {
+    "date": "2025-10-09",
+    "volume": 4000.0,
+    "amount": 280080.0,
+    "totalVolume": 3191062.0,
+    "totalAmount": 267085908.69,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20251009/151112664.shtml",
+    "price": 70.02
+  },
+  {
+    "date": "2025-10-10",
+    "volume": 1400.0,
+    "amount": 95364.0,
+    "totalVolume": 3192462.0,
+    "totalAmount": 267181272.69,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20251010/164211455.shtml",
+    "price": 68.12
+  },
+  {
+    "date": "2025-10-13",
+    "volume": 655.0,
+    "amount": 45685.25,
+    "totalVolume": 3193117.0,
+    "totalAmount": 267226957.94,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20251013/152039574.shtml",
+    "price": 69.75
+  },
+  {
+    "date": "2025-10-14",
+    "volume": 5000.0,
+    "amount": 321000.0,
+    "totalVolume": 3198117.0,
+    "totalAmount": 267547957.94,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20251014/163730683.shtml",
+    "price": 64.2
+  },
+  {
+    "date": "2025-10-15",
+    "volume": 2200.0,
+    "amount": 155697.5,
+    "totalVolume": 3200317.0,
+    "totalAmount": 267703655.44,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20251015/151003142.shtml",
+    "price": 70.77
+  },
+  {
+    "date": "2025-10-16",
+    "volume": 584.0,
+    "amount": 39680.0,
+    "totalVolume": 3200901.0,
+    "totalAmount": 267743335.44,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20251016/150838380.shtml",
+    "price": 67.95
+  },
+  {
+    "date": "2025-10-17",
+    "volume": 300.0,
+    "amount": 18903.0,
+    "totalVolume": 3201201.0,
+    "totalAmount": 267762238.44,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20251017/151800020.shtml",
+    "price": 63.01
+  },
+  {
+    "date": "2025-10-20",
+    "volume": 1010.0,
+    "amount": 62150.0,
+    "totalVolume": 3202211.0,
+    "totalAmount": 267824388.44,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20251020/154127073.shtml",
+    "price": 61.53
+  },
+  {
+    "date": "2025-10-21",
+    "volume": 13020.0,
+    "amount": 749936.3,
+    "totalVolume": 3215231.0,
+    "totalAmount": 268574324.74,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20251021/151312578.shtml",
+    "price": 57.6
+  },
+  {
+    "date": "2025-10-22",
+    "volume": 8874.0,
+    "amount": 477000.5,
+    "totalVolume": 3224105.0,
+    "totalAmount": 269051325.24,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20251022/150741719.shtml",
+    "price": 53.75
+  },
+  {
+    "date": "2025-10-23",
+    "volume": 11368.0,
+    "amount": 592275.86,
+    "totalVolume": 3235473.0,
+    "totalAmount": 269643601.1,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20251023/162533162.shtml",
+    "price": 52.1
+  },
+  {
+    "date": "2025-10-24",
+    "volume": 120.0,
+    "amount": 6100.2,
+    "totalVolume": 3235593.0,
+    "totalAmount": 269649701.3,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20251024/154410058.shtml",
+    "price": 50.84
+  },
+  {
+    "date": "2025-10-27",
+    "volume": 3100.0,
+    "amount": 157980.0,
+    "totalVolume": 3238693.0,
+    "totalAmount": 269807681.3,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20251027/151004725.shtml",
+    "price": 50.96
+  },
+  {
+    "date": "2025-10-28",
+    "volume": 10800.0,
+    "amount": 550550.0,
+    "totalVolume": 3249493.0,
+    "totalAmount": 270358231.3,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20251028/161815499.shtml",
+    "price": 50.98
+  },
+  {
+    "date": "2025-10-29",
+    "volume": 1000.0,
+    "amount": 50960.0,
+    "totalVolume": 3250493.0,
+    "totalAmount": 270409191.3,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20251029/151407754.shtml",
+    "price": 50.96
+  },
+  {
+    "date": "2025-10-30",
+    "volume": 701000.0,
+    "amount": 36118000.0,
+    "totalVolume": 3951493.0,
+    "totalAmount": 306527191.3,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20251030/153020112.shtml",
+    "price": 51.52
+  },
+  {
+    "date": "2025-10-31",
+    "volume": 91.0,
+    "amount": 4692.55,
+    "totalVolume": 3951584.0,
+    "totalAmount": 306531883.85,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20251031/154103865.shtml",
+    "price": 51.57
+  },
+  {
+    "date": "2025-11-03",
+    "volume": 3390.0,
+    "amount": 195973.3,
+    "totalVolume": 3954974.0,
+    "totalAmount": 306727857.15,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20251103/165008750.shtml",
+    "price": 57.81
+  },
+  {
+    "date": "2025-11-04",
+    "volume": 127513.0,
+    "amount": 8243770.0,
+    "totalVolume": 4082487.0,
+    "totalAmount": 314971627.15,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20251104/152631010.shtml",
+    "price": 64.65
+  },
+  {
+    "date": "2025-11-05",
+    "volume": 300.0,
+    "amount": 15750.0,
+    "totalVolume": 4082787.0,
+    "totalAmount": 314987377.15,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20251105/150934333.shtml",
+    "price": 52.5
+  },
+  {
+    "date": "2025-11-06",
+    "volume": 33677.0,
+    "amount": 2020578.0,
+    "totalVolume": 4116464.0,
+    "totalAmount": 317007955.15,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20251106/151012613.shtml",
+    "price": 60.0
+  },
+  {
+    "date": "2025-11-07",
+    "volume": 67838.0,
+    "amount": 4064280.0,
+    "totalVolume": 4184302.0,
+    "totalAmount": 321072235.15,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20251107/150933410.shtml",
+    "price": 59.91
+  },
+  {
+    "date": "2025-11-10",
+    "volume": 200.0,
+    "amount": 10900.0,
+    "totalVolume": 4184502.0,
+    "totalAmount": 321083135.15,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20251110/151144181.shtml",
+    "price": 54.5
+  },
+  {
+    "date": "2025-11-11",
+    "volume": 20050.0,
+    "amount": 1422825.0,
+    "totalVolume": 4204552.0,
+    "totalAmount": 322505960.15,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20251111/153626188.shtml",
+    "price": 70.96
+  },
+  {
+    "date": "2025-11-12",
+    "volume": 269000.0,
+    "amount": 16094240.0,
+    "totalVolume": 4473552.0,
+    "totalAmount": 338600200.15,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20251112/195129815.shtml",
+    "price": 59.83
+  },
+  {
+    "date": "2025-11-13",
+    "volume": 11000.0,
+    "amount": 649450.0,
+    "totalVolume": 4484552.0,
+    "totalAmount": 339249650.15,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20251113/150927370.shtml",
+    "price": 59.04
+  },
+  {
+    "date": "2025-11-14",
+    "volume": 21590.0,
+    "amount": 1488658.4,
+    "totalVolume": 4506142.0,
+    "totalAmount": 340738308.55,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20251114/151612536.shtml",
+    "price": 68.95
+  },
+  {
+    "date": "2025-11-17",
+    "volume": 3001.0,
+    "amount": 171410.0,
+    "totalVolume": 4509143.0,
+    "totalAmount": 340909718.55,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20251117/162748029.shtml",
+    "price": 57.12
+  },
+  {
+    "date": "2025-11-18",
+    "volume": 50500.0,
+    "amount": 3581250.0,
+    "totalVolume": 4559643.0,
+    "totalAmount": 344490968.55,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20251118/150751954.shtml",
+    "price": 70.92
+  },
+  {
+    "date": "2025-11-19",
+    "volume": 20014.0,
+    "amount": 1440988.5,
+    "totalVolume": 4579657.0,
+    "totalAmount": 345931957.05,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20251119/151231652.shtml",
+    "price": 72.0
+  },
+  {
+    "date": "2025-11-20",
+    "volume": 6280.0,
+    "amount": 459600.0,
+    "totalVolume": 4585937.0,
+    "totalAmount": 346391557.05,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20251120/151449759.shtml",
+    "price": 73.18
+  },
+  {
+    "date": "2025-11-21",
+    "volume": 200.0,
+    "amount": 12880.0,
+    "totalVolume": 4586137.0,
+    "totalAmount": 346404437.05,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20251121/152448953.shtml",
+    "price": 64.4
+  },
+  {
+    "date": "2025-11-24",
+    "volume": 11402.0,
+    "amount": 694964.4,
+    "totalVolume": 4597539.0,
+    "totalAmount": 347099401.45,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20251124/150926941.shtml",
+    "price": 60.95
+  },
+  {
+    "date": "2025-11-25",
+    "volume": 450000.0,
+    "amount": 29375000.0,
+    "totalVolume": 5047539.0,
+    "totalAmount": 376474401.45,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20251125/162417373.shtml",
+    "price": 65.28
+  },
+  {
+    "date": "2025-11-26",
+    "volume": 1289861.0,
+    "amount": 80589990.34,
+    "totalVolume": 6337400.0,
+    "totalAmount": 457064391.79,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20251126/150858488.shtml",
+    "price": 62.48
+  },
+  {
+    "date": "2025-11-27",
+    "volume": 1500.0,
+    "amount": 90060.0,
+    "totalVolume": 6338900.0,
+    "totalAmount": 457154451.79,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20251127/151152183.shtml",
+    "price": 60.04
+  },
+  {
+    "date": "2025-11-28",
+    "volume": 778.0,
+    "amount": 49172.0,
+    "totalVolume": 6339678.0,
+    "totalAmount": 457203623.79,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20251128/163742192.shtml",
+    "price": 63.2
+  },
+  {
+    "date": "2025-12-01",
+    "volume": 413.0,
+    "amount": 31065.37,
+    "totalVolume": 6340091.0,
+    "totalAmount": 457234689.16,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20251201/170314850.shtml",
+    "price": 75.22
+  },
+  {
+    "date": "2025-12-02",
+    "volume": 300202.0,
+    "amount": 18948386.95,
+    "totalVolume": 6640293.0,
+    "totalAmount": 476183076.11,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20251202/151249856.shtml",
+    "price": 63.12
+  },
+  {
+    "date": "2025-12-03",
+    "volume": 75944.0,
+    "amount": 4644735.04,
+    "totalVolume": 6716237.0,
+    "totalAmount": 480827811.15,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20251203/151557262.shtml",
+    "price": 61.16
+  },
+  {
+    "date": "2025-12-04",
+    "volume": 5001.0,
+    "amount": 275067.28,
+    "totalVolume": 6721238.0,
+    "totalAmount": 481102878.43,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20251204/154633235.shtml",
+    "price": 55.0
+  },
+  {
+    "date": "2025-12-05",
+    "volume": 699.0,
+    "amount": 60463.5,
+    "totalVolume": 6721937.0,
+    "totalAmount": 481163341.93,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20251205/151259534.shtml",
+    "price": 86.5
+  },
+  {
+    "date": "2025-12-08",
+    "volume": 1134196.0,
+    "amount": 66480121.54,
+    "totalVolume": 7856133.0,
+    "totalAmount": 547643463.47,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20251208/150936566.shtml",
+    "price": 58.61
+  },
+  {
+    "date": "2025-12-09",
+    "volume": 300.0,
+    "amount": 24000.0,
+    "totalVolume": 7856433.0,
+    "totalAmount": 547667463.47,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20251209/153646375.shtml",
+    "price": 80.0
+  },
+  {
+    "date": "2025-12-10",
+    "volume": 3110.0,
+    "amount": 208505.0,
+    "totalVolume": 7859543.0,
+    "totalAmount": 547875968.47,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20251210/152439315.shtml",
+    "price": 67.04
+  },
+  {
+    "date": "2025-12-11",
+    "volume": 85100.0,
+    "amount": 6398050.0,
+    "totalVolume": 7944643.0,
+    "totalAmount": 554274018.47,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20251211/150959822.shtml",
+    "price": 75.18
+  },
+  {
+    "date": "2025-12-12",
+    "volume": 246147.0,
+    "amount": 18587850.15,
+    "totalVolume": 8190790.0,
+    "totalAmount": 572861868.62,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20251212/154650550.shtml",
+    "price": 75.52
+  },
+  {
+    "date": "2025-12-15",
+    "volume": 23463.0,
+    "amount": 1635290.0,
+    "totalVolume": 8214253.0,
+    "totalAmount": 574497158.62,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20251215/164532785.shtml",
+    "price": 69.7
+  },
+  {
+    "date": "2025-12-16",
+    "volume": 163796.0,
+    "amount": 11899217.6,
+    "totalVolume": 8378049.0,
+    "totalAmount": 586396376.22,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20251216/154925483.shtml",
+    "price": 72.65
+  },
+  {
+    "date": "2025-12-17",
+    "volume": 72.0,
+    "amount": 5246.5,
+    "totalVolume": 8378121.0,
+    "totalAmount": 586401622.72,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20251217/171034762.shtml",
+    "price": 72.87
+  },
+  {
+    "date": "2025-12-18",
+    "volume": 220101.0,
+    "amount": 13868886.99,
+    "totalVolume": 8598222.0,
+    "totalAmount": 600270509.71,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20251218/150855522.shtml",
+    "price": 63.01
+  },
+  {
+    "date": "2025-12-19",
+    "volume": 10000.0,
+    "amount": 790000.0,
+    "totalVolume": 8608222.0,
+    "totalAmount": 601060509.71,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20251219/151944055.shtml",
+    "price": 79.0
+  },
+  {
+    "date": "2025-12-22",
+    "volume": 100.0,
+    "amount": 6300.0,
+    "totalVolume": 8608322.0,
+    "totalAmount": 601066809.71,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20251223/151432411.shtml",
+    "price": 63.0
+  },
+  {
+    "date": "2025-12-23",
+    "volume": 83958.0,
+    "amount": 5363385.84,
+    "totalVolume": 8692280.0,
+    "totalAmount": 606430195.55,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20251223/190658337.shtml",
+    "price": 63.88
+  },
+  {
+    "date": "2025-12-24",
+    "volume": 100141.0,
+    "amount": 8797081.1,
+    "totalVolume": 8792421.0,
+    "totalAmount": 615227276.65,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20251224/150855298.shtml",
+    "price": 87.85
+  },
+  {
+    "date": "2025-12-25",
+    "volume": 20.0,
+    "amount": 1573.0,
+    "totalVolume": 8792441.0,
+    "totalAmount": 615228849.65,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20251225/150909334.shtml",
+    "price": 78.65
+  },
+  {
+    "date": "2025-12-26",
+    "volume": 418662.0,
+    "amount": 33794649.23,
+    "totalVolume": 9211103.0,
+    "totalAmount": 649023498.88,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20251226/153313827.shtml",
+    "price": 80.72
+  },
+  {
+    "date": "2025-12-29",
+    "volume": 5194.0,
+    "amount": 373608.0,
+    "totalVolume": 9216297.0,
+    "totalAmount": 649397106.88,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20251229/155524491.shtml",
+    "price": 71.93
+  },
+  {
+    "date": "2025-12-30",
+    "volume": 3131.0,
+    "amount": 239524.92,
+    "totalVolume": 9219428.0,
+    "totalAmount": 649636631.8,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20251230/151804011.shtml",
+    "price": 76.5
+  },
+  {
+    "date": "2025-12-31",
+    "volume": 1.0,
+    "amount": 85.0,
+    "totalVolume": 9219429.0,
+    "totalAmount": 649636716.8,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20251231/151146872.shtml",
+    "price": 85.0
+  },
+  {
+    "date": "2026-01-05",
+    "volume": 100001.0,
+    "amount": 8150075.0,
+    "totalVolume": 9319430.0,
+    "totalAmount": 657786791.8,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20260105/151709019.shtml",
+    "price": 81.5
+  },
+  {
+    "date": "2026-01-06",
+    "volume": 20101.0,
+    "amount": 1668334.0,
+    "totalVolume": 9339531.0,
+    "totalAmount": 659455125.8,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20260106/160155850.shtml",
+    "price": 83.0
+  },
+  {
+    "date": "2026-01-07",
+    "volume": 15152.0,
+    "amount": 1257755.5,
+    "totalVolume": 9354683.0,
+    "totalAmount": 660712881.3,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20260107/150942879.shtml",
+    "price": 83.01
+  },
+  {
+    "date": "2026-01-08",
+    "volume": 218009.0,
+    "amount": 14294707.85,
+    "totalVolume": 9572692.0,
+    "totalAmount": 675007589.15,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20260108/151015508.shtml",
+    "price": 65.57
+  },
+  {
+    "date": "2026-01-09",
+    "volume": 48030.0,
+    "amount": 3153144.0,
+    "totalVolume": 9620722.0,
+    "totalAmount": 678160733.15,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20260109/164556069.shtml",
+    "price": 65.65
+  },
+  {
+    "date": "2026-01-12",
+    "volume": 14590.0,
+    "amount": 1042140.0,
+    "totalVolume": 9635312.0,
+    "totalAmount": 679202873.15,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20260112/150725614.shtml",
+    "price": 71.43
+  },
+  {
+    "date": "2026-01-13",
+    "volume": 187000.0,
+    "amount": 12757140.0,
+    "totalVolume": 9822312.0,
+    "totalAmount": 691960013.15,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20260113/150957071.shtml",
+    "price": 68.22
+  },
+  {
+    "date": "2026-01-14",
+    "volume": 14000.0,
+    "amount": 952000.0,
+    "totalVolume": 9836312.0,
+    "totalAmount": 692912013.15,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20260114/150916462.shtml",
+    "price": 68.0
+  },
+  {
+    "date": "2026-01-15",
+    "volume": 8005.0,
+    "amount": 550322.04,
+    "totalVolume": 9844317.0,
+    "totalAmount": 693462335.19,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20260115/151323081.shtml",
+    "price": 68.75
+  },
+  {
+    "date": "2026-01-16",
+    "volume": 100000.0,
+    "amount": 8200000.0,
+    "totalVolume": 9944317.0,
+    "totalAmount": 701662335.19,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20260116/151210954.shtml",
+    "price": 82.0
+  },
+  {
+    "date": "2026-01-19",
+    "volume": 33020.0,
+    "amount": 2592790.0,
+    "totalVolume": 9977337.0,
+    "totalAmount": 704255125.19,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20260119/182314147.shtml",
+    "price": 78.52
+  },
+  {
+    "date": "2026-01-20",
+    "volume": 890.0,
+    "amount": 62898.9,
+    "totalVolume": 9978227.0,
+    "totalAmount": 704318024.09,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20260120/152008007.shtml",
+    "price": 70.67
+  },
+  {
+    "date": "2026-01-21",
+    "volume": 100000.0,
+    "amount": 8425001.0,
+    "totalVolume": 10078227.0,
+    "totalAmount": 712743025.09,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20260121/170213170.shtml",
+    "price": 84.25
+  },
+  {
+    "date": "2026-01-22",
+    "volume": 1.0,
+    "amount": 80.0,
+    "totalVolume": 10078228.0,
+    "totalAmount": 712743105.09,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20260122/153623784.shtml",
+    "price": 80.0
+  },
+  {
+    "date": "2026-01-23",
+    "volume": 118022.0,
+    "amount": 9948105.0,
+    "totalVolume": 10196250.0,
+    "totalAmount": 722691210.09,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20260123/170525534.shtml",
+    "price": 84.29
+  },
+  {
+    "date": "2026-01-26",
+    "volume": 50000.0,
+    "amount": 4180000.0,
+    "totalVolume": 10246250.0,
+    "totalAmount": 726871210.09,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20260126/160750514.shtml",
+    "price": 83.6
+  },
+  {
+    "date": "2026-01-27",
+    "volume": 150.0,
+    "amount": 10395.0,
+    "totalVolume": 10246400.0,
+    "totalAmount": 726881605.09,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20260127/162752557.shtml",
+    "price": 69.3
+  },
+  {
+    "date": "2026-01-28",
+    "volume": 150.0,
+    "amount": 11250.0,
+    "totalVolume": 10246550.0,
+    "totalAmount": 726892855.09,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20260128/154443157.shtml",
+    "price": 75.0
+  },
+  {
+    "date": "2026-01-29",
+    "volume": 20010.0,
+    "amount": 1650820.0,
+    "totalVolume": 10266560.0,
+    "totalAmount": 728543675.09,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20260129/150750325.shtml",
+    "price": 82.5
+  },
+  {
+    "date": "2026-01-30",
+    "volume": 10000.0,
+    "amount": 840000.0,
+    "totalVolume": 10276560.0,
+    "totalAmount": 729383675.09,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20260130/153745650.shtml",
+    "price": 84.0
+  },
+  {
+    "date": "2026-02-02",
+    "volume": 10010.0,
+    "amount": 850650.8,
+    "totalVolume": 10286570.0,
+    "totalAmount": 730234325.89,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20260202/164011757.shtml",
+    "price": 84.98
+  },
+  {
+    "date": "2026-02-03",
+    "volume": 5000.0,
+    "amount": 430000.0,
+    "totalVolume": 10291570.0,
+    "totalAmount": 730664325.89,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20260203/163904737.shtml",
+    "price": 86.0
+  },
+  {
+    "date": "2026-02-04",
+    "volume": 200108.0,
+    "amount": 17008730.0,
+    "totalVolume": 10491678.0,
+    "totalAmount": 747673055.89,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20260204/164800853.shtml",
+    "price": 85.0
+  },
+  {
+    "date": "2026-02-05",
+    "volume": 10.0,
+    "amount": 880.0,
+    "totalVolume": 10491688.0,
+    "totalAmount": 747673935.89,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20260205/164744225.shtml",
+    "price": 88.0
+  },
+  {
+    "date": "2026-02-06",
+    "volume": 25456.0,
+    "amount": 2176488.0,
+    "totalVolume": 10517144.0,
+    "totalAmount": 749850423.89,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20260206/154506875.shtml",
+    "price": 85.5
+  },
+  {
+    "date": "2026-02-09",
+    "volume": 43010.0,
+    "amount": 3736715.9,
+    "totalVolume": 10560154.0,
+    "totalAmount": 753587139.79,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20260209/151042414.shtml",
+    "price": 86.88
+  },
+  {
+    "date": "2026-02-10",
+    "volume": 10020.0,
+    "amount": 881666.5,
+    "totalVolume": 10570174.0,
+    "totalAmount": 754468806.29,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20260210/174412199.shtml",
+    "price": 87.99
+  },
+  {
+    "date": "2026-02-11",
+    "volume": 37340.0,
+    "amount": 3223377.3,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20260211/152816392.shtml",
+    "price": 86.33
+  },
+  {
+    "date": "2026-02-12",
+    "volume": 3.0,
+    "amount": 261.0,
+    "totalVolume": 10607517.0,
+    "totalAmount": 757692444.59,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20260212/165408719.shtml",
+    "price": 87.0
+  },
+  {
+    "date": "2026-02-13",
+    "volume": 15000.0,
+    "amount": 1282500.0,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20260213/151232407.shtml",
+    "price": 85.5
+  },
+  {
+    "date": "2026-02-24",
+    "volume": 10.0,
+    "amount": 890.0,
+    "totalVolume": 10622527.0,
+    "totalAmount": 758975834.59,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20260224/180017571.shtml",
+    "price": 89.0
+  },
+  {
+    "date": "2026-02-25",
+    "volume": 10.0,
+    "amount": 770.0,
+    "totalVolume": 10622537.0,
+    "totalAmount": 758976604.59,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20260225/171254840.shtml",
+    "price": 77.0
+  },
+  {
+    "date": "2026-02-26",
+    "volume": 1001.0,
+    "amount": 85085.48,
+    "totalVolume": 10623538.0,
+    "totalAmount": 759061690.07,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20260226/165136267.shtml",
+    "price": 85.0
+  },
+  {
+    "date": "2026-02-27",
+    "volume": 244.0,
+    "amount": 21280.5,
+    "totalVolume": 10623782.0,
+    "totalAmount": 759082970.57,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20260227/163317589.shtml",
+    "price": 87.22
+  },
+  {
+    "date": "2026-03-02",
+    "volume": 2002.0,
+    "amount": 172172.49,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20260302/161344606.shtml",
+    "price": 86.0
+  },
+  {
+    "date": "2026-03-03",
+    "volume": 109.0,
+    "amount": 9383.5,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20260303/151317603.shtml",
+    "price": 86.09
+  },
+  {
+    "date": "2026-03-04",
+    "volume": 20.0,
+    "amount": 1740.0,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20260304/150955060.shtml",
+    "price": 87.0
+  },
+  {
+    "date": "2026-03-05",
+    "volume": 10000.0,
+    "amount": 860000.0,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20260305/151054231.shtml",
+    "price": 86.0
+  },
+  {
+    "date": "2026-03-06",
+    "volume": 201.0,
+    "amount": 17687.0,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20260306/151821745.shtml",
+    "price": 88.0
+  },
+  {
+    "date": "2026-03-09",
+    "volume": 13.0,
+    "amount": 1150.37,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20260309/151312144.shtml",
+    "price": 88.49
+  },
+  {
+    "date": "2026-03-10",
+    "volume": 1722.0,
+    "amount": 164967.6,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20260310/152045803.shtml",
+    "price": 95.8
+  },
+  {
+    "date": "2026-03-11",
+    "volume": 51285.0,
+    "amount": 4388722.5,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20260311/151442995.shtml",
+    "price": 85.58
+  },
+  {
+    "date": "2026-03-12",
+    "volume": 12400.0,
+    "amount": 1078300.0,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20260312/150955943.shtml",
+    "price": 86.96
+  },
+  {
+    "date": "2026-03-13",
+    "volume": 80010.0,
+    "amount": 6920860.0,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20260313/151433403.shtml",
+    "price": 86.5
+  },
+  {
+    "date": "2026-03-16",
+    "volume": 10.0,
+    "amount": 840.0,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20260316/154532050.shtml",
+    "price": 84.0
+  },
+  {
+    "date": "2026-03-17",
+    "volume": 90.0,
+    "amount": 7810.0,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20260317/151059145.shtml",
+    "price": 86.78
+  },
+  {
+    "date": "2026-03-18",
+    "volume": 100.0,
+    "amount": 8635.8,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20260318/150938799.shtml",
+    "price": 86.36
+  },
+  {
+    "date": "2026-03-19",
+    "volume": 95.0,
+    "amount": 8267.07,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20260319/150950282.shtml",
+    "price": 87.02
+  },
+  {
+    "date": "2026-03-20",
+    "volume": 100983.0,
+    "amount": 8588610.8,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20260320/155228115.shtml",
+    "price": 85.05
+  },
+  {
+    "date": "2026-03-23",
+    "volume": 30000.0,
+    "amount": 2850000.0,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20260323/151319836.shtml",
+    "price": 95.0
+  },
+  {
+    "date": "2026-03-24",
+    "volume": 237487.0,
+    "amount": 21070335.5,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20260324/151354516.shtml",
+    "price": 88.72
+  },
+  {
+    "date": "2026-03-25",
+    "volume": 20111.0,
+    "amount": 1699452.0,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20260325/151114151.shtml",
+    "price": 84.5
+  },
+  {
+    "date": "2026-03-26",
+    "volume": 310.0,
+    "amount": 27504.5,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20260326/151333590.shtml",
+    "price": 88.72
+  },
+  {
+    "date": "2026-03-27",
+    "volume": 80100.0,
+    "amount": 7219250.0,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20260327/151649914.shtml",
+    "price": 90.13
+  },
+  {
+    "date": "2026-03-30",
+    "volume": 31010.0,
+    "amount": 2616865.0,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20260330/151319190.shtml",
+    "price": 84.39
+  },
+  {
+    "date": "2026-03-31",
+    "volume": 100000.0,
+    "amount": 8460000.0,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20260331/151008292.shtml",
+    "price": 84.6
+  },
+  {
+    "date": "2026-04-02",
+    "volume": 20605.0,
+    "amount": 1731425.0,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20260402/151248450.shtml",
+    "price": 84.03
+  },
+  {
+    "date": "2026-04-03",
+    "volume": 20008.0,
+    "amount": 1674680.0,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20260403/234150558.shtml",
+    "price": 83.7
+  },
+  {
+    "date": "2026-04-07",
+    "volume": 110000.0,
+    "amount": 9160000.0,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20260407/151018360.shtml",
+    "price": 83.27
+  },
+  {
+    "date": "2026-04-09",
+    "volume": 10.0,
+    "amount": 820.0,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20260409/151057007.shtml",
+    "price": 82.0
+  },
+  {
+    "date": "2026-04-10",
+    "volume": 20.0,
+    "amount": 1700.0,
+    "totalVolume": 11532483.0,
+    "totalAmount": 837824149.7,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20260410/164118918.shtml",
+    "price": 85.0
+  },
+  {
+    "date": "2026-04-14",
+    "volume": 300.0,
+    "amount": 25050.0,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20260414/151053186.shtml",
+    "price": 83.5
+  },
+  {
+    "date": "2026-04-15",
+    "volume": 70001.0,
+    "amount": 5940084.5,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20260415/151146980.shtml",
+    "price": 84.86
+  },
+  {
+    "date": "2026-04-16",
+    "volume": 5000.0,
+    "amount": 471700.0,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20260416/151021618.shtml",
+    "price": 94.34
+  },
+  {
+    "date": "2026-04-17",
+    "volume": 3000.0,
+    "amount": 285000.0,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20260417/151307611.shtml",
+    "price": 95.0
+  },
+  {
+    "date": "2026-04-20",
+    "volume": 12410.0,
+    "amount": 1052418.0,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20260420/220543330.shtml",
+    "price": 84.8
+  },
+  {
+    "date": "2026-04-21",
+    "volume": 392.0,
+    "amount": 36666.0,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20260421/193259250.shtml",
+    "price": 93.54
+  },
+  {
+    "date": "2026-04-22",
+    "volume": 400.0,
+    "amount": 36400.0,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20260422/151137951.shtml",
+    "price": 91.0
+  },
+  {
+    "date": "2026-04-23",
+    "volume": 52000.0,
+    "amount": 4174000.0,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20260423/151234910.shtml",
+    "price": 80.27
+  },
+  {
+    "date": "2026-04-24",
+    "volume": 20500.0,
+    "amount": 1711000.0,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20260424/152506014.shtml",
+    "price": 83.46
+  },
+  {
+    "date": "2026-04-28",
+    "volume": 127706.0,
+    "amount": 11024351.98,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20260428/153145180.shtml",
+    "price": 86.33
+  },
+  {
+    "date": "2026-04-29",
+    "volume": 48072.0,
+    "amount": 4297631.0,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20260429/151146321.shtml",
+    "price": 89.4
+  },
+  {
+    "date": "2026-04-30",
+    "volume": 118100.0,
+    "amount": 9947197.0,
+    "totalVolume": 11990364.0,
+    "totalAmount": 876825648.18,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20260430/162657424.shtml",
+    "price": 84.23
+  },
+  {
+    "date": "2026-05-06",
+    "volume": 200.0,
+    "amount": 17100.0,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20260506/150913323.shtml",
+    "price": 85.5
+  },
+  {
+    "date": "2026-05-07",
+    "volume": 20100.0,
+    "amount": 1703917.0,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20260507/151143461.shtml",
+    "price": 84.77
+  },
+  {
+    "date": "2026-05-08",
+    "volume": 1105.0,
+    "amount": 99445.3,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20260508/153808393.shtml",
+    "price": 90.0
+  },
+  {
+    "date": "2026-05-11",
+    "volume": 205562.0,
+    "amount": 17079086.0,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20260511/151219007.shtml",
+    "price": 83.08
+  },
+  {
+    "date": "2026-05-12",
+    "volume": 30000.0,
+    "amount": 2505000.0,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20260512/151358981.shtml",
+    "price": 83.5
+  },
+  {
+    "date": "2026-05-13",
+    "volume": 20000.0,
+    "amount": 1660000.0,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20260513/150908710.shtml",
+    "price": 83.0
+  },
+  {
+    "date": "2026-05-14",
+    "volume": 56032.0,
+    "amount": 4713320.0,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20260514/151140556.shtml",
+    "price": 84.12
+  },
+  {
+    "date": "2026-05-15",
+    "volume": 150000.0,
+    "amount": 12500000.0,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20260515/151409921.shtml",
+    "price": 83.33
+  }
+];
