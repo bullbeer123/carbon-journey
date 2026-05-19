@@ -477,17 +477,19 @@ document.querySelectorAll('.tm-item, .tech-dash-card, .trm-domain').forEach(el =
 // ==================== 回到顶部按钮 ====================
 const backToTop = document.getElementById('backToTop');
 
-window.addEventListener('scroll', () => {
-    if (window.scrollY > 500) {
-        backToTop.classList.add('visible');
-    } else {
-        backToTop.classList.remove('visible');
-    }
-});
+if (backToTop) {
+    window.addEventListener('scroll', () => {
+        if (window.scrollY > 500) {
+            backToTop.classList.add('visible');
+        } else {
+            backToTop.classList.remove('visible');
+        }
+    });
 
-backToTop.addEventListener('click', () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-});
+    backToTop.addEventListener('click', () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+}
 
 // ==================== 中国地图简化版SVG ====================
 const chinaMapEl = document.getElementById('chinaMap');
@@ -518,6 +520,7 @@ const regionsData = [
 ];
 
 function renderChinaMap() {
+    if (!chinaMapEl || !tooltip) return;
     let svgHtml = `<svg viewBox="0 0 100 90" preserveAspectRatio="xMidYMid meet" style="width:100%;height:100%;">`;
     
     // 绘制连接线（模拟省份边界）
@@ -588,7 +591,7 @@ function renderChinaMap() {
     });
 }
 
-renderChinaMap();
+if (chinaMapEl) renderChinaMap();
 
 // ==================== 平滑滚动增强 ====================
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
