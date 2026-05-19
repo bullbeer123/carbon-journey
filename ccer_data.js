@@ -1,5 +1,9 @@
 var ccerRawData = [
   {
+    "date": "2024-01-22",
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20250306/112020984.shtml"
+  },
+  {
     "date": "2025-03-07",
     "volume": 748800.0,
     "amount": 60241797.62,
@@ -2274,6 +2278,10 @@ var ccerRawData = [
     "price": 84.6
   },
   {
+    "date": "2026-04-01",
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20260401/150748822.shtml"
+  },
+  {
     "date": "2026-04-02",
     "volume": 20605.0,
     "amount": 1731425.0,
@@ -2295,6 +2303,10 @@ var ccerRawData = [
     "price": 83.27
   },
   {
+    "date": "2026-04-08",
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20260408/150545245.shtml"
+  },
+  {
     "date": "2026-04-09",
     "volume": 10.0,
     "amount": 820.0,
@@ -2309,6 +2321,10 @@ var ccerRawData = [
     "totalAmount": 837824149.7,
     "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20260410/164118918.shtml",
     "price": 85.0
+  },
+  {
+    "date": "2026-04-13",
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20260413/152832932.shtml"
   },
   {
     "date": "2026-04-14",
@@ -2372,6 +2388,10 @@ var ccerRawData = [
     "amount": 1711000.0,
     "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20260424/152506014.shtml",
     "price": 83.46
+  },
+  {
+    "date": "2026-04-27",
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20260427/150550822.shtml"
   },
   {
     "date": "2026-04-28",
@@ -2451,5 +2471,19 @@ var ccerRawData = [
     "amount": 12500000.0,
     "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20260515/151409921.shtml",
     "price": 83.33
+  },
+  {
+    "date": "2026-05-18",
+    "volume": 23500.0,
+    "amount": 2015000.0,
+    "price": 85.74,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20260518/151659506.shtml"
+  },
+  {
+    "date": "2026-05-19",
+    "volume": 10401.0,
+    "amount": 894183.0,
+    "price": 85.97,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20260519/152008641.shtml"
   }
 ];
