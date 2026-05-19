@@ -265,9 +265,11 @@ const projectsData = [
 ];
 
 let displayedProjects = 8;
-const projectsGrid = document.getElementById('projectsGrid');
 
 function renderProjects(filter = 'all') {
+    const projectsGrid = document.getElementById('projectsGrid');
+    if (!projectsGrid) return;
+
     const filtered = filter === 'all' 
         ? projectsData 
         : projectsData.filter(p => p.category === filter);
@@ -313,24 +315,30 @@ function getCategoryName(cat) {
     return names[cat] || cat;
 }
 
-renderProjects();
+// 项目区相关初始化（仅当对应元素存在时执行）
+if (document.getElementById('projectsGrid')) {
+    renderProjects();
 
-// 项目筛选器
-document.querySelectorAll('.filter-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        displayedProjects = 8;
-        renderProjects(btn.dataset.filter);
+    // 项目筛选器
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            displayedProjects = 8;
+            renderProjects(btn.dataset.filter);
+        });
     });
-});
 
-// 加载更多
-document.getElementById('loadMoreProjects').addEventListener('click', () => {
-    displayedProjects += 8;
-    const activeFilter = document.querySelector('.filter-btn.active').dataset.filter;
-    renderProjects(activeFilter);
-});
+    // 加载更多
+    const loadMoreBtn = document.getElementById('loadMoreProjects');
+    if (loadMoreBtn) {
+        loadMoreBtn.addEventListener('click', () => {
+            displayedProjects += 8;
+            const activeFilter = document.querySelector('.filter-btn.active');
+            if (activeFilter) renderProjects(activeFilter.dataset.filter);
+        });
+    }
+}
 
 // ==================== 技术标签页切换 ====================
 document.querySelectorAll('.tech-tab').forEach(tab => {
@@ -694,7 +702,7 @@ window.addEventListener('load', () => {
     // 初始化章节过渡
     initSectionTransitions();
     
-    console.log('🌿 碳索之旅 — 中国低碳建设全景展示平台 已就绪');
+    console.log('🤖 Carbon AI 助手 — AI驱动碳管理智能顾问 已就绪');
 });
 
 // ==================== 侧边浮动导航（滑出式，默认隐藏） ====================
@@ -1195,7 +1203,6 @@ platformsData.forEach(p => {
 });
 
 let displayedPlatforms = 12;
-const platformsGrid = document.getElementById('platformsGrid');
 
 function getPlatformCategoryName(cat) {
     const names = {
