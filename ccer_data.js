@@ -2485,5 +2485,12 @@ var ccerRawData = [
     "amount": 894183.0,
     "price": 85.97,
     "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20260519/152008641.shtml"
+  },
+  {
+    "date": "2026-05-20",
+    "volume": 808.0,
+    "amount": 68680.0,
+    "price": 85.0,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20260520/151149505.shtml"
   }
 ];
