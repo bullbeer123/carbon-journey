@@ -2492,5 +2492,23 @@
     "amount": 68680.0,
     "price": 85.0,
     "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/20260520/151149505.shtml"
+  },
+  {
+    "date": "2026-05-21",
+    "volume": 150000.0,
+    "amount": 12600000.0,
+    "price": 84.0,
+    "totalVolume": 12658072.0,
+    "totalAmount": 932681379.48,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/index.html"
+  },
+  {
+    "date": "2026-05-22",
+    "volume": 200.0,
+    "amount": 17160.0,
+    "price": 85.8,
+    "totalVolume": 12658272.0,
+    "totalAmount": 932698539.48,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/index.html"
   }
 ]
