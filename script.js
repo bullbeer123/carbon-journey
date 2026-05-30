@@ -1071,6 +1071,8 @@ const platformsData = [
     { id: 34, category: 'enterprise', icon: '&#128296;', name: '吉碳云碳管理平台（吉利）', url: 'https://carbon.geely.com/', desc: '依托吉利汽车体系经验，将整车制造龙头的内部碳管理能力外溢为平台化产品。体现整车与制造龙头正在把内部能力外溢为行业公共服务的趋势。', tags: ['吉利汽车', '制造业龙头', '能力外溢'], region: '浙江' },
     { id: 35, category: 'enterprise', icon: '&#9728;&#65039;', name: '阳光慧碳', url: 'https://www.icarbon.com/', desc: '强调"不仅能算，还能降"——表明平台竞争正在从核算比拼转向减排运营能力竞争。提供严谨实用的产品碳足迹核算以及降低碳排放的完整解决方案。', tags: ['阳光电源', '算+降', '减排运营'], region: '全国' },
     { id: 36, category: 'enterprise', icon: '&#128187;', name: '智慧碳足迹管理系统（法泰电器）', url: 'https://www.fatai.com/tzjgl.html', desc: '通用型企业碳足迹管理平台，更关注企业落地的便捷性、数据管理和报告输出效率。适合需要快速建立碳数据台账和管理体系的中小型企业使用。', tags: ['法泰电器', '通用型', '便捷落地', '中小企适用'], region: '江苏' },
+    { id: 72, category: 'enterprise', icon: '&#127795;', name: '擎工互联 — 一站式碳管理平台', url: 'https://www.skyco2.com/', desc: '江苏擎天工业互联网有限公司出品，国家温室气体综合管理平台承建商。覆盖碳计量→碳核算→碳核查→碳资产运营全链路，自研数百种核算标准与数十万条计算参数。提供CBAM碳关税合规、EUDR零毁林法案、产品碳足迹、EPD环境声明等一站式服务，已服务1.5万家控排企业。', tags: ['擎天工业', 'CBAM合规', 'EPD', '国家级承建'], region: '全国' },
+    { id: 73, category: 'enterprise', icon: '&#9889;', name: '蘑菇物联 AI云智控 — 工业AI能控平台', url: 'https://www.mogulinker.com/CIC.html', desc: '广东蘑菇物联出品，以自研「灵知AI大模型」驱动的新一代工业能碳管理平台。覆盖空压站、制冷站、循环水站、制氮站、配电站、动力能源六大公辅系统，实现设备级→车间级→工厂级→集团级四级AI能源管理闭环。空压站节能10-35%，制冷站节能5-25%，广汽本田、中集集团、白云山制药等标杆案例。', tags: ['蘑菇物联', 'AI能控', '工业IoT', '公辅节能'], region: '全国' },
 
     // ===== 五、国际机制与标准 =====
     { id: 37, category: 'intl', icon: '&#127758;', name: 'VCS 核证碳标准官网', url: 'https://verra.org/', desc: '国际核证碳标准(Verra)旗下 Verified Carbon Standard (VCS)，在CCER重启之前是国际机制核证减排量的主要选择之一。网站可查询注册文件、已发行项目信息等。', tags: ['国际标准', 'VCS', '核证减排量', '项目查询'], region: '全球' },
@@ -1164,6 +1166,8 @@ const platformFunctions = {
     35: ['carbon-footprint', 'tool-platform', 'accounting'],   // 阳光慧碳
     36: ['carbon-footprint', 'accounting', 'tool-platform'],   // 法泰电器
     70: ['certification', 'data-query', 'tool-platform'],      // i-esg
+    72: ['carbon-footprint', 'certification', 'accounting', 'policy-info'], // 擎工互联（CBAM+碳足迹+核算+政策合规）
+    73: ['tool-platform', 'accounting', 'data-query'],          // 蘑菇物联AI云智控（能碳管理+AI节能+数据分析）
     // 国际机制
     37: ['trading', 'green-cert', 'standard'],                 // VCS
     38: ['standard', 'green-cert'],                            // CDM
@@ -1672,12 +1676,18 @@ function renderTier1(role) {
     }).join('');
 }
 
-// 点击平台卡片 → 记录访问 + 打开链接
+// 点击平台卡片 → 记录访问 + 打开链接（用a标签模拟点击，避免浏览器拦截window.open）
 function visitPlatform(platformId) {
     recordPlatformVisit(platformId);
     const p = platformsData.find(x => x.id === platformId);
     if (p && p.url) {
-        window.open(p.url, '_blank', 'noopener,noreferrer');
+        const a = document.createElement('a');
+        a.href = p.url;
+        a.target = '_blank';
+        a.rel = 'noopener noreferrer';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
     }
 }
 
