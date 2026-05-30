@@ -4,42 +4,62 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>服务平台 — Carbon AI 助手</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="style-new.css">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700;900&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* 平台页面专用样式 */
+        .platforms-page { padding-top: 120px; min-height: 100vh; background: linear-gradient(180deg, #f0fdf4 0%, #f8fafc 100%); }
+        .pf-header { text-align: center; margin-bottom: 40px; }
+        .pf-header h2 { font-size: 32px; color: #0d6e3d; margin: 0 0 12px; }
+        .pf-header p { color: #64748b; font-size: 16px; max-width: 700px; margin: 0 auto; line-height: 1.7; }
+        .pf-stats { display: flex; justify-content: center; gap: 40px; margin-bottom: 32px; }
+        .pf-stat { text-align: center; }
+        .pf-stat .num { font-size: 28px; font-weight: 900; color: #0d6e3d; display: block; }
+        .pf-stat .label { font-size: 13px; color: #94a3b8; margin-top: 4px; }
+        .pf-toolbar { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; margin-bottom: 24px; }
+        .pf-filter { padding: 8px 18px; border: 1px solid #d1d5db; border-radius: 20px; background: #fff; font-size: 13px; font-weight: 500; color: #475569; cursor: pointer; transition: all 0.2s; }
+        .pf-filter:hover { border-color: #1a9a5c; color: #1a9a5c; }
+        .pf-filter.active { background: #1a9a5c; color: #fff; border-color: #1a9a5c; }
+        .pf-search { display: flex; justify-content: center; margin-bottom: 30px; }
+        .pf-search input { width: 100%; max-width: 480px; padding: 10px 16px 10px 40px; border: 1px solid #d1d5db; border-radius: 24px; font-size: 14px; outline: none; background: #fff; transition: border-color 0.2s; }
+        .pf-search input:focus { border-color: #1a9a5c; box-shadow: 0 0 0 3px rgba(26,154,92,0.1); }
+        .pf-search-wrap { position: relative; display: inline-block; }
+        .pf-search-wrap svg { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); }
+        .pf-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 16px; margin-bottom: 40px; }
+        .pf-card { background: #fff; border: 1px solid #e5e7eb; border-radius: 12px; padding: 20px; transition: all 0.25s; cursor: default; }
+        .pf-card:hover { border-color: #1a9a5c; box-shadow: 0 8px 24px rgba(26,154,92,0.1); transform: translateY(-2px); }
+        .pf-card.hidden { display: none; }
+        .pf-card-top { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 10px; }
+        .pf-card-icon { width: 40px; height: 40px; border-radius: 10px; background: rgba(26,154,92,0.08); display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
+        .pf-card-name { font-size: 15px; font-weight: 700; color: #1e293b; line-height: 1.4; }
+        .pf-card-cat { font-size: 11px; color: #1a9a5c; font-weight: 600; margin-top: 2px; }
+        .pf-card-desc { font-size: 12.5px; color: #64748b; line-height: 1.65; margin-bottom: 12px; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+        .pf-card-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px; }
+        .pf-card-tag { font-size: 10.5px; padding: 3px 10px; border-radius: 12px; background: rgba(26,154,92,0.06); color: #1a9a5c; font-weight: 500; }
+        .pf-card-tag.func { background: rgba(27,136,216,0.06); color: #1b88d8; }
+        .pf-card-bottom { display: flex; align-items: center; justify-content: space-between; border-top: 1px solid #f1f5f9; padding-top: 12px; }
+        .pf-card-region { font-size: 12px; color: #94a3b8; }
+        .pf-card-visit { display: inline-flex; align-items: center; gap: 4px; padding: 6px 16px; background: #1a9a5c; color: #fff; border-radius: 18px; font-size: 12.5px; font-weight: 600; text-decoration: none; transition: all 0.2s; }
+        .pf-card-visit:hover { background: #0d6e3d; }
+        .pf-card-visit svg { width: 12px; height: 12px; }
+        .pf-no-result { text-align: center; padding: 60px 20px; color: #94a3b8; }
+        .pf-no-result .icon { font-size: 48px; margin-bottom: 12px; }
+        .pf-count { text-align: center; font-size: 13px; color: #94a3b8; margin-bottom: 20px; display: none; }
+        .pf-load-more { display: flex; justify-content: center; margin-bottom: 40px; }
+        .pf-load-more button { padding: 10px 32px; border: 1px solid #d1d5db; border-radius: 24px; background: #fff; font-size: 14px; color: #475569; cursor: pointer; transition: all 0.2s; }
+        .pf-load-more button:hover { border-color: #1a9a5c; color: #1a9a5c; }
+        @media (max-width: 768px) {
+            .pf-grid { grid-template-columns: 1fr; }
+            .pf-stats { gap: 24px; }
+            .pf-filter { font-size: 12px; padding: 6px 14px; }
+        }
+    </style>
 </head>
 <body>
-    <!-- 粒子背景画布 -->
-    <canvas id="particleCanvas"></canvas>
-    
-    <!-- 导航栏 -->
     <nav id="navbar">
         <div class="nav-container glass-panel">
             <div class="nav-logo">
-                <svg class="logo-icon" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <circle cx="20" cy="20" r="18.5" stroke="url(#logoGrad)" stroke-width="1.8" fill="rgba(13,110,61,0.05)"/>
-                    <circle cx="20" cy="20" r="15" stroke="url(#logoGrad)" stroke-width="0.6" stroke-dasharray="3 3" opacity="0.5"/>
-                    <g transform="translate(9, 7)">
-                        <path d="M11 2 C4.5 2 1 7 1 12.5 C1 18 4.5 23 11 23" 
-                              stroke="url(#logoGrad)" stroke-width="3" stroke-linecap="round" fill="none"/>
-                        <path d="M10 12.5 L17 5.5 C17.5 5 18 5 18.3 5.5 L19 7 L16.5 9.5" 
-                              stroke="#1a9a5c" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-                        <path d="M14 12.5 L19 10 C19.5 9.7 19.8 10 19.5 10.5 L18 13 L15.5 12" 
-                              stroke="#00d4aa" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-                        <circle cx="17.5" cy="6.5" r="1.2" fill="#0d6e3d"/>
-                        <circle cx="19.2" cy="10.2" r="1" fill="#1a9a5c"/>
-                        <circle cx="17" cy="14" r="0.85" fill="#00d4aa"/>
-                    </g>
-                    <line x1="13" y1="35" x2="27" y2="35" stroke="url(#logoGrad)" stroke-width="1.2" stroke-linecap="round" opacity="0.6"/>
-                    <defs>
-                        <linearGradient id="logoGrad" x1="0" y1="0" x2="22" y2="22" gradientUnits="userSpaceOnUse">
-                            <stop offset="0%" stop-color="#0d6e3d"/>
-                            <stop offset="50%" stop-color="#1a9a5c"/>
-                            <stop offset="100%" stop-color="#00d4aa"/>
-                        </linearGradient>
-                    </defs>
-                </svg>
-                <span class="logo-text">Carbon AI 助手</span>
+                <span style="font-size:18px;font-weight:700;color:#0d6e3d;">🌿 Carbon AI 助手</span>
             </div>
             <ul class="nav-links">
                 <li><a href="index.html">首页</a></li>
@@ -50,135 +70,235 @@
                 <li><a href="tools.html">AI工具</a></li>
                 <li><a href="platforms.html" class="active">服务平台</a></li>
             </ul>
-            <button class="nav-toggle" id="navToggle">☰</button>
         </div>
     </nav>
 
-    <!-- ==================== 碳管理服务平台 ==================== -->
-    <section id="platforms" class="section platforms-section" style="padding-top:120px;">
-        <div class="container">
-            <div class="section-header">
-                <span class="section-tag">🔧 实用工具箱</span>
-                <h2 class="section-title">碳管理与<span class="highlight">能碳协同平台全景图谱</span></h2>
-                <p class="section-desc">从政府公共服务到企业SaaS工具，从碳交易市场到国际标准，从工业AI能控到能碳协同 —— 73+个双碳必备平台一站式导航</p>
+    <section class="platforms-page">
+        <div class="container" style="max-width:1200px;margin:0 auto;padding:0 20px;">
+            <div class="pf-header">
+                <h2>碳管理与能碳协同平台<span style="color:#1a9a5c;">全景图谱</span></h2>
+                <p>从政府公共服务到企业SaaS工具，从碳交易市场到国际标准，从工业AI能控到能碳协同 —— 73+个双碳必备平台一站式导航</p>
             </div>
-
-            <!-- 第一层：最常用平台（默认隐藏，通过按钮切换） -->
-            <div class="platforms-tier-1" id="platformsTier1" style="display:none;">
-                <div class="tier-header">
-                    <span class="tier-label">⭐ 常用推荐</span>
-                    <span class="tier-hint">根据使用频率自动推荐</span>
-                    <button class="tier-change-btn" onclick="showAllPlatforms()" title="查看全部平台">
-                        查看全部 73+ 个平台 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-                    </button>
-                </div>
-                <div class="tier1-grid" id="tier1Grid"></div>
+            <div class="pf-stats">
+                <div class="pf-stat"><span class="num">73+</span><span class="label">收录平台</span></div>
+                <div class="pf-stat"><span class="num">6</span><span class="label">大分类</span></div>
+                <div class="pf-stat"><span class="num">8</span><span class="label">信息源</span></div>
             </div>
-
-            <!-- 第二层：完整平台列表（默认显示） -->
-            <div class="platforms-full" id="platformsFull">
-                <!-- 收起按钮 -->
-                <div style="text-align:right;margin-bottom:12px;">
-                    <button id="hidePlatformsBtn" class="tier-change-btn" onclick="hideFullPlatforms()" style="display:inline-flex;">
-                        ← 返回常用推荐
-                    </button>
+            <div class="pf-toolbar" id="pfToolbar">
+                <button class="pf-filter active" data-cat="all">🌏 全部</button>
+                <button class="pf-filter" data-cat="gov">🏛️ 政府平台</button>
+                <button class="pf-filter" data-cat="market">💹 碳交易</button>
+                <button class="pf-filter" data-cat="industry">🏭 行业协会</button>
+                <button class="pf-filter" data-cat="enterprise">🏢 企业SaaS</button>
+                <button class="pf-filter" data-cat="intl">🌐 国际机制</button>
+                <button class="pf-filter" data-cat="info">📰 资讯数据</button>
+            </div>
+            <div class="pf-search">
+                <div class="pf-search-wrap">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+                    <input type="text" id="pfSearchInput" placeholder="搜索平台名称、功能、关键词..." autocomplete="off"/>
                 </div>
-
-                <!-- 平台统计概览 -->
-                <div class="platforms-stats-bar">
-                    <div class="psb-item"><span class="psb-num">73+</span><span class="psb-label">收录平台</span></div>
-                    <div class="psb-item"><span class="psb-num">6</span><span class="psb-label">大分类</span></div>
-                    <div class="psb-item"><span class="psb-num">8</span><span class="psb-label">信息源</span></div>
-                </div>
-
-                <!-- 分类 + 场景筛选 -->
-                <div class="platforms-toolbar">
-                    <div class="platforms-filters">
-                        <button class="pf-btn active" data-pfilter="all"><span class="pf-icon">🌏</span> 全部</button>
-                        <button class="pf-btn" data-pfilter="gov"><span class="pf-icon">🏛️</span> 政府平台</button>
-                        <button class="pf-btn" data-pfilter="market"><span class="pf-icon">💹</span> 碳交易</button>
-                        <button class="pf-btn" data-pfilter="enterprise"><span class="pf-icon">🏢</span> 企业SaaS</button>
-                        <button class="pf-btn" data-pfilter="intl"><span class="pf-icon">🌐</span> 国际机制</button>
-                        <button class="pf-btn" data-pfilter="info"><span class="pf-icon">📰</span> 资讯数据</button>
-                    </div>
-                </div>
-
-                <!-- 搜索 -->
-                <div class="platforms-search-row">
-                    <div class="platforms-search-wrap">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
-                        <input type="text" id="platformSearchInput" placeholder="搜索平台名称、功能、关键词..." autocomplete="off"/>
-                    </div>
-                </div>
-
-                <!-- 平台内容区 -->
-                <div class="platforms-grid" id="platformsGrid"></div>
+            </div>
+            <div class="pf-count" id="pfCount"></div>
+            <div class="pf-grid" id="pfGrid"></div>
+            <div class="pf-no-result" id="pfNoResult" style="display:none;">
+                <div class="icon">🔍</div>
+                <p>未找到匹配的平台，试试其他关键词</p>
+            </div>
+            <div class="pf-load-more" id="pfLoadMore" style="display:none;">
+                <button onclick="loadMore()">加载更多 ↓</button>
             </div>
         </div>
     </section>
 
-    <!-- ==================== 页脚 ==================== -->
     <footer class="footer">
         <div class="container">
-            <div class="footer-top">
-                <div class="footer-brand">
-                    <div class="footer-logo">
-                        <svg class="logo-icon" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <circle cx="20" cy="20" r="18.5" stroke="url(#logoGradFooter)" stroke-width="1.8" fill="rgba(255,255,255,0.08)"/>
-                            <circle cx="20" cy="20" r="15" stroke="url(#logoGradFooter)" stroke-width="0.6" stroke-dasharray="3 3" opacity="0.4"/>
-                            <g transform="translate(9, 7)">
-                                <path d="M11 2 C4.5 2 1 7 1 12.5 C1 18 4.5 23 11 23" 
-                                      stroke="url(#logoGradFooter)" stroke-width="3" stroke-linecap="round" fill="none"/>
-                                <path d="M10 12.5 L17 5.5 C17.5 5 18 5 18.3 5.5 L19 7 L16.5 9.5" 
-                                      stroke="#5eead4" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-                                <path d="M14 12.5 L19 10 C19.5 9.7 19.8 10 19.5 10.5 L18 13 L15.5 12" 
-                                      stroke="#86efac" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-                                <circle cx="17.5" cy="6.5" r="1.2" fill="#5eead4"/>
-                                <circle cx="19.2" cy="10.2" r="1" fill="#86efac"/>
-                                <circle cx="17" cy="14" r="0.85" fill="#bbf7d0"/>
-                            </g>
-                            <line x1="13" y1="35" x2="27" y2="35" stroke="url(#logoGradFooter)" stroke-width="1.2" stroke-linecap="round" opacity="0.5"/>
-                            <defs>
-                                <linearGradient id="logoGradFooter" x1="0" y1="0" x2="22" y2="22" gradientUnits="userSpaceOnUse">
-                                    <stop offset="0%" stop-color="#86efac"/>
-                                    <stop offset="50%" stop-color="#5eead4"/>
-                                    <stop offset="100%" stop-color="#bbf7d0"/>
-                                </linearGradient>
-                            </defs>
-                        </svg>
-                        <span class="logo-text">Carbon AI 助手</span>
-                    </div>
-                    <p class="footer-desc">AI驱动的碳管理智能顾问，为企业提供碳足迹核算、减排策略、碳资产管理及ESG合规的全链路服务。</p>
-                </div>
-                <div class="footer-links">
-                    <div class="footer-col">
-                        <h5>快速导航</h5>
-                        <a href="index.html">首页</a>
-                        <a href="projects.html">低碳项目</a>
-                        <a href="tech.html">技术创新</a>
-                        <a href="market.html">碳市场</a>
-                    </div>
-                    <div class="footer-col">
-                        <h5>专题板块</h5>
-                        <a href="footprint.html">碳足迹·零碳园区</a>
-                        <a href="tools.html">AI工具</a>
-                        <a href="platforms.html">服务平台</a>
-                    </div>
-                    <div class="footer-col">
-                        <h5>相关资源</h5>
-                        <a href="https://www.mee.gov.cn/" target="_blank">生态环境部</a>
-                        <a href="https://www.ndrc.gov.cn/" target="_blank">国家发改委</a>
-                        <a href="https://www.cets.org.cn/" target="_blank">全国碳市场</a>
-                    </div>
-                </div>
-            </div>
             <div class="footer-bottom">
-                <p>本网站内容仅供学习参考，部分数据来源于公开信息</p>
-                <p class="copyright">© 2025-2026 Carbon AI 助手 · AI驱动碳管理智能顾问</p>
+                <p>© 2025-2026 Carbon AI 助手 · AI驱动碳管理智能顾问</p>
             </div>
         </div>
     </footer>
 
-    <script src="script.js"></script>
+    <script>
+    // ===== 所有平台数据 =====
+    const platforms = [
+        // 政府平台
+        {id:1,cat:'gov',icon:'🌿',name:'国家温室气体排放因子数据库',url:'https://data.ncsc.org.cn/factories/index',desc:'生态环境部建立的国家温室气体排放因子数据库，发布全国温室气体排放因子和碳足迹因子，提供政策文件、标准规范和碳排放计算工具等模块。',tags:['国家级','因子数据','免费'],region:'全国',func:['数据查询','碳排放盘查','标准方法']},
+        {id:2,cat:'gov',icon:'🌱',name:'江苏省产品碳足迹公共服务平台',url:'https://jstzj.fzggw.jiangsu.gov.cn/portal/home/index',desc:'江苏省发改委主导建设的碳足迹公共服务平台，提供产品碳足迹建模、核算、认证及采信一站式服务。已入驻企业1018家，完成核算报告500份，认证报告230份。',tags:['省级','认证服务','企业超1000家'],region:'江苏',func:['碳足迹核算','认证合规','工具平台']},
+        {id:3,cat:'gov',icon:'🌲',name:'浙江省产品碳足迹服务平台',url:'https://ny.fzggw.zj.gov.cn/tzj/org/home/#/platForm',desc:'以"方法统一、数据可信"为原则，采用"全省规范指导、市场自主实践"模式，建立符合省情、衔接国家、接轨国际的产品碳足迹数据库。',tags:['省级','市场化实践','产业集群'],region:'浙江',func:['碳足迹核算','认证合规','数据查询']},
+        {id:4,cat:'gov',icon:'☀️',name:'山东省企业产品碳足迹一站式服务平台',url:'https://cfootprint.greendev.org.cn/user/login',desc:'山东省生态环境厅组织开发的公益性平台，覆盖ecoinvent因子库、中国LCA因子库、山东本土因子库等权威数据库。依据ISO14067、PAS2050国际标准快速精准核算。',tags:['省级','公益性','多因子库','ISO标准'],region:'山东',func:['碳足迹核算','认证合规','数据查询']},
+        {id:5,cat:'gov',icon:'🌳',name:'上海市产品碳足迹背景数据库',url:'https://www.shlcd.org.cn/admin/portal/home',desc:'以"专业透明、全链协同、开放共享、国际兼容"为特色，每条数据均采用生命周期评价方法开展清单级建模与计算，实现产业链级的层层精准追溯。',tags:['直辖市','高质量背景数据','LCA建模'],region:'上海',func:['碳足迹核算','数据查询','标准方法']},
+        {id:6,cat:'gov',icon:'🌴',name:'湖北省产品碳足迹公共服务平台',url:'https://hbcfp.hbets.com.cn/web/#/home',desc:'定位为全省碳足迹的数据归集中心、管理平台和服务枢纽，实现产品碳足迹"核算-认证-标识-披露"全流程管理。内置化工、电池、光纤等重点产品15类核算模型。',tags:['省级','四位一体','15类模型'],region:'湖北',func:['碳足迹核算','碳排放盘查','认证合规','工具平台']},
+        {id:7,cat:'gov',icon:'🏆',name:'粤港澳大湾区碳足迹标识认证平台',url:'https://www.smq.com.cn/gbalca/gateway/#/index',desc:'全国首个聚焦碳足迹标识认证工作的公共服务平台，率先实现认证申请、核算、核查、报告、证书及标识发放的一体化管理。实现"五个统一"。',tags:['大湾区','认证闭环','五个统一'],region:'粤港澳大湾区',func:['碳足迹核算','认证合规']},
+        {id:8,cat:'gov',icon:'🏛️',name:'大连碳足迹标识认证公共服务平台',url:'https://dllca.dlitg.com/dl/gateway/#/about/index',desc:'聚焦东北地区绿色贸易合规与重点行业碳管理需求，打造东北地区首个集"一站式、全流程、多场景"于一体的碳足迹数字化公共服务体系。',tags:['市级','东北首站','贸易合规'],region:'辽宁/大连',func:['碳足迹核算','认证合规']},
+        {id:9,cat:'gov',icon:'🏗️',name:'绍兴碳足迹公共服务平台',url:'https://fzlca.kq.gov.cn:8001/common#/home',desc:'围绕纺织等地方特色产业构建的碳服务平台，依托绍兴柯桥区政务云和一体化数据平台建设。',tags:['地市级','纺织行业','特色产业'],region:'浙江/绍兴',func:['碳足迹核算','工具平台']},
+        {id:10,cat:'gov',icon:'📊',name:'秦皇岛碳足迹公共服务平台',url:'http://qhdztgs.cn/login',desc:'由秦皇岛国资委监管企业研发搭建，通过多源数据采集和智能分析，整合企业各部门及业务流程中的碳排放数据，协助企业设定科学合理的碳减排目标。',tags:['地市级','国企研发','减排目标管理'],region:'河北/秦皇岛',func:['碳足迹核算','碳排放盘查','工具平台']},
+        // 碳交易平台
+        {id:11,cat:'market',icon:'🎯',name:'全国碳排放权交易系统',url:'https://www.cets.org.cn',desc:'2021年7月16日正式开市，全球覆盖温室气体排放量最大的碳市场。纳入2000+家重点排放单位，覆盖年排放量51亿吨。官方唯一指定管理与交易服务平台。',tags:['国家级','ETS强制市场','51亿吨覆盖','全球最大'],region:'全国',func:['碳交易履约','认证合规']},
+        {id:12,cat:'market',icon:'🍃',name:'CCER自愿减排交易平台',url:'https://www.ccer.com.cn',desc:'2024年在北京重启，2025年完成首批登记884.41万吨，成交额6.26亿元。支持全社会自愿减排行动，涵盖光热发电、海上风电、生物质能等项目类型。',tags:['国家级','自愿减排','重启','6.26亿成交额'],region:'全国',func:['碳交易履约','绿证碳汇']},
+        {id:13,cat:'market',icon:'💻',name:'CCER注册登记系统及信息平台',url:'https://ccer.cets.org.cn/client/home',desc:'新版CCER注册登记系统，包含CCER政策、方法学技术规范、项目与减排量信息、审定核查机构名单等核心内容。',tags:['国家级','注册登记','方法学','核查机构'],region:'全国',func:['碳交易履约','绿证碳汇','标准方法']},
+        {id:14,cat:'market',icon:'🏙️',name:'北京绿色交易所',url:'https://www.cbgex.com.cn',desc:'原名北京环境交易所，2008年成立，注册资本6.51亿元。综合性环境权益交易机构，2020年更名为北京绿色交易所，承担全国CCER交易中心职能。',tags:['地方试点','注册资本6.51亿','CCER中心'],region:'北京',func:['碳交易履约','绿证碳汇']},
+        {id:15,cat:'market',icon:'💹',name:'上海环境能源交易所',url:'https://www.cneeex.com',desc:'全国首家环境能源类交易平台，上海市碳交易试点指定平台，同时是生态环境部指定的全国碳排放权交易系统建设和运营机构。',tags:['地方试点','全国碳市场运营方','行情查询'],region:'上海',func:['碳交易履约','数据查询']},
+        {id:16,cat:'market',icon:'🏦',name:'广州碳排放权交易中心',url:'https://www.cnemission.com',desc:'广东省和广州市合作共建的国家级碳排放权交易试点交易所，大湾区唯一兼具国家碳交易试点和绿色金融改革创新试验区试点的双试点机构。',tags:['地方试点','大湾区双试点','绿色金融'],region:'广东',func:['碳交易履约','绿证碳汇']},
+        {id:17,cat:'market',icon:'🏛️',name:'湖北省碳排放权交易中心',url:'https://www.hbets.cn',desc:'中部地区核心碳交易试点，严格遵循《湖北省碳排放权交易管理暂行办法》，聚焦本地重点排放单位的配额分配、交易、履约管理。',tags:['地方试点','中部核心','履约管理'],region:'湖北',func:['碳交易履约']},
+        {id:18,cat:'market',icon:'🏢',name:'深圳绿色交易所',url:'https://www.szets.com',desc:'原名深圳排放权交易所，2010年成立，2019年成为深圳交易集团控股企业，2024年更名。集交易所、智库、能力建设中心于一体的综合性交易机构。',tags:['地方试点','更名绿交所','综合型'],region:'广东/深圳',func:['碳交易履约','研究智库']},
+        {id:19,cat:'market',icon:'🏯',name:'天津排放权交易所',url:'https://www.chinatcx.com.cn',desc:'北方地区重要碳交易试点，聚焦本地工业企业碳排放管控，提供配额交易、履约清缴、碳核查等服务，衔接京津冀协同降碳工作。',tags:['地方试点','北方枢纽','京津冀协同'],region:'天津',func:['碳交易履约']},
+        {id:20,cat:'market',icon:'🏰',name:'重庆碳排放权交易中心',url:'https://tpf.cqggzy.com',desc:'服务西南地区低碳转型需求，覆盖本地重点排放单位，定期公布年度重点排放单位名单，提供配额交易、履约管理等服务。',tags:['地方试点','西部示范','履约管理'],region:'重庆',func:['碳交易履约']},
+        {id:21,cat:'market',icon:'⛩️',name:'福建省海峡股权交易中心（碳市场）',url:'https://carbon.hxee.com.cn',desc:'东南地区碳交易试点，适配福建绿色产业发展特点，覆盖电力、钢铁、化工等重点行业，提供配额交易、碳核查、履约清缴等服务。',tags:['地方试点','海峡特色','多行业覆盖'],region:'福建',func:['碳交易履约']},
+        {id:22,cat:'market',icon:'💰',name:'四川联合环境交易所',url:'https://www.sceex.com.cn',desc:'西部地区重要的环境权益交易平台，提供碳排放权交易、用能权交易、排污权交易等服务，是西部大开发中低碳转型的重要支撑平台。',tags:['地方试点','西部','多权益交易'],region:'四川',func:['碳交易履约','绿证碳汇']},
+        // 行业协会平台
+        {id:23,cat:'industry',icon:'⚡',name:'电力行业产品碳足迹与EPD平台',url:'https://cfp-epd.cec.org.cn/carbon/#/',desc:'立足电力行业，打造统一权威的行业产品碳足迹与环境产品声明平台。充分发挥标准化引领、数字化引擎、专业化赋智、市场化赋能作用。',tags:['电力行业','EPD','标准化'],region:'全国',func:['碳足迹核算','认证合规','标准方法']},
+        {id:24,cat:'industry',icon:'🔩',name:'中国铝工业产品碳足迹核算平台',url:'http://al.metalscfp.com/Login/Index',desc:'为铝产业链提供更贴合工艺特征的核算框架，适合高能耗材料行业的精细化核算。覆盖从氧化铝、电解铝到铝加工的全产业链环节。',tags:['有色金属','铝工业','精细化核算'],region:'全国',func:['碳足迹核算','碳排放盘查','工具平台']},
+        {id:25,cat:'industry',icon:'🧱',name:'原材料工业产品碳足迹基础数据库(CNCD)',url:'http://3060service.com/prod/proddoor/carbon/index',desc:'由国检集团建设，覆盖钢铁、铝、水泥、玻璃等典型原材料工业。用于产品碳足迹(CFP)、环境产品声明(EPD)、生命周期评价(LCA)等工作。',tags:['原材料','国检集团','EPD/LCA','重化工业'],region:'全国',func:['碳足迹核算','认证合规','数据查询']},
+        {id:26,cat:'industry',icon:'🚚',name:'中国交通运输碳足迹公示平台',url:'http://transcarbon.cn/',desc:'覆盖水路运输、道路运输、铁路运输、航空运输四类运输方式，包含物流企业的不同运输工具空载、满载运输服务碳足迹信息。',tags:['交通运输','物流排放','多方式覆盖'],region:'全国',func:['碳足迹核算','数据查询']},
+        {id:27,cat:'industry',icon:'🚗',name:'中国汽车产业链碳公示平台(CPP)',url:'https://www.auto-cpp.com/',desc:'全球首个汽车全产业链的碳足迹信息公示平台！覆盖整车、零部件、车用材料三类产品碳足迹信息。旨在筑牢本土汽车碳数据，推动碳足迹信息国际互认。',tags:['汽车产业','全球首创','国际互认','链主牵引'],region:'全国',func:['碳足迹核算','认证合规','数据查询']},
+        {id:28,cat:'industry',icon:'🔋',name:'锂电池碳足迹背景数据库',url:'https://www.ldchy.cn/ldctzjbj/',desc:'针对锂电池产品碳足迹核算的碳足迹因子数据集合。V2.0版本已迭代发布，构建准确、可靠、完整的锂电池生命周期基础数据。',tags:['锂电池','新能源','V2.0','全链条'],region:'全国',func:['碳足迹核算','数据查询']},
+        {id:29,cat:'industry',icon:'🏗️',name:'建筑材料碳标签平台',url:'http://ecolabel.greenjc.cn/org/gateway/index',desc:'由中国建筑材料联合会发起，以"碳标签"为抓手推动建材行业方法统一、信息披露和示范应用。促进建材产业低碳转型。',tags:['建材','碳标签','联合会','建筑减碳'],region:'全国',func:['碳足迹核算','认证合规']},
+        {id:30,cat:'industry',icon:'📈',name:'中国产品全生命周期温室气体排放系数库',url:'https://lca.cityghg.com/',desc:'中国城市温室气体工作组(CCG)组织54名专业研究人员无偿志愿建设，全部公开。公开性强、可及性高，是中小企业和研究团队的重要参考工具。',tags:['LCA系数库','公开免费','54人志愿','学术友好'],region:'全国',func:['碳足迹核算','数据查询','标准方法']},
+        {id:31,cat:'industry',icon:'🗺️',name:'GIS-LCA碳足迹评价软件平台',url:'https://www.gislca.com/#/index',desc:'引入地理位置维度和高时空分辨率数据库(v0.1含数十万条单元过程数据)，主要涵盖煤炭采选、火力发电、生物质能发电等行业。',tags:['GIS地理信息','高时空分辨','数十万条数据'],region:'全国',func:['碳足迹核算','工具平台','数据查询']},
+        // 企业SaaS
+        {id:32,cat:'enterprise',icon:'📦',name:'京碳惠 SCEMP® 物流碳足迹管理系统',url:'https://bv.jdl.com/',desc:'京东主导建设，全球首款供应链MRV-T碳数据资产管理SaaS软件。通过数字化监测-报告-核查-追踪技术，实现供应链脱碳及碳排放全生命周期管理。',tags:['京东','物流MRV-T','供应链','SaaS'],region:'全国',func:['碳足迹核算','工具平台','碳排放盘查']},
+        {id:33,cat:'enterprise',icon:'⚙️',name:'西碳迹 SiTANJI（西门子）',url:'https://www.siemens-x.com.cn/offering/1',desc:'西门子以区块链、工业边缘计算、数字孪生等创新技术为基础构建的碳足迹生态解决方案。帮助出海企业与其上下游及第三方核查机构数据交互。',tags:['西门子','区块链','数字孪生','出海企业首选'],region:'全球/中国',func:['碳足迹核算','认证合规','工具平台']},
+        {id:34,cat:'enterprise',icon:'🚘',name:'吉碳云碳管理平台（吉利）',url:'https://carbon.geely.com/',desc:'依托吉利汽车体系经验，将整车制造龙头的内部碳管理能力外溢为平台化产品。体现整车与制造龙头正在把内部能力外溢为行业公共服务的趋势。',tags:['吉利汽车','制造业龙头','能力外溢'],region:'浙江',func:['碳排放盘查','工具平台']},
+        {id:35,cat:'enterprise',icon:'☀️',name:'阳光慧碳',url:'https://www.icarbon.com/',desc:'强调"不仅能算，还能降"——表明平台竞争正在从核算比拼转向减排运营能力竞争。提供严谨实用的产品碳足迹核算以及降低碳排放的完整解决方案。',tags:['阳光电源','算+降','减排运营'],region:'全国',func:['碳足迹核算','工具平台','碳排放盘查']},
+        {id:36,cat:'enterprise',icon:'💻',name:'智慧碳足迹管理系统（法泰电器）',url:'https://www.fatai.com/tzjgl.html',desc:'通用型企业碳足迹管理平台，更关注企业落地的便捷性、数据管理和报告输出效率。适合需要快速建立碳数据台账和管理体系的中小型企业使用。',tags:['法泰电器','通用型','便捷落地','中小企适用'],region:'江苏',func:['碳足迹核算','碳排放盘查','工具平台']},
+        {id:37,cat:'enterprise',icon:'🌳',name:'擎工互联 — 一站式碳管理平台',url:'https://www.skyco2.com/',desc:'江苏擎天工业互联网有限公司出品，国家温室气体综合管理平台承建商。覆盖碳计量→碳核算→碳核查→碳资产运营全链路，自研数百种核算标准与数十万条计算参数。提供CBAM碳关税合规、EUDR零毁林法案、产品碳足迹、EPD环境声明等一站式服务，已服务1.5万家控排企业。',tags:['擎天工业','CBAM合规','EPD','国家级承建'],region:'全国',func:['碳足迹核算','认证合规','碳排放盘查','政策资讯']},
+        {id:38,cat:'enterprise',icon:'⚡',name:'蘑菇物联 AI云智控 — 工业AI能控平台',url:'https://www.mogulinker.com/CIC.html',desc:'广东蘑菇物联出品，以自研「灵知AI大模型」驱动的新一代工业能碳管理平台。覆盖空压站、制冷站、循环水站、制氮站、配电站、动力能源六大公辅系统，实现设备级→车间级→工厂级→集团级四级AI能源管理闭环。空压站节能10-35%，制冷站节能5-25%，广汽本田、中集集团、白云山制药等标杆案例。',tags:['蘑菇物联','AI能控','工业IoT','公辅节能'],region:'全国',func:['工具平台','碳排放盘查','数据查询']},
+        // 国际机制与标准
+        {id:39,cat:'intl',icon:'🌍',name:'VCS 核证碳标准官网',url:'https://verra.org/',desc:'国际核证碳标准(Verra)旗下 Verified Carbon Standard (VCS)，在CCER重启之前是国际机制核证减排量的主要选择之一。网站可查询注册文件、已发行项目信息等。',tags:['国际标准','VCS','核证减排量','项目查询'],region:'全球',func:['碳交易履约','绿证碳汇','标准方法']},
+        {id:40,cat:'intl',icon:'🌐',name:'CDM 清洁发展机制官网',url:'https://cdm.unfccc.int/',desc:'联合国气候变化框架公约下的清洁发展机制官方网站。CDM方法是所有减排机制的鼻祖——我国CCER旧方法学大部分源自CDM时期的舶来品。可下载所有方法学文档。',tags:['联合国','CDM','方法学鼻祖','历史存档'],region:'全球',func:['标准方法','绿证碳汇']},
+        {id:41,cat:'intl',icon:'🏝️',name:'GCC 全球碳理事会',url:'https://www.globalcarboncouncil.com/',desc:'Global Carbon Council，提供项目标准、方法学、各类模板等材料。是中东地区重要的自愿减排标准体系，近年来在全球范围内的影响力持续提升。',tags:['GCC','中东','新兴标准','模板资源'],region:'全球/中东',func:['标准方法','绿证碳汇']},
+        {id:42,cat:'intl',icon:'🇪🇺',name:'欧盟CBAM碳边境调节机制',url:'https://taxation-customs.ec.europa.eu/carbon-border-adjustment-mechanism_en',desc:'CBAM（Carbon Border Adjustment Mechanism）是欧盟推出的碳边境调节机制，对进口商品征收碳关税。出口型中国企业必须关注并应对这一政策。',tags:['欧盟','CBAM','碳关税','出口合规必知'],region:'欧盟',func:['认证合规','标准方法','政策资讯']},
+        {id:43,cat:'intl',icon:'🇪🇺',name:'EU Green Deal 欧盟绿色新政',url:'https://commission.europa.eu/strategy-and-policy/priorities-2019-2024/european-green-deal_en',desc:'欧洲绿色新政是欧盟应对气候变化的旗舰战略框架，涵盖能源、交通、农业、工业等各领域的深度脱碳路线图。理解该政策有助于预判国际贸易规则演变方向。',tags:['欧盟','Green Deal','脱碳路线图','前瞻预判'],region:'欧盟',func:['政策资讯','标准方法']},
+        {id:44,cat:'intl',icon:'📜',name:'EUR-Lex 欧盟法规数据库',url:'https://eur-lex.europa.eu/homepage.html',desc:'欧盟法律法规的官方数据库，可查询所有现行有效法律、提案、判例等。涉及碳边境调节、可持续披露指令(SDR)等关键法规的原始文本均可在此获取。',tags:['欧盟','法规库','SDR','法律原文'],region:'欧盟',func:['政策资讯','标准方法']},
+        {id:45,cat:'intl',icon:'📊',name:'欧洲能源交易所 EEX',url:'https://www.eex.com/en/',desc:'欧洲领先的能源和碳衍生品交易所，提供EU ETS碳配额期货、期权交易。了解EEX的碳价走势对研判国际碳定价趋势有重要参考价值。',tags:['欧盟','碳期货','EEX','碳价参考'],region:'欧盟',func:['碳交易履约','数据查询']},
+        {id:46,cat:'intl',icon:'📈',name:'ICE 洲际交易所',url:'https://www.theice.com/index',desc:'Intercontinental Exchange，全球最大的金融衍生品交易所之一，提供欧盟碳配额(EUA)、英国碳配额(UKA)等碳金融产品交易。国际碳价的晴雨表。',tags:['全球','ICE','碳金融','国际碳价'],region:'全球',func:['碳交易履约','数据查询']},
+        {id:47,cat:'intl',icon:'✅',name:'GRI 全球报告倡议标准',url:'https://www.globalreporting.org/',desc:'Global Reporting Initiative，全球最广泛使用的可持续发展/ESG报告标准。企业在编制ESG/可持续发展报告时最常引用的标准框架。',tags:['GRI','ESG标准','可持续报告','全球通用'],region:'全球',func:['认证合规','标准方法']},
+        {id:48,cat:'intl',icon:'⚡',name:'中国绿证 GEC 认购平台',url:'http://www.greenenergy.org.cn/',desc:'中国绿色电力证书(GEC)官方认购平台，可进行绿证信息查询、防伪查询等。绿证是企业证明可再生能源消费、实现Scope 2减排目标的重要凭证。',tags:['绿证','GEC','国内','可再生能源'],region:'全国',func:['绿证碳汇']},
+        {id:49,cat:'intl',icon:'☀️',name:'I-REC 国际绿证标准',url:'https://www.irecstandard.org/',desc:'International REC Standard，全球应用范围最广的国际绿证标准体系。跨国企业和出口导向型企业常用I-REC来证明海外可再生能源消费。',tags:['I-REC','国际绿证','全球通用','出口企业'],region:'全球',func:['绿证碳汇','认证合规']},
+        {id:50,cat:'intl',icon:'🔌',name:'APX Tigrs 全球可再生能源交易工具',url:'https://apx.com/about-tigr/',desc:'全球可再生能源交易工具，提供I-REC和其他环境属性的交易登记与注销服务。在欧洲和美洲市场有广泛的应用。',tags:['APX','TIGRs','环境属性交易','欧美市场'],region:'全球',func:['绿证碳汇']},
+        // 资讯/数据/智库类
+        {id:51,cat:'info',icon:'📰',name:'生态环境部官网',url:'https://www.mee.gov.cn/',desc:'全国碳市场的配套政策由生态环境部发布，配额分配方案、排放因子、核算指南等最新政策都可以在这里搜索获得。权威中的权威。',tags:['国家级','政策源头','官方权威'],region:'全国',func:['政策资讯','标准方法','数据查询']},
+        {id:52,cat:'info',icon:'🏛️',name:'国家发展和改革委员会官网',url:'https://www.ndrc.gov.cn/',desc:'"1+N"政策体系的顶层设计者，双碳目标的宏观调控部门。能耗双控向碳排放双控转型的核心政策从这里发布。',tags:['国家级','顶层设计','宏观调控','1+N'],region:'全国',func:['政策资讯']},
+        {id:53,cat:'info',icon:'⚡',name:'国家能源局官网',url:'http://www.nea.gov.cn/',desc:'能源领域最高主管部门，可再生能源发展规划、新型储能发展实施方案等能源转型核心政策均由此发布。了解能源转型的第一手来源。',tags:['国家级','能源主管','新能源政策','储能规划'],region:'全国',func:['政策资讯']},
+        {id:54,cat:'info',icon:'🌍',name:'中国气候变化信息网',url:'https://www.ccchina.org.cn/index.aspx',desc:'国家应对气候变化战略研究和国际合作中心主办。囊括国内外动态、政策法规、减排技术、研究成果、基础知识等版块。"基础知识"模块非常友好。',tags:['国家级','气候战略中心','知识库','百问百答'],region:'全国',func:['政策资讯','数据查询','研究智库']},
+        {id:55,cat:'info',icon:'📡',name:'国家信息通报',url:'https://tnc.ccchina.org.cn/index.aspx',desc:'同样由国家气候战略中心主办。我国提交到联合国的国家碳排放数据都要以此为准。了解国家层面碳排放量化机制的重要窗口。',tags:['国家级','UNFCCC通报','国家数据','国际报送'],region:'全国',func:['数据查询','研究智库']},
+        {id:56,cat:'info',icon:'🗺️',name:'蔚蓝地图（公众环境研究中心IPE）',url:'https://www.ipe.org.cn/MapLowCarbon/LowCarbon.html?q=5',desc:'开放的碳排放可视化信息平台！免费查到全球碳排放数据、中国各省市和企业温室气体排放情况、化石能源使用情况等。还可进行粗略的企业碳排放核算。',tags:['可视化','免费','企业排放','地图呈现'],region:'全球/中国',func:['数据查询','工具平台','碳排放盘查']},
+        {id:57,cat:'info',icon:'📰',name:'中国能源网（《中国能源报》）',url:'http://www.cnenergynews.cn/',desc:'《人民日报》主管、《中国能源报》主办的能源资讯平台。我国能源领域碳排放量占所有行业比重最大，了解能源与碳中和的首选媒体。',tags:['能源资讯','人民日报系','权威媒体'],region:'全国',func:['政策资讯']},
+        {id:58,cat:'info',icon:'📊',name:'碳排放交易网',url:'http://www.tanpaifang.com/',desc:'双碳方面综合类资讯网站，持续运营多年。涵盖碳交易、碳金融、碳足迹、新能源、自愿碳减排等多方面内容。信息全面更新及时。',tags:['综合资讯','碳交易','碳金融','多板块'],region:'全国',func:['政策资讯','碳交易履约']},
+        {id:59,cat:'info',icon:'🚀',name:'碳道 Ideacarbon',url:'http://www.ideacarbon.org/',desc:'专注绿色低碳能源投资的碳交易市场资讯服务商。提供头条资讯、策略分析和碳金融信息。部分内容需会员服务，碳交易实时信息建议关注其小程序。',tags:['碳交易资讯','策略分析','碳金融','会员制'],region:'全国',func:['碳交易履约','政策资讯']},
+        {id:60,cat:'info',icon:'🔍',name:'碳导航 — 双碳行业链接导航站',url:'https://navi.co2.press/index.html',desc:'聚合导航网站，提供全球各大交易所、审核机构、咨询机构、研究机构、NGO、双碳会议的官方链接入口。想全面了解双碳行业生态系统时的最佳起点。',tags:['导航站','链接聚合','生态图谱','收藏必备'],region:'全球/中国',func:['数据查询','研究智库']},
+        {id:61,cat:'info',icon:'🏛️',name:'落基山研究所(RMI) 中国',url:'http://www.rmi-china.com/',desc:'全球顶级能源转型智库的中国分支。RMI全球项目涵盖突破性技术、零碳电力、零碳工业、零碳建筑、零碳交通等领域。报告质量极高，"双碳"人必看。',tags:['智库','RMI','全球顶尖','报告必读'],region:'全球/中国',func:['研究智库','政策资讯']},
+        {id:62,cat:'info',icon:'🌐',name:'全球能源互联网发展合作组织(GEIDCO)',url:'https://www.geidco.org.cn/',desc:'中国发起成立的首个能源领域国际组织(2016年北京)。致力于推动世界能源可持续发展。在全球能源互联规划和标准制定方面有重要影响力。',tags:['国际组织','GEIDCO','能源互联','中国发起'],region:'全球/中国',func:['研究智库','标准方法']},
+        {id:63,cat:'info',icon:'🎓',name:'清华大学气候变化与可持续发展研究院',url:'http://iccsd.tsinghua.edu.cn/',desc:'致力于开展战略政策研究，加强国际对话交流，培养优秀领军人才。努力成为可持续发展领域的国际一流高端智库。',tags:['高校智库','清华','高端智库','政策研究'],region:'北京',func:['研究智库','政策资讯']},
+        {id:64,cat:'info',icon:'🏫',name:'北京大学碳中和研究院',url:'https://carbon.pku.edu.cn/',desc:'依托北大文理农工医多学科交叉优势，围绕国家"双碳"战略需求，在科学研究、人才培养、社会服务和国际合作等方面取得系统性创新成果。',tags:['高校智库','北大','交叉学科','双碳战略'],region:'北京',func:['研究智库','政策资讯']},
+        {id:65,cat:'info',icon:'📚',name:'公共机构绿色低碳发展典型案例库',url:'https://www.ggj.gov.cn/jn/jnindex.html',desc:'视频展播模块+案例搜索功能，进一步提升用户体验和学习效率。展示全国公共机构节能降碳的优秀实践案例，发挥智库作用。',tags:['公共机构','典型案例','案例搜索'],region:'全国',func:['研究智库','工具平台']},
+        {id:66,cat:'industry',icon:'🌻',name:'生物质能产业分会',url:'https://www.beipa.org.cn/wcbg',desc:'中国产业发展促进会下属生物质能产业分会平台，提供生物质能行业资讯、政策解读和技术动态。生物质能在可再生能源中占有重要地位。',tags:['行业协会','生物质能','可再生能源'],region:'全国',func:['政策资讯','研究智库']},
+        {id:67,cat:'info',icon:'⚡',name:'中国储能网',url:'https://www.escn.com.cn/',desc:'储能行业专业资讯平台，覆盖电化学储能、物理储能等各类储能技术动态和市场信息。储能是新能源占比提升后的关键基础设施，值得关注。',tags:['储能','行业资讯','关键技术'],region:'全国',func:['政策资讯','研究智库']},
+        {id:68,cat:'info',icon:'🔬',name:'CCUS 国家地方联合工程研究中心',url:'https://ccus.nwu.edu.cn/',desc:'西北大学牵头建设的CCUS技术国家级研究平台，聚焦二氧化碳捕集、利用与封存技术的研发与产业化推广。CCUS是实现碳中和的关键兜底技术。',tags:['CCUS','国家级中心','西北大学','碳中和技术'],region:'陕西',func:['研究智库','标准方法']},
+        {id:69,cat:'market',icon:'⚠️',name:'旧版CCER注册登记/交易系统（历史存档）',url:'http://registry.ccersc.org.cn/login.do',desc:'旧版自愿减排注册登记系统和交易系统的游客登录入口。2017年暂停后不再接受新项目，但历史数据和已签发CCER仍可通过此系统查询。仅供研究参考使用。',tags:['历史存档','旧版CCER','仅参考','已停运'],region:'全国',func:['碳交易履约','绿证碳汇','数据查询']},
+        {id:70,cat:'market',icon:'🔧',name:'北京市碳排放权电子交易平台',url:'https://www.bjets.com.cn',desc:'北京市碳排放权电子交易专用平台，与北京绿色交易所(cbgex)分工不同，此平台侧重于电子化的配额交易操作功能。',tags:['地方试点','北京','电子化交易'],region:'北京',func:['碳交易履约']},
+        {id:71,cat:'industry',icon:'🍃',name:'绿网',url:'http://www.lvwang.org.cn/',desc:'中国绿色网络信息中心，提供绿色低碳发展相关资讯、政策解读、技术交流和案例分享，是环保领域重要的信息服务平台。',tags:['环保资讯','政策解读','信息中心'],region:'全国',func:['政策资讯','研究智库']},
+        {id:72,cat:'enterprise',icon:'📊',name:'i-esg',url:'https://www.i-esg.com/',desc:'专业的ESG信息服务平台，提供ESG评级、数据查询、报告分析和投资研究服务，帮助企业提升ESG表现。',tags:['ESG评级','数据服务','报告分析'],region:'全国',func:['认证合规','数据查询','工具平台']},
+        {id:73,cat:'market',icon:'💰',name:'碳在线',url:'https://www.tanco2.cc/',desc:'碳市场在线服务平台，提供碳交易行情、碳资产管理、碳金融产品等信息服务。',tags:['碳交易','行情查询','碳资产'],region:'全国',func:['碳交易履约','数据查询']},
+    ];
+
+    const catNames = {gov:'政府平台',market:'碳交易',industry:'行业协会',enterprise:'企业SaaS',intl:'国际机制/标准',info:'资讯/数据/智库'};
+    let currentCat = 'all';
+    let shownCount = 0;
+    const PAGE_SIZE = 24;
+
+    function renderCards(resetCount = true) {
+        const query = document.getElementById('pfSearchInput').value.toLowerCase().trim();
+        const grid = document.getElementById('pfGrid');
+        const noResult = document.getElementById('pfNoResult');
+        const loadMore = document.getElementById('pfLoadMore');
+        const countEl = document.getElementById('pfCount');
+
+        // 筛选
+        let filtered = platforms.filter(p => {
+            if (currentCat !== 'all' && p.cat !== currentCat) return false;
+            if (query) {
+                const txt = (p.name + ' ' + p.desc + ' ' + p.tags.join(' ') + ' ' + p.func.join(' ') + ' ' + catNames[p.cat] + ' ' + p.region).toLowerCase();
+                if (!txt.includes(query)) return false;
+            }
+            return true;
+        });
+
+        if (resetCount) shownCount = 0;
+        shownCount = Math.min(shownCount + PAGE_SIZE, filtered.length);
+        if (resetCount && filtered.length > 0) shownCount = Math.min(PAGE_SIZE, filtered.length);
+        const toShow = filtered.slice(0, shownCount);
+
+        // 更新计数
+        if (query || currentCat !== 'all') {
+            countEl.style.display = 'block';
+            countEl.textContent = `找到 ${filtered.length} 个平台`;
+        } else {
+            countEl.style.display = 'none';
+        }
+
+        // 无结果
+        if (filtered.length === 0) {
+            grid.innerHTML = '';
+            noResult.style.display = 'block';
+            loadMore.style.display = 'none';
+            return;
+        }
+        noResult.style.display = 'none';
+
+        // 渲染卡片
+        grid.innerHTML = toShow.map(p => `
+            <div class="pf-card">
+                <div class="pf-card-top">
+                    <div class="pf-card-icon">${p.icon}</div>
+                    <div>
+                        <div class="pf-card-name">${p.name}</div>
+                        <div class="pf-card-cat">${catNames[p.cat] || p.cat}</div>
+                    </div>
+                </div>
+                <div class="pf-card-desc">${p.desc}</div>
+                <div class="pf-card-tags">
+                    ${p.tags.map(t => `<span class="pf-card-tag">${t}</span>`).join('')}
+                    ${p.func.slice(0,2).map(f => `<span class="pf-card-tag func">${f}</span>`).join('')}
+                </div>
+                <div class="pf-card-bottom">
+                    <span class="pf-card-region">📍 ${p.region}</span>
+                    <a href="${p.url}" target="_blank" rel="noopener" class="pf-card-visit">
+                        访问 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h3M15 3h6v6M10 14L21 3"/></svg>
+                    </a>
+                </div>
+            </div>
+        `).join('');
+
+        // 加载更多按钮
+        loadMore.style.display = shownCount < filtered.length ? 'flex' : 'none';
+    }
+
+    function loadMore() {
+        shownCount += PAGE_SIZE;
+        renderCards(false);
+    }
+
+    // 分类筛选
+    document.querySelectorAll('.pf-filter').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.pf-filter').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            currentCat = btn.dataset.cat;
+            renderCards();
+        });
+    });
+
+    // 搜索
+    let searchTimer;
+    document.getElementById('pfSearchInput').addEventListener('input', () => {
+        clearTimeout(searchTimer);
+        searchTimer = setTimeout(() => renderCards(), 200);
+    });
+
+    // 初始渲染
+    renderCards();
+    </script>
 </body>
 </html>
