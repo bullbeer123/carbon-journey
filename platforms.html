@@ -63,8 +63,8 @@
                 <p class="section-desc">从政府公共服务到企业SaaS工具，从碳交易市场到国际标准，从工业AI能控到能碳协同 —— 73+个双碳必备平台一站式导航</p>
             </div>
 
-            <!-- 第一层：最常用平台 -->
-            <div class="platforms-tier-1" id="platformsTier1">
+            <!-- 第一层：最常用平台（默认隐藏，通过按钮切换） -->
+            <div class="platforms-tier-1" id="platformsTier1" style="display:none;">
                 <div class="tier-header">
                     <span class="tier-label">⭐ 常用推荐</span>
                     <span class="tier-hint">根据使用频率自动推荐</span>
@@ -75,8 +75,15 @@
                 <div class="tier1-grid" id="tier1Grid"></div>
             </div>
 
-            <!-- 第二层：完整平台列表 -->
-            <div class="platforms-full" id="platformsFull" style="display:none;">
+            <!-- 第二层：完整平台列表（默认显示） -->
+            <div class="platforms-full" id="platformsFull">
+                <!-- 收起按钮 -->
+                <div style="text-align:right;margin-bottom:12px;">
+                    <button id="hidePlatformsBtn" class="tier-change-btn" onclick="hideFullPlatforms()" style="display:inline-flex;">
+                        ← 返回常用推荐
+                    </button>
+                </div>
+
                 <!-- 平台统计概览 -->
                 <div class="platforms-stats-bar">
                     <div class="psb-item"><span class="psb-num">73+</span><span class="psb-label">收录平台</span></div>

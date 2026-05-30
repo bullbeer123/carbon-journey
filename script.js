@@ -1311,6 +1311,7 @@ function renderPlatforms(filter = 'all', searchQuery = '') {
     }
 
     const platformsGrid = document.getElementById('platformsGrid');
+    if (!platformsGrid) return;
 
     if (toShow.length === 0) {
         platformsGrid.innerHTML = `<div class="platforms-empty"><span style="font-size:40px;">&#128269;</span><h3>未找到匹配的平台</h3><p>试试其他关键词或切换分类/场景/功能</p></div>`;
