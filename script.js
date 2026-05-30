@@ -1,10 +1,11 @@
 // ==================== 粒子背景系统 ====================
 const canvas = document.getElementById('particleCanvas');
-const ctx = canvas.getContext('2d');
+const ctx = canvas ? canvas.getContext('2d') : null;
 let particles = [];
 let animationId;
 
 function resizeCanvas() {
+    if (!canvas) return;
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
 }
@@ -42,6 +43,7 @@ class Particle {
     }
     
     draw() {
+        if (!ctx) return;
         const color = this._colorFn();
         ctx.beginPath();
         ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
@@ -59,6 +61,7 @@ class Particle {
 
 function initParticles() {
     particles = [];
+    if (!canvas) return;
     const count = Math.min(120, Math.floor((canvas.width * canvas.height) / 15000));
     for (let i = 0; i < count; i++) {
         particles.push(new Particle());
@@ -66,6 +69,7 @@ function initParticles() {
 }
 
 function connectParticles() {
+    if (!ctx) return;
     const maxDist = 150;
     for (let i = 0; i < particles.length; i++) {
         for (let j = i + 1; j < particles.length; j++) {
@@ -87,6 +91,7 @@ function connectParticles() {
 }
 
 function animateParticles() {
+    if (!ctx) return;
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     
     particles.forEach(p => {
@@ -112,24 +117,28 @@ const navbar = document.getElementById('navbar');
 const navToggle = document.getElementById('navToggle');
 const navLinks = document.querySelector('.nav-links');
 
-window.addEventListener('scroll', () => {
-    if (window.scrollY > 80) {
-        navbar.classList.add('scrolled');
-    } else {
-        navbar.classList.remove('scrolled');
-    }
-});
-
-navToggle.addEventListener('click', () => {
-    navLinks.classList.toggle('open');
-});
-
-// 点击导航链接后关闭菜单
-navLinks.querySelectorAll('a').forEach(link => {
-    link.addEventListener('click', () => {
-        navLinks.classList.remove('open');
+if (navbar) {
+    window.addEventListener('scroll', () => {
+        if (window.scrollY > 80) {
+            navbar.classList.add('scrolled');
+        } else {
+            navbar.classList.remove('scrolled');
+        }
     });
-});
+}
+
+if (navToggle && navLinks) {
+    navToggle.addEventListener('click', () => {
+        navLinks.classList.toggle('open');
+    });
+
+    // 点击导航链接后关闭菜单
+    navLinks.querySelectorAll('a').forEach(link => {
+        link.addEventListener('click', () => {
+            navLinks.classList.remove('open');
+        });
+    });
+}
 
 // 滚动时高亮当前section
 const sections = document.querySelectorAll('.section[id]');
@@ -1209,7 +1218,7 @@ platformsData.forEach(p => {
     p.functions = platformFunctions[p.id] || [];
 });
 
-let displayedPlatforms = 12;
+let displayedPlatforms = 200;
 
 function getPlatformCategoryName(cat) {
     const names = {
@@ -1328,8 +1337,10 @@ function renderPlatforms(filter = 'all', searchQuery = '') {
 
     // 更新加载更多按钮
     const loadMoreBtn = document.getElementById('loadMorePlatforms');
-    if (toShow.length >= filtered.length) { loadMoreBtn.style.display = 'none'; }
-    else { loadMoreBtn.style.display = 'inline-flex'; loadMoreBtn.textContent = `还有 ${filtered.length - toShow.length} 个 &#8595;`; }
+    if (loadMoreBtn) {
+        if (toShow.length >= filtered.length) { loadMoreBtn.style.display = 'none'; }
+        else { loadMoreBtn.style.display = 'inline-flex'; loadMoreBtn.textContent = `还有 ${filtered.length - toShow.length} 个 &#8595;`; }
+    }
 
     // 触发显示动画
     setTimeout(() => {
@@ -1470,12 +1481,15 @@ if (platformSearchInput) {
 }
 
 // 加载更多
-document.getElementById('loadMorePlatforms').addEventListener('click', () => {
-    displayedPlatforms += (currentViewMode === 'table' ? 100 : 16);
-    const activeFilter = document.querySelector('.pf-btn.active');
-    const searchInput = document.getElementById('platformSearchInput');
-    renderPlatforms(activeFilter ? activeFilter.dataset.pfilter : 'all', searchInput ? searchInput.value : '');
-});
+const loadMorePlatformsBtn = document.getElementById('loadMorePlatforms');
+if (loadMorePlatformsBtn) {
+    loadMorePlatformsBtn.addEventListener('click', () => {
+        displayedPlatforms += (currentViewMode === 'table' ? 100 : 16);
+        const activeFilter = document.querySelector('.pf-btn.active');
+        const searchInput = document.getElementById('platformSearchInput');
+        renderPlatforms(activeFilter ? activeFilter.dataset.pfilter : 'all', searchInput ? searchInput.value : '');
+    });
+}
 
 // 初始渲染
 renderPlatforms();
