@@ -40,10 +40,10 @@
   <div class="section-block">
     <div style="display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:12px;margin-bottom:8px;">
       <div>
-        <h1 style="font-size:26px;font-weight:700;color:var(--sz-green-dark);margin:0;">早上好 👋</h1>
+        <h1 style="font-size:26px;font-weight:700;color:var(--sz-green-dark);margin:0;">工作台</h1>
         <p style="color:var(--sz-text-muted);font-size:14px;margin:4px 0 0;">双碳·节能·ESG — 你的综合工作台，今日已准备就绪</p>
       </div>
-      <span style="font-size:13px;color:var(--sz-text-muted);">{{DATE}}</span>
+      <span style="font-size:13px;color:var(--sz-text-muted);"></span>
     </div>
   </div>
 
@@ -197,21 +197,6 @@
 document.getElementById('navToggle').addEventListener('click', function(){
   document.querySelector('.nav-links').classList.toggle('open');
 });
-
-// 日期
-var d = new Date();
-var weekDays = ['日','一','二','三','四','五','六'];
-var dateStr = d.getFullYear() + '年' + (d.getMonth()+1) + '月' + d.getDate() + '日 星期' + weekDays[d.getDay()];
-document.querySelector('h1').textContent = 
-  ['早上','下午','晚上'].map(function(t,i){var h=d.getHours();return h<i*5+6?t:''}).filter(Boolean)[0] + '好 👋';
-// fallback
-if (!document.querySelector('h1').textContent.includes('好')) {
-  var h = d.getHours();
-  var greet = h < 12 ? '早上' : h < 18 ? '下午' : '晚上';
-  document.querySelector('h1').textContent = greet + '好 👋';
-}
-var metaEl = document.querySelector('.page-wrap .section-block:first-child .meta-text');
-document.querySelector('.page-wrap .section-block:first-child span:last-child').textContent = dateStr;
 </script>
 
 </body>
