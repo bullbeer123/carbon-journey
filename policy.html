@@ -6,6 +6,33 @@
 <title>顺其自然 — 政策解读</title>
 <link rel="stylesheet" href="shunqiziran.css">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'><path d='M20 4C12 4 5 10 5 18C5 26 10 32 18 36L20 38L22 36C30 32 35 26 35 18C35 10 28 4 20 4Z' fill='%231a7a3a' opacity='0.15'/><path d='M14 16L20 12L26 16V24L20 28L14 24V16Z' stroke='%231a7a3a' stroke-width='1.5' fill='none' stroke-linejoin='round'/></svg>">
+<style>
+.policy-tabs { display: flex; gap: 4px; margin-bottom: 24px; border-bottom: 2px solid var(--sz-border); }
+.policy-tab { padding: 10px 20px; border: none; background: none; font-size: 14px; font-weight: 500; color: var(--sz-text-muted); cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -2px; transition: var(--sz-transition); }
+.policy-tab:hover { color: var(--sz-green); }
+.policy-tab.active { color: var(--sz-green-dark); border-bottom-color: var(--sz-green); font-weight: 600; }
+.policy-panel { display: none; }
+.policy-panel.active { display: block; }
+.doc-card { padding: 16px 20px; border-left: 3px solid var(--sz-border); transition: border-color var(--sz-transition); }
+.doc-card:hover { border-left-color: var(--sz-green); background: var(--sz-green-light); }
+.doc-card .doc-title { font-size: 14px; font-weight: 600; color: var(--sz-green-dark); margin-bottom: 4px; }
+.doc-card .doc-dept { font-size: 12px; color: var(--sz-text-muted); }
+.doc-card .doc-date { font-size: 12px; color: var(--sz-text-muted); }
+.doc-card .doc-keywords { margin-top: 6px; display: flex; flex-wrap: wrap; gap: 4px; }
+.doc-kw { font-size: 11px; padding: 2px 8px; border-radius: 10px; background: #e8f5e9; color: var(--sz-green-dark); }
+.doc-kw.key { background: #fff3e0; color: #e65100; }
+.framework-card { padding: 24px; text-align: center; }
+.framework-card .fw-num { width: 40px; height: 40px; border-radius: 50%; background: var(--sz-green); color: #fff; display: inline-flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 700; margin-bottom: 12px; }
+.timeline-item { position: relative; padding: 0 0 20px 32px; border-left: 2px solid var(--sz-border); }
+.timeline-item:last-child { border-left-color: transparent; }
+.timeline-item::before { content: ''; position: absolute; left: -6px; top: 4px; width: 10px; height: 10px; border-radius: 50%; background: var(--sz-green); }
+.timeline-item .tl-year { font-size: 13px; font-weight: 700; color: var(--sz-green-dark); }
+.timeline-item .tl-title { font-size: 14px; font-weight: 600; margin: 2px 0; }
+.timeline-item .tl-desc { font-size: 12px; color: var(--sz-text-muted); }
+.related-link { display: flex; align-items: center; gap: 12px; padding: 14px 20px; text-decoration: none; color: var(--sz-text); border-radius: var(--sz-radius-sm); transition: var(--sz-transition); }
+.related-link:hover { background: var(--sz-green-light); }
+.related-link .rl-icon { width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 18px; }
+</style>
 </head>
 <body>
 <nav id="navbar">
@@ -32,46 +59,279 @@
 </nav>
 
 <div class="page-wrap">
+
   <div class="section-block">
-    <h1 style="font-size:24px;font-weight:700;color:var(--sz-green-dark);">政策解读</h1>
-    <p style="color:var(--sz-text-muted);font-size:14px;margin:6px 0 24px;">双碳·节能·ESG 政策文件库与解读工具</p>
-
-    <div class="card-grid card-grid-3" style="margin-bottom:24px;">
-      <div class="card" style="text-align:center;padding:24px;">
-        <div style="font-size:36px;margin-bottom:8px;">📜</div>
-        <div style="font-size:15px;font-weight:600;color:var(--sz-green-dark);">双碳政策</div>
-        <div style="font-size:12px;color:var(--sz-text-muted);margin-top:4px;">碳达峰碳中和·1+N政策体系·行业方案</div>
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:16px;">
+      <div>
+        <h1 style="font-size:24px;font-weight:700;color:var(--sz-green-dark);margin:0;">政策解读</h1>
+        <p style="color:var(--sz-text-muted);font-size:14px;margin:4px 0 0;">双碳·节能·ESG 政策文件库与解读框架</p>
       </div>
-      <div class="card" style="text-align:center;padding:24px;">
-        <div style="font-size:36px;margin-bottom:8px;">💡</div>
-        <div style="font-size:15px;font-weight:600;color:var(--sz-green-dark);">节能政策</div>
-        <div style="font-size:12px;color:var(--sz-text-muted);margin-top:4px;">节能审查·能效标准·绿色工厂·设备更新</div>
-      </div>
-      <div class="card" style="text-align:center;padding:24px;">
-        <div style="font-size:36px;margin-bottom:8px;">♻️</div>
-        <div style="font-size:15px;font-weight:600;color:var(--sz-green-dark);">ESG政策</div>
-        <div style="font-size:12px;color:var(--sz-text-muted);margin-top:4px;">ESG披露指引·绿色金融·碳市场规则</div>
-      </div>
-    </div>
-
-    <div class="card" style="padding:40px;text-align:center;">
-      <div style="font-size:48px;margin-bottom:16px;">🏗️</div>
-      <div style="font-size:18px;font-weight:600;color:var(--sz-green-dark);">政策库正在建设中</div>
-      <p style="color:var(--sz-text-muted);font-size:14px;margin:12px 0;">分类政策文件库、AI政策解读助手、政策时间线追踪等功能即将上线。</p>
-      <div style="display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin-top:20px;">
-        <span class="btn-sz btn-sz-primary" style="opacity:0.6;">即将开放</span>
+      <div style="display:flex;gap:8px;">
+        <a href="https://www.gov.cn/zhengce/" target="_blank" class="btn-sz btn-sz-outline btn-sz-sm">国务院政策库 ↗</a>
+        <a href="https://www.ndrc.gov.cn/" target="_blank" class="btn-sz btn-sz-outline btn-sz-sm">国家发改委 ↗</a>
+        <a href="https://www.mee.gov.cn/" target="_blank" class="btn-sz btn-sz-outline btn-sz-sm">生态环境部 ↗</a>
       </div>
     </div>
   </div>
+
+  <!-- ===== 政策解读三步法 ===== -->
+  <div class="section-block">
+    <div class="section-title">解读框架</div>
+    <div class="card-grid card-grid-3">
+      <div class="card framework-card">
+        <div class="fw-num">1</div>
+        <div style="font-size:15px;font-weight:600;margin-bottom:6px;">信息获取</div>
+        <div style="font-size:12px;color:var(--sz-text-muted);line-height:1.6;">
+          国务院 → 部委 → 地方 <br>
+          官方媒体评论定调 <br>
+          权威数据库交叉验证
+        </div>
+      </div>
+      <div class="card framework-card">
+        <div class="fw-num">2</div>
+        <div style="font-size:15px;font-weight:600;margin-bottom:6px;">阅读分析</div>
+        <div style="font-size:12px;color:var(--sz-text-muted);line-height:1.6;">
+          从上往下看层级转化 <br>
+          圈三类关键词（定调/动词/程度）<br>
+          横向纵向对比找差异
+        </div>
+      </div>
+      <div class="card framework-card">
+        <div class="fw-num">3</div>
+        <div style="font-size:15px;font-weight:600;margin-bottom:6px;">投资匹配</div>
+        <div style="font-size:12px;color:var(--sz-text-muted);line-height:1.6;">
+          判断政策阶段 <br>
+          追踪钱流向+试点结果 <br>
+          匹配ETF与核心标的
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 核心政策文库 ===== -->
+  <div class="section-block">
+    <div class="section-title">核心政策文库</div>
+
+    <div class="policy-tabs">
+      <button class="policy-tab active" onclick="switchTab('carbon')">双碳</button>
+      <button class="policy-tab" onclick="switchTab('energy')">节能</button>
+      <button class="policy-tab" onclick="switchTab('esg')">ESG</button>
+      <button class="policy-tab" onclick="switchTab('industry')">行业</button>
+    </div>
+
+    <!-- 双碳 -->
+    <div class="policy-panel active" id="panel-carbon">
+      <div class="card-grid card-grid-2">
+        <div class="card doc-card">
+          <div class="doc-title">关于完整准确全面贯彻新发展理念做好碳达峰碳中和工作的意见</div>
+          <div class="doc-dept">中共中央 国务院 · <span class="doc-date">2021.09</span></div>
+          <div class="doc-keywords"><span class="doc-kw key">顶层设计</span><span class="doc-kw">1+N体系</span><span class="doc-kw">碳达峰碳中和</span></div>
+        </div>
+        <div class="card doc-card">
+          <div class="doc-title">2030年前碳达峰行动方案</div>
+          <div class="doc-dept">国务院 · <span class="doc-date">2021.10</span></div>
+          <div class="doc-keywords"><span class="doc-kw key">行动方案</span><span class="doc-kw">能源绿色低碳</span><span class="doc-kw">十大行动</span></div>
+        </div>
+        <div class="card doc-card">
+          <div class="doc-title">碳排放权交易管理暂行条例</div>
+          <div class="doc-dept">国务院 · <span class="doc-date">2024.05</span></div>
+          <div class="doc-keywords"><span class="doc-kw key">碳市场</span><span class="doc-kw">CEA</span><span class="doc-kw">碳排放权</span></div>
+        </div>
+        <div class="card doc-card">
+          <div class="doc-title">关于建立碳足迹管理体系的实施方案</div>
+          <div class="doc-dept">生态环境部等15部门 · <span class="doc-date">2024.06</span></div>
+          <div class="doc-keywords"><span class="doc-kw key">碳足迹</span><span class="doc-kw">产品碳标签</span><span class="doc-kw">CBAM应对</span></div>
+        </div>
+        <div class="card doc-card">
+          <div class="doc-title">温室气体自愿减排交易管理办法（试行）</div>
+          <div class="doc-dept">生态环境部 · <span class="doc-date">2023.10</span></div>
+          <div class="doc-keywords"><span class="doc-kw key">CCER</span><span class="doc-kw">自愿减排</span><span class="doc-kw">方法学</span></div>
+        </div>
+        <div class="card doc-card">
+          <div class="doc-title">关于全国碳排放权交易市场扩围工作的通知</div>
+          <div class="doc-dept">生态环境部 · <span class="doc-date">2025.03</span></div>
+          <div class="doc-keywords"><span class="doc-kw key">扩围</span><span class="doc-kw">钢铁</span><span class="doc-kw">水泥</span><span class="doc-kw">铝冶炼</span></div>
+        </div>
+        <div class="card doc-card">
+          <div class="doc-title">碳排放统计核算体系工作方案</div>
+          <div class="doc-dept">国家发改委等8部门 · <span class="doc-date">2024.10</span></div>
+          <div class="doc-keywords"><span class="doc-kw">核算标准</span><span class="doc-kw">统计体系</span><span class="doc-kw">MRV</span></div>
+        </div>
+        <div class="card doc-card">
+          <div class="doc-title">加快构建碳排放双控制度体系工作方案</div>
+          <div class="doc-dept">国务院 · <span class="doc-date">2024.07</span></div>
+          <div class="doc-keywords"><span class="doc-kw key">双控制度</span><span class="doc-kw">强度+总量</span><span class="doc-kw">考核机制</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 节能 -->
+    <div class="policy-panel" id="panel-energy">
+      <div class="card-grid card-grid-2">
+        <div class="card doc-card">
+          <div class="doc-title">2024—2025年节能降碳行动方案</div>
+          <div class="doc-dept">国务院 · <span class="doc-date">2024.05</span></div>
+          <div class="doc-keywords"><span class="doc-kw key">节能降碳</span><span class="doc-kw">约束性指标</span><span class="doc-kw">十大行动</span></div>
+        </div>
+        <div class="card doc-card">
+          <div class="doc-title">关于严格能效约束推动重点领域节能降碳的若干意见</div>
+          <div class="doc-dept">国家发改委等5部门 · <span class="doc-date">2021.10</span></div>
+          <div class="doc-keywords"><span class="doc-kw key">能效约束</span><span class="doc-kw">标杆水平</span><span class="doc-kw">技术改造</span></div>
+        </div>
+        <div class="card doc-card">
+          <div class="doc-title">"十四五"节能减排综合工作方案</div>
+          <div class="doc-dept">国务院 · <span class="doc-date">2022.01</span></div>
+          <div class="doc-keywords"><span class="doc-kw key">节能减排</span><span class="doc-kw">十四五</span><span class="doc-kw">重点工程</span></div>
+        </div>
+        <div class="card doc-card">
+          <div class="doc-title">推动大规模设备更新和消费品以旧换新行动方案</div>
+          <div class="doc-dept">国务院 · <span class="doc-date">2024.03</span></div>
+          <div class="doc-keywords"><span class="doc-kw key">设备更新</span><span class="doc-kw">以旧换新</span><span class="doc-kw">节能设备</span></div>
+        </div>
+        <div class="card doc-card">
+          <div class="doc-title">工业能效提升行动计划</div>
+          <div class="doc-dept">工信部等6部门 · <span class="doc-date">2022.06</span></div>
+          <div class="doc-keywords"><span class="doc-kw">工业节能</span><span class="doc-kw">能效领跑</span><span class="doc-kw">绿色工厂</span></div>
+        </div>
+        <div class="card doc-card">
+          <div class="doc-title">关于加快经济社会发展全面绿色转型的意见</div>
+          <div class="doc-dept">中共中央 国务院 · <span class="doc-date">2024.07</span></div>
+          <div class="doc-keywords"><span class="doc-kw key">全面转型</span><span class="doc-kw">绿色低碳</span><span class="doc-kw">顶层设计</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ESG -->
+    <div class="policy-panel" id="panel-esg">
+      <div class="card-grid card-grid-2">
+        <div class="card doc-card">
+          <div class="doc-title">上市公司可持续发展报告指引</div>
+          <div class="doc-dept">沪深北交易所 · <span class="doc-date">2024.04</span></div>
+          <div class="doc-keywords"><span class="doc-kw key">ESG报告</span><span class="doc-kw">强制披露</span><span class="doc-kw">上市公司</span></div>
+        </div>
+        <div class="card doc-card">
+          <div class="doc-title">企业可持续披露准则——基本准则（试行）</div>
+          <div class="doc-dept">财政部等9部门 · <span class="doc-date">2024.12</span></div>
+          <div class="doc-keywords"><span class="doc-kw key">披露准则</span><span class="doc-kw">ISSB对标</span><span class="doc-kw">统一标准</span></div>
+        </div>
+        <div class="card doc-card">
+          <div class="doc-title">关于推进绿色金融发展的指导意见</div>
+          <div class="doc-dept">人民银行等7部门 · <span class="doc-date">2024.10</span></div>
+          <div class="doc-keywords"><span class="doc-kw key">绿色金融</span><span class="doc-kw">转型金融</span><span class="doc-kw">碳金融</span></div>
+        </div>
+        <div class="card doc-card">
+          <div class="doc-title">银行业保险业绿色金融指引</div>
+          <div class="doc-dept">金融监管总局 · <span class="doc-date">2024.05</span></div>
+          <div class="doc-keywords"><span class="doc-kw key">绿色金融</span><span class="doc-kw">银行保险</span><span class="doc-kw">风险管控</span></div>
+        </div>
+        <div class="card doc-card">
+          <div class="doc-title">关于进一步强化碳达峰碳中和标准计量体系建设的行动方案</div>
+          <div class="doc-dept">市场监管总局等9部门 · <span class="doc-date">2024.06</span></div>
+          <div class="doc-keywords"><span class="doc-kw key">标准计量</span><span class="doc-kw">碳核算</span><span class="doc-kw">国际互认</span></div>
+        </div>
+        <div class="card doc-card">
+          <div class="doc-title">EU CBAM 碳边境调节机制 过渡期实施细则</div>
+          <div class="doc-dept">欧盟委员会 · <span class="doc-date">2023.10生效</span></div>
+          <div class="doc-keywords"><span class="doc-kw key">CBAM</span><span class="doc-kw">碳关税</span><span class="doc-kw">出口合规</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 行业 -->
+    <div class="policy-panel" id="panel-industry">
+      <div class="card-grid card-grid-2">
+        <div class="card doc-card">
+          <div class="doc-title">工业领域碳达峰实施方案</div>
+          <div class="doc-dept">工信部等3部门 · <span class="doc-date">2022.08</span></div>
+          <div class="doc-keywords"><span class="doc-kw key">工业碳达峰</span><span class="doc-kw">高耗能行业</span><span class="doc-kw">技术改造</span></div>
+        </div>
+        <div class="card doc-card">
+          <div class="doc-title">有色金属行业碳达峰实施方案</div>
+          <div class="doc-dept">工信部等3部门 · <span class="doc-date">2022.11</span></div>
+          <div class="doc-keywords"><span class="doc-kw">电解铝</span><span class="doc-kw">再生金属</span><span class="doc-kw">清洁能源</span></div>
+        </div>
+        <div class="card doc-card">
+          <div class="doc-title">建材行业碳达峰实施方案</div>
+          <div class="doc-dept">工信部等4部门 · <span class="doc-date">2022.11</span></div>
+          <div class="doc-keywords"><span class="doc-kw">水泥</span><span class="doc-kw">玻璃</span><span class="doc-kw">低碳建材</span></div>
+        </div>
+        <div class="card doc-card">
+          <div class="doc-title">石化化工行业碳达峰实施方案</div>
+          <div class="doc-dept">工信部等6部门 · <span class="doc-date">2022.10</span></div>
+          <div class="doc-keywords"><span class="doc-kw">炼化</span><span class="doc-kw">煤化工</span><span class="doc-kw">低碳技术</span></div>
+        </div>
+        <div class="card doc-card">
+          <div class="doc-title">钢铁行业碳达峰实施方案</div>
+          <div class="doc-dept">工信部等3部门 · <span class="doc-date">2022.10</span></div>
+          <div class="doc-keywords"><span class="doc-kw">粗钢产量</span><span class="doc-kw">废钢利用</span><span class="doc-kw">氢冶金</span></div>
+        </div>
+        <div class="card doc-card">
+          <div class="doc-title">城乡建设领域碳达峰实施方案</div>
+          <div class="doc-dept">住建部 · <span class="doc-date">2022.07</span></div>
+          <div class="doc-keywords"><span class="doc-kw">绿色建筑</span><span class="doc-kw">零碳建筑</span><span class="doc-kw">节能改造</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 政策时间线 ===== -->
+  <div class="section-block">
+    <div class="section-title">关键节点</div>
+    <div style="max-width:600px;">
+      <div class="timeline-item">
+        <div class="tl-year">2020.09</div>
+        <div class="tl-title">习近平主席宣布"双碳"目标</div>
+        <div class="tl-desc">2030碳达峰·2060碳中和，开启中国气候治理新篇章</div>
+      </div>
+      <div class="timeline-item">
+        <div class="tl-year">2021.07</div>
+        <div class="tl-title">全国碳排放权交易市场正式上线</div>
+        <div class="tl-desc">首批纳入2162家发电企业，覆盖约45亿吨CO2排放</div>
+      </div>
+      <div class="timeline-item">
+        <div class="tl-year">2024.05</div>
+        <div class="tl-title">碳排放权交易管理暂行条例施行</div>
+        <div class="tl-desc">碳市场法律地位正式确立，监管框架完善</div>
+      </div>
+      <div class="timeline-item">
+        <div class="tl-year">2024.06</div>
+        <div class="tl-title">碳足迹管理体系实施方案发布</div>
+        <div class="tl-desc">15部门联合，产品碳标识认证制度加速建立</div>
+      </div>
+      <div class="timeline-item">
+        <div class="tl-year">2025.03</div>
+        <div class="tl-title">碳市场扩围至四大行业</div>
+        <div class="tl-desc">钢铁·水泥·铝冶炼正式纳入，覆盖排放量超80亿吨</div>
+      </div>
+      <div class="timeline-item">
+        <div class="tl-year">2026</div>
+        <div class="tl-title">"十五五"碳双控全面实施</div>
+        <div class="tl-desc">从能耗双控转向碳排放双控，考核体系重大变革</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 工作链接 ===== -->
+  <div class="section-block">
+    <div class="section-title">关联工具</div>
+    <div class="card-grid card-grid-2">
+      <a href="https://299ae360d57e45b68a389bc69d54ecd1.app.codebuddy.work" target="_blank" class="card related-link">
+        <div class="rl-icon" style="background:#e8f5e9;color:#1a7a3a;">🔌</div>
+        <div><div style="font-size:14px;font-weight:600;">节能降碳诊断平台</div><div style="font-size:12px;color:var(--sz-text-muted);">企业节能诊断+政策匹配引擎</div></div>
+      </a>
+      <a href="https://747e89cda7d442a397b4846f943a39af.app.codebuddy.work" target="_blank" class="card related-link">
+        <div class="rl-icon" style="background:#e3f2fd;color:#1565c0;">📊</div>
+        <div><div style="font-size:14px;font-weight:600;">企业ESG诊断工具</div><div style="font-size:12px;color:var(--sz-text-muted);">ESG评估+信息披露+政策合规检查</div></div>
+      </a>
+    </div>
+  </div>
+
 </div>
 
 <div class="footer-sz">
   <div class="footer-inner">
     <div class="footer-brand">
-      <svg width="24" height="24" viewBox="0 0 40 40" fill="none">
-        <path d="M20 4C12 4 5 10 5 18C5 26 10 32 18 36L20 38L22 36C30 32 35 26 35 18C35 10 28 4 20 4Z" fill="#1a7a3a" opacity="0.15"/>
-        <path d="M14 16L20 12L26 16V24L20 28L14 24V16Z" stroke="#1a7a3a" stroke-width="1.5" fill="none" stroke-linejoin="round"/>
-      </svg>
+      <svg width="24" height="24" viewBox="0 0 40 40" fill="none"><path d="M20 4C12 4 5 10 5 18C5 26 10 32 18 36L20 38L22 36C30 32 35 26 35 18C35 10 28 4 20 4Z" fill="#1a7a3a" opacity="0.15"/><path d="M14 16L20 12L26 16V24L20 28L14 24V16Z" stroke="#1a7a3a" stroke-width="1.5" fill="none" stroke-linejoin="round"/></svg>
       <span>顺其自然</span>
     </div>
     <div>© 2026 bull beer</div>
@@ -82,6 +342,13 @@
 document.getElementById('navToggle').addEventListener('click', function(){
   document.querySelector('.nav-links').classList.toggle('open');
 });
+
+function switchTab(name) {
+  document.querySelectorAll('.policy-tab').forEach(function(t){ t.classList.remove('active'); });
+  document.querySelectorAll('.policy-panel').forEach(function(p){ p.classList.remove('active'); });
+  document.getElementById('panel-' + name).classList.add('active');
+  event.target.classList.add('active');
+}
 </script>
 </body>
 </html>
