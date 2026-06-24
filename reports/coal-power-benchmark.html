@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>煤电行业能效标杆快速调研报告</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: system-ui, -apple-system, sans-serif; background: #f5f5f0; color: #2c2c2a; line-height: 1.6; padding: 20px; }
+.container { max-width: 960px; margin: 0 auto; }
+.header { background: linear-gradient(135deg, #3C3489, #534AB7); border-radius: 16px; padding: 32px; color: #fff; margin-bottom: 24px; }
+.header h1 { font-size: 22px; font-weight: 600; margin-bottom: 8px; }
+.header p { font-size: 14px; opacity: 0.85; }
+.header .meta { font-size: 12px; opacity: 0.7; margin-top: 12px; }
+.card { background: #fff; border-radius: 12px; padding: 24px; margin-bottom: 16px; border: 1px solid #e0ddd5; }
+.card h2 { font-size: 17px; font-weight: 600; color: #3C3489; margin-bottom: 16px; padding-bottom: 8px; border-bottom: 2px solid #EEEDFE; }
+.card h3 { font-size: 14px; font-weight: 600; color: #2c2c2a; margin: 16px 0 8px; }
+table { width: 100%; border-collapse: collapse; font-size: 13px; margin: 8px 0; }
+th { background: #F1EFE8; text-align: left; padding: 8px 10px; font-weight: 600; border-bottom: 1px solid #D3D1C7; }
+td { padding: 8px 10px; border-bottom: 1px solid #F1EFE8; }
+th:first-child, td:first-child { padding-left: 0; }
+.tag { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 500; }
+.tag-policy { background: #E6F1FB; color: #185FA5; }
+.tag-tech { background: #E1F5EE; color: #0F6E56; }
+.tag-opp { background: #EAF3DE; color: #3B6D11; }
+.tag-bench { background: #FAEEDA; color: #854F0B; }
+.tag-core { background: #EEEDFE; color: #534AB7; }
+.stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin: 12px 0; }
+.stat { background: #F9F8F4; border-radius: 10px; padding: 16px; text-align: center; }
+.stat .num { font-size: 28px; font-weight: 700; color: #3C3489; }
+.stat .num.green { color: #3B6D11; }
+.stat .num.amber { color: #854F0B; }
+.stat .label { font-size: 12px; color: #5F5E5A; margin-top: 4px; }
+.timeline { position: relative; padding-left: 20px; }
+.timeline-item { position: relative; padding: 8px 0 8px 20px; border-left: 2px solid #D3D1C7; }
+.timeline-item:last-child { border-left-color: transparent; }
+.timeline-item::before { content: ''; position: absolute; left: -5px; top: 14px; width: 8px; height: 8px; border-radius: 50%; background: #534AB7; }
+.timeline-item .date { font-size: 12px; color: #888780; }
+.timeline-item .text { font-size: 13px; }
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+@media (max-width: 640px) { .two-col { grid-template-columns: 1fr; } }
+.nav { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; }
+.nav a { background: #fff; border: 1px solid #D3D1C7; border-radius: 8px; padding: 8px 14px; font-size: 13px; text-decoration: none; color: #2c2c2a; font-weight: 500; }
+.nav a:hover { background: #EEEDFE; border-color: #7F77DD; }
+.summary-box { background: #EEEDFE; border-radius: 10px; padding: 16px; margin: 12px 0; font-size: 13px; }
+.highlight { background: #FAEEDA; padding: 2px 6px; border-radius: 4px; font-weight: 500; }
+    <link rel="stylesheet" href="../shunqiziran.css">
+</style>
+</head>
+<body>
+
+<div style="background:rgba(255,255,255,0.92);border-bottom:1px solid var(--sz-border);padding:0 24px;">
+  <div style="max-width:960px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:48px;">
+    <a href="../index.html" style="display:flex;align-items:center;gap:6px;text-decoration:none;color:var(--sz-green-dark);font-weight:600;font-size:14px;">
+      <svg width="18" height="18" viewBox="0 0 40 40" fill="none"><path d="M20 4C12 4 5 10 5 18C5 26 10 32 18 36L20 38L22 36C30 32 35 26 35 18C35 10 28 4 20 4Z" fill="#1a7a3a" opacity="0.15"/><path d="M14 16L20 12L26 16V24L20 28L14 24V16Z" stroke="#1a7a3a" stroke-width="1.5" fill="none" stroke-linejoin="round"/></svg>
+      顺其自然
+    </a>
+    <a href="../reports.html" style="font-size:12px;color:var(--sz-green);text-decoration:none;">← 报告中心</a>
+  </div>
+</div>
+
+<div class="container" style="padding-top:20px;">
+  <div class="header">
+    <h1>煤电行业能效标杆 · 快速调研报告</h1>
+    <p>基于 industry-quick-research 方法论，2026年6月24日生成</p>
+    <div class="meta">数据来源：国家发改委、国家能源局、国家标准委、GB 21258-2024、发改运行〔2025〕1499号、发改环资〔2026〕698号</div>
+  </div>
+
+  <div class="nav">
+    <a href="#kmap">📊 知识地图</a>
+    <a href="#benchmarks">🎯 标杆数据</a>
+    <a href="#policy">📜 政策框架</a>
+    <a href="#standards">📏 国标体系</a>
+    <a href="#timeline">⏱ 政策演进</a>
+    <a href="#opportunities">💡 机会地图</a>
+    <a href="#sources">📡 信息源</a>
+  </div>
+
+  <!-- Executive Summary -->
+  <div class="card" id="summary">
+    <h2>核心结论</h2>
+    <div class="stats">
+      <div class="stat"><div class="num">53</div><div class="label">标杆-基准差距 (gce/kWh)</div></div>
+      <div class="stat"><div class="num green">+15%</div><div class="label">标杆产能比例目标 (2028)</div></div>
+      <div class="stat"><div class="num amber">20%</div><div class="label">中央直补比例</div></div>
+      <div class="stat"><div class="num green">≥5</div><div class="label">改造降耗要求 (gce/kWh)</div></div>
+    </div>
+    <div class="summary-box">
+      <strong>一句话总结：</strong>煤电行业正经历"标杆倒逼+落后出清"的强制性转型——<span class="highlight">2028年底能效基准以下机组必须清零</span>，中央按20%直补助推万亿级改造市场。最确定的机遇在"通流改造+数字化能效"，技术成熟、回收期短、政策匹配度最高。
+    </div>
+  </div>
+
+  <!-- Benchmarks -->
+  <div class="card" id="benchmarks">
+    <h2>🎯 能效标杆数据（2025年版）</h2>
+    <p style="font-size: 13px; color: #5F5E5A; margin-bottom: 12px;">供电煤耗 单位：克标准煤/千瓦时 (gce/kWh) | 来源：《煤炭清洁高效利用重点领域标杆水平和基准水平(2025年版)》</p>
+    <table>
+      <tr><th>机组类型</th><th style="text-align:center">标杆水平</th><th style="text-align:center">基准水平</th><th>说明</th></tr>
+      <tr><td>超超临界 1000MW</td><td style="text-align:center; font-weight:700; color:#3C3489;">268+K</td><td style="text-align:center">283+K</td><td>国内最先进主力</td></tr>
+      <tr><td>超超临界 600MW</td><td style="text-align:center; font-weight:700; color:#3C3489;">275+K</td><td style="text-align:center">291+K</td><td>2026.04起执行</td></tr>
+      <tr><td>超临界 600MW</td><td style="text-align:center; font-weight:700; color:#3C3489;">286+K</td><td style="text-align:center">299+K</td><td></td></tr>
+      <tr><td>超临界 300MW</td><td style="text-align:center; font-weight:700; color:#3C3489;">290+K</td><td style="text-align:center">308+K</td><td></td></tr>
+      <tr><td>亚临界 600MW</td><td style="text-align:center; font-weight:700; color:#3C3489;">303+K</td><td style="text-align:center">312+K</td><td>改造重点</td></tr>
+      <tr><td><strong>亚临界 300MW</strong></td><td style="text-align:center; font-weight:700; color:#854F0B;">309+K</td><td style="text-align:center; font-weight:700; color:#854F0B;">321+K</td><td><strong>最需改造</strong></td></tr>
+      <tr><td>W火焰锅炉</td><td style="text-align:center">+3修正</td><td style="text-align:center">+3修正</td><td>无烟煤</td></tr>
+      <tr><td>循环流化床</td><td style="text-align:center">+15修正</td><td style="text-align:center">+15修正</td><td>劣质煤</td></tr>
+    </table>
+    <p style="font-size: 12px; color: #888780; margin-top: 8px;">* K值为能耗修正系数，由GB 21258标准规定计算方法，综合考虑煤质、冷却方式、温度、负荷率等因素</p>
+    
+    <h3>供热煤耗（2025年新增）</h3>
+    <table>
+      <tr><th>机组类型</th><th style="text-align:center">标杆 (kgce/GJ)</th><th style="text-align:center">基准 (kgce/GJ)</th></tr>
+      <tr><td>超临界 600-1000MW</td><td style="text-align:center">40</td><td style="text-align:center">42</td></tr>
+      <tr><td>超临界 300-600MW</td><td style="text-align:center">42</td><td style="text-align:center">42.5</td></tr>
+    </table>
+
+    <h3>GB 21258-2024 分级限额（1000MW超超临界示例）</h3>
+    <table>
+      <tr><th>等级</th><th>名称</th><th style="text-align:center">值 (gce/kWh)</th><th>对标政策</th></tr>
+      <tr><td><span class="tag tag-bench">1级</span></td><td><strong>先进值</strong></td><td style="text-align:center; font-weight:700;">260</td><td>标杆水平参考</td></tr>
+      <tr><td><span class="tag tag-tech">2级</span></td><td>准入值</td><td style="text-align:center">265</td><td>新建项目门槛</td></tr>
+      <tr><td><span class="tag tag-policy">3级</span></td><td>限定值</td><td style="text-align:center">270</td><td>基准水平参考</td></tr>
+    </table>
+  </div>
+
+  <!-- Timeline -->
+  <div class="card" id="timeline">
+    <h2>⏱ 政策演进时间线</h2>
+    <div class="timeline">
+      <div class="timeline-item">
+        <div class="date">2021.11</div>
+        <div class="text">发改委：2025年火电平均煤耗降至<strong>300以下</strong>，新建湿冷&lt;285</div>
+      </div>
+      <div class="timeline-item">
+        <div class="date">2024.09</div>
+        <div class="text"><strong>GB 21258-2024</strong> 发布，整合旧标，首次纳入循环流化床</div>
+      </div>
+      <div class="timeline-item">
+        <div class="date">2025.04</div>
+        <div class="text">GB 21258-2024 <strong>正式实施</strong></div>
+      </div>
+      <div class="timeline-item">
+        <div class="date">2025.11</div>
+        <div class="text"><strong>2025年版标杆基准</strong> 发布，新增供热煤耗指标</div>
+      </div>
+      <div class="timeline-item">
+        <div class="date">2026.06.15</div>
+        <div class="text"><strong>⚠️ 三年攻坚行动启动</strong> — 标杆+15%、基准以下清零、中央20%直补</div>
+      </div>
+      <div class="timeline-item" style="border-left-color: #D85A30;">
+        <div class="date">2028年底</div>
+        <div class="text"><strong style="color:#D85A30;">🔴 最后期限</strong> — 不达标机组淘汰关停</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Policy -->
+  <div class="card" id="policy">
+    <h2>📜 政策逻辑框架</h2>
+    <div class="two-col">
+      <div>
+        <h3>核心政策文件</h3>
+        <table>
+          <tr><th>文件</th><th>时间</th></tr>
+          <tr><td>标杆基准（2025年版）</td><td>2025.11</td></tr>
+          <tr><td>三年攻坚行动通知</td><td>2026.06</td></tr>
+          <tr><td>GB 21258-2024</td><td>2025.04</td></tr>
+          <tr><td>煤电节能减排行动计划</td><td>2021</td></tr>
+        </table>
+      </div>
+      <div>
+        <h3>激励约束组合</h3>
+        <table>
+          <tr><th>工具</th><th>力度</th></tr>
+          <tr><td>中央直补</td><td><strong>20%</strong> 核定总投资</td></tr>
+          <tr><td>差别电价</td><td>加价 ≤0.1元/度</td></tr>
+          <tr><td>碳资产</td><td>减排量可交易/置换</td></tr>
+          <tr><td>落后出清</td><td>清单式淘汰关停</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Opportunities -->
+  <div class="card" id="opportunities">
+    <h2>💡 机会地图</h2>
+    <div class="two-col">
+      <div>
+        <h3>改造赛道对比</h3>
+        <table>
+          <tr><th>赛道</th><th>降耗</th><th>回收期</th><th>热度</th></tr>
+          <tr><td><strong>通流改造</strong></td><td>5-10g</td><td>2-4年</td><td><span class="tag tag-opp">🔥 首选</span></td></tr>
+          <tr><td>锅炉改造</td><td>2-5g</td><td>3-5年</td><td><span class="tag tag-tech">推荐</span></td></tr>
+          <tr><td>供热改造</td><td>-</td><td>3-5年</td><td><span class="tag tag-tech">推荐</span></td></tr>
+          <tr><td>数字化能效</td><td>1-3g</td><td>1-2年</td><td><span class="tag tag-opp">🔥 高性价比</span></td></tr>
+          <tr><td>掺烧生物质</td><td>碳降10-15%</td><td>中期</td><td><span class="tag tag-policy">关注</span></td></tr>
+        </table>
+      </div>
+      <div>
+        <h3>政策红利</h3>
+        <table>
+          <tr><th>机会</th><th>窗口期</th></tr>
+          <tr><td>中央20%直补申报</td><td><strong>2026-2028</strong> ⏰</td></tr>
+          <tr><td>碳排放置换指标</td><td>2026年起</td></tr>
+          <tr><td>碳配额收益</td><td>长期</td></tr>
+          <tr><td>老旧机组替代</td><td>2028前</td></tr>
+        </table>
+      </div>
+    </div>
+    <div style="background:#EAF3DE; border-radius: 8px; padding: 12px; margin-top: 12px; font-size:13px;">
+      <strong>核心判断：</strong>确定性最高的机会在 <strong>「通流改造 + 数字化能效」</strong> 组合——技术最成熟、政策最匹配、回收期最短。2026-2028年是最确定的3年改造窗口，中央20%直补不常有。
+    </div>
+  </div>
+
+  <!-- Sources -->
+  <div class="card" id="sources">
+    <h2>📡 行业信息源</h2>
+    <table>
+      <tr><th>来源</th><th>类型</th><th>价值</th><th>频率</th></tr>
+      <tr><td>国家发改委 ndrc.gov.cn</td><td><span class="tag tag-policy">政策</span></td><td>⭐⭐⭐⭐⭐</td><td>实时</td></tr>
+      <tr><td>国家能源局</td><td><span class="tag tag-policy">政策</span></td><td>⭐⭐⭐⭐⭐</td><td>实时</td></tr>
+      <tr><td>中国电力企业联合会</td><td><span class="tag tag-bench">数据</span></td><td>⭐⭐⭐⭐⭐</td><td>月/年</td></tr>
+      <tr><td>北极星电力网</td><td><span class="tag tag-tech">媒体</span></td><td>⭐⭐⭐⭐</td><td>每日</td></tr>
+      <tr><td>国网能源研究院</td><td><span class="tag tag-core">研究</span></td><td>⭐⭐⭐⭐</td><td>季/年</td></tr>
+      <tr><td>全国碳排放权交易市场</td><td><span class="tag tag-opp">市场</span></td><td>⭐⭐⭐</td><td>每日</td></tr>
+    </table>
+  </div>
+
+  <div style="text-align:center; font-size:12px; color:#888780; padding:20px;">
+    本报告由 WorkBuddy · industry-quick-research Skill 生成 · 数据截止2026年6月<br>
+    完整 Industry OS 知识库包含 Database/ Knowledge-Map/ Opportunities/ Intelligence/ 四部分
+  </div>
+</div>
+</body>
+</html>
