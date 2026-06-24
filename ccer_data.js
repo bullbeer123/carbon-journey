@@ -2510,5 +2510,50 @@ var ccerRawData = [
     "totalVolume": 12658272.0,
     "totalAmount": 932698539.48,
     "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/index.html"
+  },
+  {
+    "date": "2026-05-25",
+    "volume": 250,
+    "amount": 21450.0,
+    "price": 85.8,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/index.html",
+    "totalVolume": 12658522.0,
+    "totalAmount": 932719989.48
+  },
+  {
+    "date": "2026-05-26",
+    "volume": 0,
+    "amount": 0.0,
+    "price": 85.8,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/index.html",
+    "totalVolume": 12658522.0,
+    "totalAmount": 932719989.48
+  },
+  {
+    "date": "2026-05-27",
+    "volume": 35004,
+    "amount": 2926232.0,
+    "price": 83.6,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/index.html",
+    "totalVolume": 12693526.0,
+    "totalAmount": 935646221.48
+  },
+  {
+    "date": "2026-05-28",
+    "volume": 177136,
+    "amount": 14838812.18,
+    "price": 83.77,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/index.html",
+    "totalVolume": 12870662.0,
+    "totalAmount": 950485033.66
+  },
+  {
+    "date": "2026-05-29",
+    "volume": 30042,
+    "amount": 2509636.27,
+    "price": 83.54,
+    "url": "https://www.ccer.com.cn/wcm/ccer/html/2502lshq/index.html",
+    "totalVolume": 12900704.0,
+    "totalAmount": 952994669.93
   }
 ];

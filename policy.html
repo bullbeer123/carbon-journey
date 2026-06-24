@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>顺其自然 — 政策解读</title>
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="style-new.css">
+<link rel="stylesheet" href="shunqiziran.css">
+</head>
+<body>
+<nav id="navbar">
+  <div class="nav-container">
+    <div class="nav-logo">
+      <svg class="logo-icon" viewBox="0 0 40 40" fill="none">
+        <path d="M20 4C12 4 5 10 5 18C5 26 10 32 18 36L20 38L22 36C30 32 35 26 35 18C35 10 28 4 20 4Z" fill="#1a7a3a" opacity="0.15"/>
+        <path d="M14 16L20 12L26 16V24L20 28L14 24V16Z" stroke="#1a7a3a" stroke-width="1.5" fill="none" stroke-linejoin="round"/>
+        <path d="M20 12V28M14 20H26" stroke="#1a7a3a" stroke-width="1.2" opacity="0.6"/>
+        <circle cx="20" cy="20" r="18" stroke="#1a7a3a" stroke-width="0.8" opacity="0.3"/>
+      </svg>
+      <span class="logo-text">顺其自然</span>
+    </div>
+    <ul class="nav-links">
+      <li><a href="index.html">工作台</a></li>
+      <li><a href="market.html">碳市场</a></li>
+      <li><a href="policy.html" class="active">政策解读</a></li>
+      <li><a href="reports.html">报告中心</a></li>
+      <li><a href="tools.html">工具箱</a></li>
+      <li><a href="platforms.html">服务平台</a></li>
+    </ul>
+    <button class="nav-toggle" id="navToggle">☰</button>
+  </div>
+</nav>
+
+<div class="page-wrap">
+  <div class="section-block">
+    <h1 style="font-size:24px;font-weight:700;color:var(--sz-green-dark);">政策解读</h1>
+    <p style="color:var(--sz-text-muted);font-size:14px;margin:6px 0 24px;">双碳·节能·ESG 政策文件库与解读工具</p>
+
+    <div class="card-grid card-grid-3" style="margin-bottom:24px;">
+      <div class="card" style="text-align:center;padding:24px;">
+        <div style="font-size:36px;margin-bottom:8px;">📜</div>
+        <div style="font-size:15px;font-weight:600;color:var(--sz-green-dark);">双碳政策</div>
+        <div style="font-size:12px;color:var(--sz-text-muted);margin-top:4px;">碳达峰碳中和·1+N政策体系·行业方案</div>
+      </div>
+      <div class="card" style="text-align:center;padding:24px;">
+        <div style="font-size:36px;margin-bottom:8px;">💡</div>
+        <div style="font-size:15px;font-weight:600;color:var(--sz-green-dark);">节能政策</div>
+        <div style="font-size:12px;color:var(--sz-text-muted);margin-top:4px;">节能审查·能效标准·绿色工厂·设备更新</div>
+      </div>
+      <div class="card" style="text-align:center;padding:24px;">
+        <div style="font-size:36px;margin-bottom:8px;">♻️</div>
+        <div style="font-size:15px;font-weight:600;color:var(--sz-green-dark);">ESG政策</div>
+        <div style="font-size:12px;color:var(--sz-text-muted);margin-top:4px;">ESG披露指引·绿色金融·碳市场规则</div>
+      </div>
+    </div>
+
+    <div class="card" style="padding:40px;text-align:center;">
+      <div style="font-size:48px;margin-bottom:16px;">🏗️</div>
+      <div style="font-size:18px;font-weight:600;color:var(--sz-green-dark);">政策库正在建设中</div>
+      <p style="color:var(--sz-text-muted);font-size:14px;margin:12px 0;">分类政策文件库、AI政策解读助手、政策时间线追踪等功能即将上线。</p>
+      <div style="display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin-top:20px;">
+        <span class="btn-sz btn-sz-primary" style="opacity:0.6;">即将开放</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="footer-sz">
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <svg width="24" height="24" viewBox="0 0 40 40" fill="none">
+        <path d="M20 4C12 4 5 10 5 18C5 26 10 32 18 36L20 38L22 36C30 32 35 26 35 18C35 10 28 4 20 4Z" fill="#1a7a3a" opacity="0.15"/>
+        <path d="M14 16L20 12L26 16V24L20 28L14 24V16Z" stroke="#1a7a3a" stroke-width="1.5" fill="none" stroke-linejoin="round"/>
+      </svg>
+      <span>顺其自然</span>
+    </div>
+    <div>© 2026 牛智楷 · 广州万物牵科技</div>
+  </div>
+</div>
+
+<script>
+document.getElementById('navToggle').addEventListener('click', function(){
+  document.querySelector('.nav-links').classList.toggle('open');
+});
+</script>
+</body>
+</html>
