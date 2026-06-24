@@ -64,7 +64,7 @@
     <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:16px;">
       <div>
         <h1 style="font-size:24px;font-weight:700;color:var(--sz-green-dark);margin:0;">政策解读</h1>
-        <p style="color:var(--sz-text-muted);font-size:14px;margin:4px 0 0;">双碳·节能·ESG 政策文件库与解读框架</p>
+        <p style="color:var(--sz-text-muted);font-size:14px;margin:4px 0 0;">双碳·节能·ESG·零碳园区 政策文件库与解读框架</p>
       </div>
       <div style="display:flex;gap:8px;">
         <a href="https://www.gov.cn/zhengce/" target="_blank" class="btn-sz btn-sz-outline btn-sz-sm">国务院政策库 ↗</a>
@@ -117,6 +117,7 @@
       <button class="policy-tab" onclick="switchTab('energy')">节能</button>
       <button class="policy-tab" onclick="switchTab('esg')">ESG</button>
       <button class="policy-tab" onclick="switchTab('industry')">行业</button>
+      <button class="policy-tab" onclick="switchTab('zerocarbon')">零碳园区</button>
     </div>
 
     <!-- 双碳 -->
@@ -274,6 +275,53 @@
     </div>
   </div>
 
+    <!-- 零碳园区 -->
+    <div class="policy-panel" id="panel-zerocarbon">
+      <div class="card-grid card-grid-2">
+        <div class="card doc-card">
+          <div class="doc-title">关于组织开展零碳园区建设工作的通知（910号文）</div>
+          <div class="doc-dept">国家发改委 · <span class="doc-date">2024.09</span></div>
+          <div class="doc-keywords"><span class="doc-kw key">零碳园区</span><span class="doc-kw">申报建设</span><span class="doc-kw">评价指标</span></div>
+        </div>
+        <div class="card doc-card">
+          <div class="doc-title">零碳园区评价技术规范 T/CECA-G 0344</div>
+          <div class="doc-dept">中国节能协会 · <span class="doc-date">2025</span></div>
+          <div class="doc-keywords"><span class="doc-kw key">团体标准</span><span class="doc-kw">评价体系</span><span class="doc-kw">核算方法</span></div>
+        </div>
+        <div class="card doc-card">
+          <div class="doc-title">广东省零碳园区建设方案</div>
+          <div class="doc-dept">广东省发改委 · <span class="doc-date">2024</span></div>
+          <div class="doc-keywords"><span class="doc-kw key">省级方案</span><span class="doc-kw">20项指标</span><span class="doc-kw">粤港澳大湾区</span></div>
+        </div>
+        <div class="card doc-card">
+          <div class="doc-title">国家级零碳园区评价指标（6项硬性标准）</div>
+          <div class="doc-dept">国家发改委 · <span class="doc-date">2024.09</span></div>
+          <div class="doc-keywords"><span class="doc-kw key">能耗</span><span class="doc-kw">碳排放</span><span class="doc-kw">可再生能源</span><span class="doc-kw">水资源</span></div>
+        </div>
+        <div class="card doc-card">
+          <div class="doc-title">近零能耗建筑技术标准 GB/T 51350</div>
+          <div class="doc-dept">住建部 · <span class="doc-date">2019</span></div>
+          <div class="doc-keywords"><span class="doc-kw">近零能耗</span><span class="doc-kw">建筑节能</span><span class="doc-kw">国标</span></div>
+        </div>
+        <div class="card doc-card">
+          <div class="doc-title">绿色校园评价标准 T/CABEE 053</div>
+          <div class="doc-dept">中国建筑节能协会 · <span class="doc-date">2023</span></div>
+          <div class="doc-keywords"><span class="doc-kw">绿色校园</span><span class="doc-kw">零碳校园</span><span class="doc-kw">评价体系</span></div>
+        </div>
+        <div class="card doc-card">
+          <div class="doc-title">零碳校园建设技术导则 T/CABEE 128</div>
+          <div class="doc-dept">中国建筑节能协会 · <span class="doc-date">2026</span></div>
+          <div class="doc-keywords"><span class="doc-kw key">零碳校园</span><span class="doc-kw">建设导则</span><span class="doc-kw">分布式光伏</span></div>
+        </div>
+        <div class="card doc-card">
+          <div class="doc-title">绿色建筑评价标准 GB/T 50378</div>
+          <div class="doc-dept">住建部 · <span class="doc-date">2019（2024修订）</span></div>
+          <div class="doc-keywords"><span class="doc-kw">绿色建筑</span><span class="doc-kw">三星认证</span><span class="doc-kw">碳排放计算</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- ===== 政策时间线 ===== -->
   <div class="section-block">
     <div class="section-title">关键节点</div>
@@ -304,6 +352,11 @@
         <div class="tl-desc">钢铁·水泥·铝冶炼正式纳入，覆盖排放量超80亿吨</div>
       </div>
       <div class="timeline-item">
+        <div class="tl-year">2024.09</div>
+        <div class="tl-title">国家发改委发布零碳园区910号文</div>
+        <div class="tl-desc">明确零碳园区建设要求、6项硬性评价指标，启动全国申报</div>
+      </div>
+      <div class="timeline-item">
         <div class="tl-year">2026</div>
         <div class="tl-title">"十五五"碳双控全面实施</div>
         <div class="tl-desc">从能耗双控转向碳排放双控，考核体系重大变革</div>
@@ -317,12 +370,20 @@
     <div class="card-grid card-grid-2">
       <a href="https://299ae360d57e45b68a389bc69d54ecd1.app.codebuddy.work" target="_blank" class="card related-link">
         <div class="rl-icon" style="background:#e8f5e9;color:#1a7a3a;">🔌</div>
-        <div><div style="font-size:14px;font-weight:600;">节能降碳诊断平台</div><div style="font-size:12px;color:var(--sz-text-muted);">企业节能诊断+政策匹配引擎</div></div>
+        <div><div style="font-size:14px;font-weight:600;">节能降碳诊断平台</div><div style="font-size:12px;color:var(--sz-text-muted);">      企业节能诊断+政策匹配引擎</div></div>
       </a>
       <a href="https://747e89cda7d442a397b4846f943a39af.app.codebuddy.work" target="_blank" class="card related-link">
         <div class="rl-icon" style="background:#e3f2fd;color:#1565c0;">📊</div>
         <div><div style="font-size:14px;font-weight:600;">企业ESG诊断工具</div><div style="font-size:12px;color:var(--sz-text-muted);">ESG评估+信息披露+政策合规检查</div></div>
       </a>
+      <div class="card related-link">
+        <div class="rl-icon" style="background:#fff3e0;color:#e65100;">📐</div>
+        <div><div style="font-size:14px;font-weight:600;">零碳园区摸排系统</div><div style="font-size:12px;color:var(--sz-text-muted);">5大维度摸排+国标省标双对标</div></div>
+      </div>
+      <div class="card related-link">
+        <div class="rl-icon" style="background:#fce4ec;color:#c62828;">🏫</div>
+        <div><div style="font-size:14px;font-weight:600;">中大零碳校园方案</div><div style="font-size:12px;color:var(--sz-text-muted);">数字孪生驾驶舱+改造方案</div></div>
+      </div>
     </div>
   </div>
 
