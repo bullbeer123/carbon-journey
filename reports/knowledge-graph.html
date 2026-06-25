@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>双碳知识库图谱 | 2026年中国节能降碳政策全景</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+    background: #f8f9fa; color: #2c2c2a; overflow-x: hidden;
+  }
+  header {
+    text-align: center; padding: 32px 20px 20px; background: #fff;
+    border-bottom: 1px solid #e8e8e8;
+  }
+  header h1 { font-size: 22px; font-weight: 600; color: #1a1a1a; margin-bottom: 6px; }
+  header p { font-size: 13px; color: #888; }
+  .legend {
+    display: flex; justify-content: center; flex-wrap: wrap; gap: 16px;
+    padding: 12px 20px; background: #fff; border-bottom: 1px solid #eee;
+  }
+  .legend-item { display: flex; align-items: center; gap: 6px; font-size: 12px; color: #555; }
+  .legend-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+  .legend-dot.policy { background: #7c3aed; }
+  .legend-dot.concept { background: #f59e0b; }
+  .legend-dot.finance { background: #3b82f6; }
+  .legend-dot.analysis { background: #10b981; }
+  .legend-dot.entity { background: #6b7280; }
+  #chart { width: 100%; height: calc(100vh - 140px); min-height: 500px; cursor: grab; }
+  #chart:active { cursor: grabbing; }
+  .node circle { stroke-width: 1.5px; transition: stroke-width 0.15s, r 0.15s; }
+  .node:hover circle { stroke-width: 3px; }
+  .node text { font-size: 10px; pointer-events: none; user-select: none; }
+  .link { stroke-opacity: 0.25; transition: stroke-opacity 0.15s; }
+  .link:hover { stroke-opacity: 0.6; }
+  .tooltip {
+    position: fixed; pointer-events: none; opacity: 0;
+    background: #fff; border: 1px solid #ddd; border-radius: 8px;
+    padding: 10px 14px; font-size: 12px; max-width: 260px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.1); z-index: 100;
+    transition: opacity 0.15s;
+  }
+  .tooltip.show { opacity: 1; }
+  .tooltip .title { font-weight: 600; font-size: 13px; color: #1a1a1a; margin-bottom: 4px; }
+  .tooltip .cat { font-size: 10px; color: #999; margin-bottom: 4px; }
+  .tooltip .desc { font-size: 11px; color: #555; line-height: 1.5; }
+  .tooltip .tag { display: inline-block; background: #f0f0f0; padding: 1px 6px; border-radius: 3px; font-size: 10px; margin: 2px 2px 0 0; }
+  footer {
+    text-align: center; padding: 12px; font-size: 11px; color: #bbb;
+    border-top: 1px solid #eee; background: #fff;
+  }
+  @media (max-width: 640px) {
+    header h1 { font-size: 18px; }
+    .legend { gap: 10px; }
+    .legend-item { font-size: 11px; }
+    #chart { height: 60vh; min-height: 400px; }
+  }
+  .nav-bar { background: #fff; border-bottom: 1px solid #e0e3e0; padding: 0 20px; display: flex; align-items: center; justify-content: space-between; height: 44px; }
+  .nav-bar a { text-decoration: none; font-size: 13px; color: #555; font-weight: 500; }
+  .nav-bar a:hover { color: #1a7a3a; }
+</style>
+</head>
+<body>
+<div class="nav-bar">
+  <a href="../index.html">← 顺其自然</a>
+  <a href="../reports.html" style="color:#1a7a3a;">报告中心</a>
+</div>
+<header>
+  <h1>2026年中国节能降碳政策知识图谱</h1>
+  <p>19 个节点 · 50+ 条引用关系 · 复利增长的知识底座</p>
+</header>
+<div class="legend">
+  <div class="legend-item"><span class="legend-dot policy"></span>核心政策</div>
+  <div class="legend-item"><span class="legend-dot concept"></span>业务概念</div>
+  <div class="legend-item"><span class="legend-dot finance"></span>融资工具</div>
+  <div class="legend-item"><span class="legend-dot analysis"></span>综合分析</div>
+  <div class="legend-item"><span class="legend-dot entity"></span>组织/实体</div>
+</div>
+<svg id="chart"></svg>
+<div class="tooltip" id="tooltip"></div>
+<footer>
+  数据源：13份政策文件/研究报告 · 编译时间：2026-06-25 · 基于 Andrej Karpathy LLM Wiki 方法论
+</footer>
+
+<script src="https://d3js.org/d3.v7.min.js"></script>
+<script>
+(function() {
+  if (typeof d3 === 'undefined') {
+    document.getElementById('chart').innerHTML = '<text x="50%" y="50%" fill="#999" font-size="14" text-anchor="middle">加载 D3.js 中，请刷新页面...</text>';
+    return;
+  }
+
+  var nodes = [
+    { id: "policy-gf12", label: "国发〔2024〕12号", sub: "行动方案", cat: "policy", r: 16,
+      desc: "国务院首个跨部门节能降碳行动方案，十大领域量化目标", tags: ["2024-2025", "年度节能5000万吨标煤"] },
+    { id: "policy-698", label: "发改环资〔2026〕698号", sub: "三年攻坚行动", cat: "policy", r: 16,
+      desc: "五部门联合，9大高耗能行业\"标杆提升+基准清零\"三年攻坚", tags: ["2026-2028", "撬动1.2-1.5万亿"] },
+    { id: "policy-khbf", label: "双碳综合评价考核办法", sub: "碳指标纳入党政考核", cat: "policy", r: 15,
+      desc: "中办国办印发，优秀/合格/不合格三等评价，与干部任用挂钩", tags: ["2026.04", "十五五碳强度降65%"] },
+    { id: "policy-42", label: "发改环资〔2026〕42号", sub: "零碳工厂指导意见", cat: "policy", r: 15,
+      desc: "发改委+工信部联合，首个国家级零碳工厂系统性指导文件", tags: ["2026", "五项重点任务"] },
+    { id: "policy-zybg", label: "中办国办节能降碳意见", sub: "顶层路线图", cat: "policy", r: 14,
+      desc: "最高层级政策，首次提出\"以绿制绿\"零碳园区模式", tags: ["2026.04", "统筹节能降碳与能源安全"] },
+
+    { id: "concept-zero-factory", label: "零碳工厂", sub: "光储+微电网", cat: "concept", r: 14,
+      desc: "单一生产单位净零碳排放，光伏+储能+微电网+碳资产", tags: ["核心业务"] },
+    { id: "concept-zero-park", label: "零碳园区", sub: "52个国家级名单", cat: "concept", r: 13,
+      desc: "多主体集合净零碳排放，光储充+微电网+虚拟电厂", tags: ["以绿制绿"] },
+    { id: "concept-coal", label: "火电节能降碳改造", sub: "三改联动", cat: "concept", r: 14,
+      desc: "煤电行业系统性低碳转型，市场800-1500亿元", tags: ["节能降碳", "灵活性", "供热"] },
+    { id: "concept-benchmark", label: "能效标杆水平", sub: "三级标准", cat: "concept", r: 12,
+      desc: "高耗能行业能效标杆/基准/低于基准分级管理", tags: ["698号文核心工具"] },
+    { id: "concept-renewable", label: "可再生能源消纳权重", sub: "18.9%→25%", cat: "concept", r: 13,
+      desc: "各省绿电消纳最低比例强制目标，绿证为基本凭证", tags: ["法律+行政约束"] },
+    { id: "concept-accounting", label: "非化石能源电力核算", sub: "绿证+绿电+碳排", cat: "concept", r: 12,
+      desc: "物理/交易/分摊三级认定，衔接三大核算体系", tags: ["零碳核算基础"] },
+    { id: "concept-equipment", label: "节能装备高质量发展", sub: "电机35%·变压器75%", cat: "concept", r: 13,
+      desc: "2026-2028四大主攻品类，新增占比目标", tags: ["设备更新", "以旧换新"] },
+    { id: "concept-cea", label: "CEA", sub: "≈84.91元/吨", cat: "concept", r: 12,
+      desc: "中国碳排放配额，碳市场基础交易品种", tags: ["碳市场"] },
+    { id: "concept-cbam", label: "CBAM", sub: "欧盟碳关税", cat: "concept", r: 11,
+      desc: "2026全面开征，与CEA价差5-8倍", tags: ["出口合规"] },
+
+    { id: "finance-carbon", label: "碳减排支持工具", sub: "8000亿/年·1.25%", cat: "finance", r: 14,
+      desc: "央行低息再贷款，2026年扩容纳入节能改造领域", tags: ["碳金融", "融资"] },
+    { id: "finance-loan", label: "设备更新贷款贴息", sub: "1.5pp·26家银行", cat: "finance", r: 13,
+      desc: "本金贴息1.5个百分点，2年期，覆盖20+领域", tags: ["设备更新", "零碳工厂融资"] },
+
+    { id: "analysis-compare", label: "三大政策对比", sub: "目标→落地→验证", cat: "analysis", r: 12,
+      desc: "国发12号 vs 698号 vs 考核办法的三维对比分析", tags: ["综合分析"] },
+    { id: "analysis-landscape", label: "政策全景+业务机会", sub: "五大趋势·四线机会", cat: "analysis", r: 13,
+      desc: "2026年中国节能降碳政策全景与四线业务机会映射", tags: ["战略决策"] },
+
+    { id: "entity-ndrc", label: "国家发展改革委", sub: "核心牵头部门", cat: "entity", r: 12,
+      desc: "双碳政策核心牵头部门", tags: ["政府机构"] }
+  ];
+
+  var links = [
+    { source: "policy-gf12", target: "policy-khbf" },
+    { source: "policy-gf12", target: "policy-zybg" },
+    { source: "policy-khbf", target: "policy-zybg" },
+    { source: "policy-gf12", target: "policy-698" },
+    { source: "policy-gf12", target: "policy-42" },
+    { source: "policy-khbf", target: "policy-698" },
+    { source: "policy-zybg", target: "policy-698" },
+    { source: "policy-zybg", target: "concept-zero-park" },
+
+    { source: "policy-698", target: "concept-coal" },
+    { source: "policy-698", target: "concept-benchmark" },
+    { source: "policy-698", target: "concept-equipment" },
+    { source: "policy-698", target: "finance-loan" },
+    { source: "policy-698", target: "analysis-compare" },
+
+    { source: "policy-42", target: "concept-zero-factory" },
+    { source: "policy-42", target: "finance-carbon" },
+    { source: "policy-42", target: "concept-accounting" },
+    { source: "policy-42", target: "concept-renewable" },
+
+    { source: "concept-zero-factory", target: "concept-zero-park" },
+    { source: "concept-zero-factory", target: "concept-cea" },
+    { source: "concept-zero-factory", target: "concept-cbam" },
+    { source: "concept-zero-factory", target: "finance-carbon" },
+    { source: "concept-zero-factory", target: "finance-loan" },
+    { source: "concept-zero-factory", target: "concept-accounting" },
+    { source: "concept-zero-factory", target: "concept-equipment" },
+
+    { source: "concept-zero-park", target: "concept-renewable" },
+    { source: "concept-zero-park", target: "concept-cea" },
+
+    { source: "concept-coal", target: "concept-cea" },
+    { source: "concept-coal", target: "concept-benchmark" },
+
+    { source: "concept-renewable", target: "concept-accounting" },
+    { source: "concept-renewable", target: "policy-gf12" },
+
+    { source: "concept-cea", target: "concept-cbam" },
+    { source: "concept-cea", target: "finance-carbon" },
+    { source: "concept-cea", target: "policy-khbf" },
+
+    { source: "finance-carbon", target: "finance-loan" },
+    { source: "finance-carbon", target: "policy-gf12" },
+
+    { source: "finance-loan", target: "concept-equipment" },
+
+    { source: "analysis-compare", target: "analysis-landscape" },
+    { source: "analysis-landscape", target: "policy-698" },
+    { source: "analysis-landscape", target: "policy-42" },
+
+    { source: "policy-khbf", target: "entity-ndrc" },
+    { source: "entity-ndrc", target: "policy-gf12" },
+    { source: "entity-ndrc", target: "policy-698" }
+  ];
+
+  var catColors = {
+    policy: { fill: "#f5f3ff", stroke: "#7c3aed", text: "#5b21b6" },
+    concept: { fill: "#fffbeb", stroke: "#f59e0b", text: "#92400e" },
+    finance: { fill: "#eff6ff", stroke: "#3b82f6", text: "#1d4ed8" },
+    analysis: { fill: "#ecfdf5", stroke: "#10b981", text: "#047857" },
+    entity: { fill: "#f9fafb", stroke: "#6b7280", text: "#4b5563" }
+  };
+
+  var svg = d3.select("#chart");
+  var tooltip = d3.select("#tooltip");
+  var svgNode = svg.node();
+  var svgRect = svgNode.getBoundingClientRect();
+  var width = Math.max(svgRect.width, 400);
+  var height = Math.max(svgRect.height, 400);
+  svg.attr("viewBox", "0 0 " + width + " " + height);
+
+  var g = svg.append("g");
+
+  var simulation = d3.forceSimulation(nodes)
+    .force("link", d3.forceLink(links).id(function(d) { return d.id; }).distance(100))
+    .force("charge", d3.forceManyBody().strength(-350))
+    .force("center", d3.forceCenter(width / 2, height / 2))
+    .force("collision", d3.forceCollide().radius(function(d) { return d.r + 10; }));
+
+  var link = g.append("g")
+    .selectAll("line")
+    .data(links)
+    .join("line")
+    .attr("class", "link")
+    .attr("stroke", "#bbb")
+    .attr("stroke-width", 1);
+
+  var node = g.append("g")
+    .selectAll("g")
+    .data(nodes)
+    .join("g")
+    .attr("class", "node")
+    .call(d3.drag()
+      .on("start", dragstarted)
+      .on("drag", dragged)
+      .on("end", dragended));
+
+  node.append("circle")
+    .attr("r", function(d) { return d.r; })
+    .attr("fill", function(d) { return catColors[d.cat].fill; })
+    .attr("stroke", function(d) { return catColors[d.cat].stroke; });
+
+  node.append("text")
+    .attr("text-anchor", "middle")
+    .attr("dy", "-0.1em")
+    .attr("fill", function(d) { return catColors[d.cat].text; })
+    .attr("font-weight", "600")
+    .style("font-size", function(d) { return d.r >= 15 ? "11px" : "10px"; })
+    .text(function(d) { return d.label; });
+
+  node.append("text")
+    .attr("text-anchor", "middle")
+    .attr("dy", "1.1em")
+    .attr("fill", "#888")
+    .style("font-size", "9px")
+    .text(function(d) { return d.sub; });
+
+  node.on("mouseenter", function(event, d) {
+    tooltip.classed("show", true)
+      .html('<div class="title">' + d.label + '</div>' +
+            '<div class="cat">' + (d.cat === "policy" ? "核心政策" : d.cat === "concept" ? "业务概念" : d.cat === "finance" ? "融资工具" : d.cat === "analysis" ? "综合分析" : "组织实体") + '</div>' +
+            '<div class="desc">' + d.desc + '</div>' +
+            '<div>' + d.tags.map(function(t) { return '<span class="tag">' + t + '</span>'; }).join("") + '</div>');
+  });
+
+  node.on("mousemove", function(event) {
+    tooltip.style("left", (event.clientX + 14) + "px")
+           .style("top", (event.clientY - 10) + "px");
+  });
+
+  node.on("mouseleave", function() {
+    tooltip.classed("show", false);
+  });
+
+  simulation.on("tick", function() {
+    link
+      .attr("x1", function(d) { return d.source.x; })
+      .attr("y1", function(d) { return d.source.y; })
+      .attr("x2", function(d) { return d.target.x; })
+      .attr("y2", function(d) { return d.target.y; });
+
+    node.attr("transform", function(d) {
+      return "translate(" + d.x + "," + d.y + ")";
+    });
+  });
+
+  function dragstarted(event, d) {
+    if (!event.active) simulation.alphaTarget(0.3).restart();
+    d.fx = d.x; d.fy = d.y;
+  }
+  function dragged(event, d) {
+    d.fx = event.x; d.fy = event.y;
+  }
+  function dragended(event, d) {
+    if (!event.active) simulation.alphaTarget(0);
+    d.fx = null; d.fy = null;
+  }
+
+  window.addEventListener("resize", function() {
+    width = svg.node().clientWidth;
+    height = svg.node().clientHeight;
+    simulation.force("center", d3.forceCenter(width / 2, height / 2));
+    simulation.alpha(0.3).restart();
+  });
+})();
+</script>
+</body>
+</html>
