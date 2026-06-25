@@ -1,0 +1,1860 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>零碳园区 · 基础摸排系统</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=Noto+Sans+SC:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* ========== Design Tokens ========== */
+:root {
+  --green-50: oklch(96% 0.025 160);
+  --green-100: oklch(92% 0.04 158);
+  --green-200: oklch(85% 0.07 155);
+  --green-300: oklch(75% 0.10 152);
+  --green-400: oklch(65% 0.13 150);
+  --green-500: oklch(55% 0.15 148);
+  --green-600: oklch(45% 0.13 146);
+  --green-700: oklch(38% 0.11 144);
+  --green-800: oklch(30% 0.09 142);
+  --green-900: oklch(22% 0.07 140);
+
+  --emerald: oklch(60% 0.18 162);
+  --emerald-light: oklch(75% 0.12 160);
+
+  --neutral-50: oklch(98% 0.005 80);
+  --neutral-100: oklch(95% 0.007 80);
+  --neutral-200: oklch(90% 0.008 80);
+  --neutral-300: oklch(82% 0.01 80);
+  --neutral-400: oklch(65% 0.015 80);
+  --neutral-500: oklch(52% 0.02 80);
+  --neutral-600: oklch(42% 0.02 80);
+  --neutral-700: oklch(32% 0.02 80);
+  --neutral-800: oklch(22% 0.02 80);
+  --neutral-900: oklch(14% 0.02 80);
+
+  --accent-blue: oklch(58% 0.15 250);
+  --accent-amber: oklch(68% 0.14 80);
+  --accent-red: oklch(55% 0.18 25);
+  --accent-violet: oklch(55% 0.14 290);
+
+  --font-display: 'Instrument Sans', 'Noto Sans SC', system-ui, sans-serif;
+  --font-body: 'Noto Sans SC', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', 'SF Mono', monospace;
+
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --radius-xl: 20px;
+
+  --shadow-sm: 0 1px 2px oklch(0% 0 0 / 0.04), 0 1px 1px oklch(0% 0 0 / 0.02);
+  --shadow-md: 0 4px 12px oklch(0% 0 0 / 0.06), 0 2px 4px oklch(0% 0 0 / 0.04);
+  --shadow-lg: 0 12px 32px oklch(0% 0 0 / 0.08), 0 4px 8px oklch(0% 0 0 / 0.04);
+  --shadow-xl: 0 24px 60px oklch(0% 0 0 / 0.12);
+}
+
+/* ========== Reset ========== */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-size:16px;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
+body{font-family:var(--font-body);color:var(--neutral-800);background:var(--neutral-50);min-height:100vh;line-height:1.6}
+img{max-width:100%;display:block}
+a{color:var(--green-600);text-decoration:none;transition:color .2s}
+a:hover{color:var(--green-700)}
+
+/* ========== Layout ========== */
+.app-shell{display:flex;min-height:100vh}
+
+/* Sidebar */
+.sidebar{width:260px;background:var(--neutral-900);color:var(--neutral-100);display:flex;flex-direction:column;position:fixed;top:0;left:0;height:100vh;z-index:100;transition:transform .3s ease}
+.sidebar-brand{padding:28px 24px 20px;border-bottom:1px solid oklch(100% 0 0 / 0.06)}
+.sidebar-logo{display:flex;align-items:center;gap:10px;margin-bottom:4px}
+.sidebar-logo-icon{width:32px;height:32px;display:flex;align-items:center;justify-content:center}
+.sidebar-logo-text{font-family:var(--font-display);font-size:18px;font-weight:700;color:#fff;letter-spacing:-0.3px}
+.sidebar-logo-sub{font-size:11px;color:var(--neutral-400);font-weight:400;letter-spacing:1px;text-transform:uppercase}
+.sidebar-nav{padding:16px 12px;flex:1;overflow-y:auto}
+.nav-section{margin-bottom:20px}
+.nav-section-title{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:1.2px;color:var(--neutral-500);padding:0 12px;margin-bottom:6px}
+.nav-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:var(--radius-md);font-size:14px;color:var(--neutral-300);cursor:pointer;transition:all .15s ease;position:relative;font-weight:450}
+.nav-item:hover{background:oklch(100% 0 0 / 0.06);color:#fff}
+.nav-item.active{background:oklch(55% 0.15 148 / 0.15);color:var(--emerald-light);font-weight:500}
+.nav-item.active::before{content:'';position:absolute;left:0;top:8px;bottom:8px;width:3px;background:var(--emerald);border-radius:0 3px 3px 0}
+.nav-item .nav-icon{width:20px;height:20px;flex-shrink:0;opacity:0.7}
+.nav-item.active .nav-icon{opacity:1}
+.nav-badge{font-size:11px;padding:1px 8px;border-radius:20px;background:oklch(100% 0 0 / 0.1);color:var(--neutral-400);margin-left:auto}
+.nav-item.active .nav-badge{background:oklch(55% 0.15 148 / 0.25);color:var(--emerald-light)}
+.sidebar-footer{padding:16px 20px;border-top:1px solid oklch(100% 0 0 / 0.06)}
+.sidebar-user{display:flex;align-items:center;gap:10px}
+.sidebar-avatar{width:32px;height:32px;border-radius:50%;background:var(--emerald);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:600;color:#fff}
+.sidebar-user-info{flex:1;min-width:0}
+.sidebar-user-name{font-size:13px;font-weight:500;color:var(--neutral-200)}
+.sidebar-user-role{font-size:11px;color:var(--neutral-500)}
+
+/* Main Content */
+.main-content{margin-left:260px;flex:1;min-width:0}
+.top-bar{position:sticky;top:0;z-index:50;background:oklch(98% 0.005 80 / 0.85);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--neutral-200);padding:0 40px;height:64px;display:flex;align-items:center;justify-content:space-between}
+.top-bar-left{display:flex;align-items:center;gap:16px}
+.top-bar-title{font-size:15px;font-weight:600;color:var(--neutral-800)}
+.top-bar-breadcrumb{font-size:12px;color:var(--neutral-400);display:flex;align-items:center;gap:6px}
+.top-bar-breadcrumb span{color:var(--neutral-600)}
+.top-bar-right{display:flex;align-items:center;gap:12px}
+.top-bar-btn{width:36px;height:36px;border-radius:50%;border:1px solid var(--neutral-200);background:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .15s ease}
+.top-bar-btn:hover{background:var(--neutral-100);border-color:var(--neutral-300)}
+.top-bar-date{font-size:12px;color:var(--neutral-500);padding:6px 14px;background:var(--neutral-100);border-radius:20px}
+
+.page-content{padding:32px 40px 60px}
+.page{display:none;animation:pageIn .35s ease}
+.page.active{display:block}
+@keyframes pageIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+
+/* ========== Components ========== */
+
+/* Section Headers */
+.section-header{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:28px}
+.section-header-left{}
+.section-title{font-family:var(--font-display);font-size:22px;font-weight:700;color:var(--neutral-900);letter-spacing:-0.3px;line-height:1.3}
+.section-subtitle{font-size:14px;color:var(--neutral-500);margin-top:4px}
+.section-header-right{display:flex;gap:8px;align-items:center}
+
+/* Stats Row */
+.stats-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:16px;margin-bottom:32px}
+.stat-card{background:#fff;border-radius:var(--radius-lg);padding:20px;box-shadow:var(--shadow-sm);border:1px solid var(--neutral-100);transition:all .2s ease;position:relative;overflow:hidden}
+.stat-card:hover{box-shadow:var(--shadow-md);transform:translateY(-1px)}
+.stat-card::after{content:'';position:absolute;top:0;left:0;right:0;height:3px}
+.stat-card.green::after{background:var(--green-500)}
+.stat-card.blue::after{background:var(--accent-blue)}
+.stat-card.amber::after{background:var(--accent-amber)}
+.stat-card.violet::after{background:var(--accent-violet)}
+.stat-card.red::after{background:var(--accent-red)}
+.stat-value{font-family:var(--font-display);font-size:28px;font-weight:700;color:var(--neutral-900);letter-spacing:-0.5px;line-height:1.1}
+.stat-label{font-size:12px;color:var(--neutral-500);margin-top:2px;font-weight:450}
+.stat-change{font-size:11px;margin-top:4px;font-weight:500;display:inline-flex;align-items:center;gap:3px}
+.stat-change.up{color:var(--accent-red)}
+.stat-change.down{color:var(--green-600)}
+
+/* Content Cards */
+.content-card{background:#fff;border-radius:var(--radius-xl);border:1px solid var(--neutral-100);box-shadow:var(--shadow-sm);overflow:hidden;margin-bottom:20px;transition:box-shadow .2s}
+.content-card:hover{box-shadow:var(--shadow-md)}
+.card-head{padding:20px 24px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--neutral-100)}
+.card-head-left{display:flex;align-items:center;gap:10px}
+.card-icon{width:32px;height:32px;border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;font-size:16px}
+.card-icon.green-bg{background:var(--green-100)}
+.card-icon.blue-bg{background:oklch(92% 0.05 250)}
+.card-icon.amber-bg{background:oklch(92% 0.06 80)}
+.card-icon.violet-bg{background:oklch(92% 0.05 290)}
+.card-icon.red-bg{background:oklch(92% 0.06 25)}
+.card-title{font-size:15px;font-weight:600;color:var(--neutral-800)}
+.card-subtitle{font-size:12px;color:var(--neutral-400)}
+.card-body{padding:20px 24px}
+.card-action{padding:6px 16px;border-radius:var(--radius-sm);font-size:13px;font-weight:500;border:1px solid var(--neutral-200);background:#fff;color:var(--neutral-600);cursor:pointer;transition:all .15s ease}
+.card-action:hover{background:var(--neutral-50);border-color:var(--green-300);color:var(--green-700)}
+
+/* Grid Layouts */
+.form-2col{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.form-3col{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px}
+@media(max-width:768px){.form-2col,.form-3col{grid-template-columns:1fr}}
+
+/* Form Elements */
+.form-group{margin-bottom:16px}
+.form-label{display:block;font-size:12px;font-weight:550;color:var(--neutral-700);margin-bottom:5px;letter-spacing:0.2px}
+.form-label .req{color:var(--accent-red);margin-left:2px}
+.form-input,.form-select,.form-textarea{width:100%;padding:9px 14px;border:1.5px solid var(--neutral-200);border-radius:var(--radius-md);font-size:14px;color:var(--neutral-800);background:#fff;transition:all .15s ease;font-family:var(--font-body)}
+.form-input:focus,.form-select:focus,.form-textarea:focus{outline:none;border-color:var(--green-400);box-shadow:0 0 0 3px oklch(55% 0.15 148 / 0.1)}
+.form-input::placeholder{color:var(--neutral-400)}
+.form-textarea{min-height:72px;resize:vertical;line-height:1.5}
+.form-hint{font-size:11px;color:var(--neutral-400);margin-top:4px}
+
+/* Buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:9px 22px;border-radius:var(--radius-md);font-size:14px;font-weight:500;border:none;cursor:pointer;transition:all .15s ease;font-family:var(--font-body);white-space:nowrap}
+.btn-primary{background:var(--green-600);color:#fff}
+.btn-primary:hover{background:var(--green-700);box-shadow:var(--shadow-md);transform:translateY(-1px)}
+.btn-primary:active{transform:translateY(0);box-shadow:none}
+.btn-secondary{background:var(--neutral-100);color:var(--neutral-700)}
+.btn-secondary:hover{background:var(--neutral-200)}
+.btn-outline{background:#fff;border:1.5px solid var(--neutral-200);color:var(--neutral-700)}
+.btn-outline:hover{border-color:var(--green-400);color:var(--green-700);background:var(--green-50)}
+.btn-ghost{background:transparent;color:var(--neutral-600);padding:9px 12px}
+.btn-ghost:hover{background:var(--neutral-100);color:var(--neutral-800)}
+.btn-sm{padding:6px 14px;font-size:12px;border-radius:var(--radius-sm)}
+.btn-icon{width:36px;height:36px;padding:0;border-radius:var(--radius-sm)}
+
+/* Tags & Badges */
+.tag{display:inline-flex;align-items:center;padding:2px 10px;border-radius:20px;font-size:11px;font-weight:550;gap:4px}
+.tag-green{background:var(--green-100);color:var(--green-700)}
+.tag-blue{background:oklch(92% 0.05 250);color:oklch(40% 0.12 250)}
+.tag-amber{background:oklch(92% 0.06 80);color:oklch(45% 0.12 80)}
+.tag-red{background:oklch(92% 0.06 25);color:oklch(42% 0.15 25)}
+.tag-gray{background:var(--neutral-100);color:var(--neutral-600)}
+
+/* Alert */
+.alert{display:flex;align-items:flex-start;gap:10px;padding:14px 18px;border-radius:var(--radius-md);font-size:13px;line-height:1.5;margin-bottom:16px}
+.alert-info{background:oklch(94% 0.04 250);color:oklch(35% 0.12 250);border:1px solid oklch(85% 0.06 250)}
+.alert-success{background:var(--green-50);color:var(--green-800);border:1px solid var(--green-200)}
+.alert-warning{background:oklch(94% 0.06 80);color:oklch(40% 0.12 80);border:1px solid oklch(85% 0.08 80)}
+
+/* Survey Rows (data entry layout) */
+.survey-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px}
+.survey-item{background:var(--neutral-50);border-radius:var(--radius-md);padding:14px 16px;border:1px solid var(--neutral-100);transition:all .15s ease}
+.survey-item:hover{border-color:var(--green-200);background:#fff}
+.survey-item-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.survey-item-name{font-size:13px;font-weight:500;color:var(--neutral-700);display:flex;align-items:center;gap:6px}
+.survey-item-unit{font-size:11px;color:var(--neutral-400);padding:1px 6px;background:var(--neutral-100);border-radius:4px}
+.survey-input{width:100%;padding:8px 12px;border:1px solid var(--neutral-200);border-radius:var(--radius-sm);font-size:14px;color:var(--neutral-800);background:#fff;transition:all .15s ease;font-family:var(--font-body)}
+.survey-input:focus{outline:none;border-color:var(--green-400);box-shadow:0 0 0 2px oklch(55% 0.15 148 / 0.08);background:var(--green-50)}
+.survey-input::placeholder{color:var(--neutral-300)}
+
+/* Progress & Status */
+.progress-bar{height:5px;background:var(--neutral-100);border-radius:4px;overflow:hidden}
+.progress-fill{height:100%;border-radius:4px;transition:width .6s cubic-bezier(0.22,1,0.36,1)}
+.progress-fill.green{background:var(--green-500)}
+.progress-fill.blue{background:var(--accent-blue)}
+.progress-fill.amber{background:var(--accent-amber)}
+
+/* Tabs */
+.tab-bar{display:flex;gap:2px;background:var(--neutral-100);padding:3px;border-radius:var(--radius-md);margin-bottom:24px;width:fit-content}
+.tab-btn{padding:8px 18px;border:none;background:transparent;border-radius:var(--radius-sm);font-size:13px;font-weight:500;color:var(--neutral-500);cursor:pointer;transition:all .15s ease;font-family:var(--font-body);white-space:nowrap}
+.tab-btn:hover{color:var(--neutral-700)}
+.tab-btn.active{background:#fff;color:var(--neutral-800);box-shadow:var(--shadow-sm)}
+.tab-panel{display:none;animation:pageIn .3s ease}
+.tab-panel.active{display:block}
+
+/* ========== Dashboard Page ========== */
+.hero-card{background:linear-gradient(135deg,oklch(92% 0.06 158) 0%,oklch(88% 0.08 155) 50%,oklch(85% 0.07 250) 100%);border-radius:var(--radius-xl);padding:36px;margin-bottom:28px;position:relative;overflow:hidden}
+.hero-card::before{content:'';position:absolute;top:-60px;right:-60px;width:200px;height:200px;border-radius:50%;background:oklch(100% 0 0 / 0.08)}
+.hero-card::after{content:'';position:absolute;bottom:-40px;left:60%;width:160px;height:160px;border-radius:50%;background:oklch(100% 0 0 / 0.05)}
+.hero-content{position:relative;z-index:1}
+.hero-title{font-family:var(--font-display);font-size:28px;font-weight:800;color:var(--green-900);letter-spacing:-0.5px;line-height:1.2}
+.hero-desc{font-size:14px;color:var(--green-700);margin-top:6px;max-width:520px;line-height:1.6}
+.hero-badges{display:flex;gap:10px;margin-top:16px;flex-wrap:wrap}
+.hero-badge{display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border-radius:20px;font-size:12px;font-weight:500;background:oklch(100% 0 0 / 0.2);backdrop-filter:blur(4px);color:var(--green-800)}
+
+/* Module Cards */
+.module-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;margin-bottom:28px}
+.module-card{background:#fff;border-radius:var(--radius-lg);padding:24px;box-shadow:var(--shadow-sm);border:1px solid var(--neutral-100);cursor:pointer;transition:all .25s ease;position:relative}
+.module-card:hover{box-shadow:var(--shadow-lg);transform:translateY(-3px);border-color:var(--green-200)}
+.module-card-icon{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;margin-bottom:12px}
+.module-card-title{font-size:15px;font-weight:600;color:var(--neutral-800);margin-bottom:3px}
+.module-card-desc{font-size:12px;color:var(--neutral-500);line-height:1.5;margin-bottom:14px}
+.module-card .progress-bar{margin-bottom:6px}
+.module-card-status{font-size:11px;color:var(--neutral-400);display:flex;justify-content:space-between}
+
+/* KPI Dashboard Grid */
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:24px}
+.kpi-item{background:#fff;border-radius:var(--radius-md);padding:18px;border:1px solid var(--neutral-100);box-shadow:var(--shadow-sm);text-align:center;position:relative}
+.kpi-value{font-family:var(--font-display);font-size:24px;font-weight:700;color:var(--neutral-900);letter-spacing:-0.3px}
+.kpi-unit{font-size:12px;color:var(--neutral-400);font-weight:400}
+.kpi-label{font-size:11px;color:var(--neutral-500);margin-top:2px;font-weight:450}
+
+/* Chart placeholder */
+.chart-area{height:200px;display:flex;align-items:flex-end;gap:6px;padding:16px 0 0}
+.chart-bar{flex:1;border-radius:4px 4px 0 0;min-height:4px;transition:height .4s cubic-bezier(0.22,1,0.36,1);position:relative}
+.chart-bar:hover{opacity:0.8}
+.chart-legend{display:flex;justify-content:space-between;font-size:11px;color:var(--neutral-400);margin-top:8px}
+
+/* ========== Mobile Menu ========== */
+.mobile-toggle{display:none;width:40px;height:40px;border:none;background:var(--neutral-100);border-radius:var(--radius-sm);cursor:pointer;align-items:center;justify-content:center}
+.mobile-toggle span{display:block;width:18px;height:2px;background:var(--neutral-600);border-radius:2px;position:relative;transition:all .2s}
+.mobile-toggle span::before,.mobile-toggle span::after{content:'';position:absolute;left:0;width:100%;height:2px;background:var(--neutral-600);border-radius:2px;transition:all .2s}
+.mobile-toggle span::before{top:-6px}
+.mobile-toggle span::after{top:6px}
+
+/* ========== Responsive ========== */
+@media(max-width:1024px){
+  .sidebar{transform:translateX(-100%)}
+  .sidebar.open{transform:translateX(0)}
+  .main-content{margin-left:0}
+  .page-content{padding:24px 20px 40px}
+  .top-bar{padding:0 20px}
+  .mobile-toggle{display:flex}
+  .stats-row{grid-template-columns:repeat(2,1fr)}
+  .hero-card{padding:24px}
+  .hero-title{font-size:22px}
+}
+@media(max-width:640px){
+  .stats-row{grid-template-columns:1fr}
+  .module-grid{grid-template-columns:1fr}
+  .survey-grid{grid-template-columns:1fr}
+  .section-header{flex-direction:column;align-items:flex-start;gap:12px}
+  .hero-card{padding:20px}
+  .top-bar-date{display:none}
+}
+
+/* Sidebar overlay */
+.sidebar-overlay{display:none;position:fixed;inset:0;background:oklch(0% 0 0 / 0.3);z-index:90}
+.sidebar-overlay.active{display:block}
+
+/* Score ring */
+.score-ring{width:100px;height:100px;position:relative;margin:0 auto 10px}
+.score-ring svg{transform:rotate(-90deg)}
+.score-ring-text{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-family:var(--font-display);font-size:26px;font-weight:700;color:var(--neutral-900)}
+
+/* Misc */
+.text-center{text-align:center}
+.text-sm{font-size:12px;color:var(--neutral-400)}
+.flex{display:flex}
+.flex-wrap{flex-wrap:wrap}
+.gap-8{gap:8px}
+.gap-12{gap:12px}
+.items-center{align-items:center}
+.justify-between{justify-content:space-between}
+.mt-8{margin-top:8px}
+.mb-12{margin-bottom:12px}
+.mb-16{margin-bottom:16px}
+.mb-24{margin-bottom:24px}
+</style>
+</head>
+<body>
+
+<div class="app-shell">
+  <!-- Sidebar Overlay -->
+  <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar(false)"></div>
+
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      <div class="sidebar-logo">
+        <div class="sidebar-logo-icon">
+          <svg viewBox="0 0 32 32" fill="none" width="32" height="32"><circle cx="16" cy="16" r="14" stroke="oklch(70% 0.12 152)" stroke-width="2"/><path d="M10 19c2-6 6-9 6-9s4 3 6 9c-2 4-6 5-6 5s-4-1-6-5z" fill="oklch(70% 0.12 152)"/><path d="M14 16l-2 2 3 3 5-6-2-1-3 4-1-2z" fill="#fff"/></svg>
+        </div>
+        <div>
+          <div class="sidebar-logo-text">零碳园区</div>
+          <div class="sidebar-logo-sub">零碳园区基础摸排系统</div>
+        </div>
+      </div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-section">
+        <div class="nav-section-title">总览</div>
+        <div class="nav-item active" data-page="dashboard" onclick="navigate(this)">
+          <span class="nav-icon"><svg viewBox="0 0 20 20" fill="none" width="20" height="20"><rect x="2" y="2" width="7" height="7" rx="1.5" fill="currentColor" opacity=".6"/><rect x="11" y="2" width="7" height="3" rx="1.5" fill="currentColor" opacity=".6"/><rect x="2" y="11" width="7" height="7" rx="1.5" fill="currentColor" opacity=".8"/><rect x="11" y="7" width="7" height="11" rx="1.5" fill="currentColor"/></svg></span>
+          评估看板
+          <span class="nav-badge" id="sidebarScore">--</span>
+        </div>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">数据摸排</div>
+        <div class="nav-item" data-page="energy" onclick="navigate(this)">
+          <span class="nav-icon"><svg viewBox="0 0 20 20" fill="none" width="20" height="20"><path d="M10 2L4 11h5l-1 7 7-10h-5l3-6h-3z" fill="currentColor"/></svg></span>
+          能源消费摸排
+          <span class="nav-badge" id="badgeEnergy">待填</span>
+        </div>
+        <div class="nav-item" data-page="carbon" onclick="navigate(this)">
+          <span class="nav-icon"><svg viewBox="0 0 20 20" fill="none" width="20" height="20"><circle cx="10" cy="10" r="8" fill="currentColor" opacity=".15"/><circle cx="10" cy="10" r="5" fill="currentColor" opacity=".5"/><circle cx="10" cy="10" r="2.5" fill="currentColor"/></svg></span>
+          碳排放摸排
+          <span class="nav-badge" id="badgeCarbon">待填</span>
+        </div>
+        <div class="nav-item" data-page="renewable" onclick="navigate(this)">
+          <span class="nav-icon"><svg viewBox="0 0 20 20" fill="none" width="20" height="20"><circle cx="10" cy="10" r="3" fill="currentColor"/><path d="M10 4V2M14.24 5.76l1.41-1.41M16 10h2M14.24 14.24l1.41 1.41M10 16v2M5.76 14.24l-1.41 1.41M4 10H2M5.76 5.76L4.35 4.35" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span>
+          风光资源摸排
+          <span class="nav-badge" id="badgeRenew">待填</span>
+        </div>
+        <div class="nav-item" data-page="water" onclick="navigate(this)">
+          <span class="nav-icon"><svg viewBox="0 0 20 20" fill="none" width="20" height="20"><path d="M10 3C8 7 5 9.5 5 12.5a5 5 0 0010 0C15 9.5 12 7 10 3z" fill="currentColor" opacity=".6"/></svg></span>
+          水资源摸排
+          <span class="nav-badge" id="badgeWater">待填</span>
+        </div>
+        <div class="nav-item" data-page="environment" onclick="navigate(this)">
+          <span class="nav-icon"><svg viewBox="0 0 20 20" fill="none" width="20" height="20"><path d="M3 14l3-3 3 3 5-5h3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="16.5" cy="5.5" r="1.5" fill="currentColor"/></svg></span>
+          环境要素摸排
+          <span class="nav-badge" id="badgeEnv">待填</span>
+        </div>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">评估管理</div>
+        <div class="nav-item" data-page="assessment" onclick="navigate(this)">
+          <span class="nav-icon"><svg viewBox="0 0 20 20" fill="none" width="20" height="20"><path d="M17 4l-7 7-3-3-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+          对标评估
+          <span class="nav-badge" id="badgeAssess">待评</span>
+        </div>
+        <div class="nav-item" data-page="standard" onclick="navigate(this)">
+          <span class="nav-icon"><svg viewBox="0 0 20 20" fill="none" width="20" height="20"><path d="M4 3h5l2 2h5a1 1 0 011 1v9a1 1 0 01-1 1H4a1 1 0 01-1-1V4a1 1 0 011-1z" stroke="currentColor" stroke-width="1.5"/><path d="M7 9l2 2 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+          标准对标
+          <span class="nav-badge" id="badgeStd">查看</span>
+        </div>
+        <div class="nav-item" data-page="report" onclick="navigate(this)">
+          <span class="nav-icon"><svg viewBox="0 0 20 20" fill="none" width="20" height="20"><path d="M4 3h12a1 1 0 011 1v12a1 1 0 01-1 1H4a1 1 0 01-1-1V4a1 1 0 011-1z" stroke="currentColor" stroke-width="1.5" rx="2"/><path d="M7 7h6M7 10h6M7 13h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span>
+          报告管理
+        </div>
+      </div>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="sidebar-user">
+        <div class="sidebar-avatar">K</div>
+        <div class="sidebar-user-info">
+          <div class="sidebar-user-name">柯工</div>
+          <div class="sidebar-user-role">碳中和咨询师</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main -->
+  <main class="main-content">
+    <header class="top-bar">
+      <div class="top-bar-left">
+        <button class="mobile-toggle" onclick="toggleSidebar(true)" id="menuBtn">
+          <span></span>
+        </button>
+        <div>
+          <div class="top-bar-title" id="pageTitle">评估看板</div>
+          <div class="top-bar-breadcrumb">零碳园区 / <span id="breadcrumbCurrent">Dashboard</span></div>
+        </div>
+      </div>
+      <div class="top-bar-right">
+        <span class="top-bar-date" id="dateDisplay"></span>
+        <button class="top-bar-btn" title="通知" onclick="alert('暂无新通知')">
+          <svg viewBox="0 0 20 20" fill="none" width="18" height="18"><path d="M10 2a6 6 0 00-6 6v3l-1 2h14l-1-2V8a6 6 0 00-6-6z" stroke="currentColor" stroke-width="1.5"/><path d="M7 15a3 3 0 006 0" stroke="currentColor" stroke-width="1.5"/></svg>
+        </button>
+        <button class="top-bar-btn" title="导出" onclick="exportData()">
+          <svg viewBox="0 0 20 20" fill="none" width="18" height="18"><path d="M10 2v12m0 0l-4-4m4 4l4-4M4 14v2a2 2 0 002 2h8a2 2 0 002-2v-2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <div class="page-content">
+      <!-- ====== DASHBOARD ====== -->
+      <div class="page active" id="page-dashboard">
+        <div class="hero-card">
+          <div class="hero-content">
+            <div class="hero-title">园区基础数据摸排看板</div>
+            <div class="hero-desc">依据发改环资〔2025〕910号文 · 零碳园区建设通知，系统开展园区能耗、碳排放、风光资源、水及环境等全要素数据收集与对标评估</div>
+            <div class="hero-badges">
+              <span class="hero-badge">📋 910号文 8大重点任务</span>
+              <span class="hero-badge">📊 附件3 建设指标体系</span>
+              <span class="hero-badge">🔄 附件4 碳排放核算方法</span>
+              <span class="hero-badge">✅ 国家级/广东省双标准对标</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="stats-row">
+          <div class="stat-card green"><div class="stat-value" id="dashProgress">0%</div><div class="stat-label">摸排完成度</div><div class="stat-change down">5维度 · <span id="dashFilled">0/0</span> 项已填</div></div>
+          <div class="stat-card blue"><div class="stat-value" id="dashEnergy">--</div><div class="stat-label">综合能耗 (万吨标煤)</div></div>
+          <div class="stat-card amber"><div class="stat-value" id="dashEmission">--</div><div class="stat-label">碳排放 (tCO₂e)</div></div>
+          <div class="stat-card violet"><div class="stat-value" id="dashRenew">--</div><div class="stat-label">可再生能源占比</div></div>
+          <div class="stat-card red"><div class="stat-value" id="dashAlert">0</div><div class="stat-label">待处理预警</div></div>
+        </div>
+
+        <div class="module-grid">
+          <div class="module-card" onclick="navigate(document.querySelector('[data-page=energy]'))">
+            <div class="module-card-icon" style="background:var(--green-100)">⚡</div>
+            <div class="module-card-title">能源消费摸排</div>
+            <div class="module-card-desc">电力、原煤、天然气、柴油、热力等全品种能源消费数据收集</div>
+            <div class="progress-bar"><div class="progress-fill green" id="progEnergy" style="width:0%"></div></div>
+            <div class="module-card-status"><span id="energyStatus">0项 · 待采集</span><span>→</span></div>
+          </div>
+          <div class="module-card" onclick="navigate(document.querySelector('[data-page=carbon]'))">
+            <div class="module-card-icon" style="background:oklch(92% 0.05 250)">🌫️</div>
+            <div class="module-card-title">碳排放摸排</div>
+            <div class="module-card-desc">范围1/2/3排放源识别、碳排放核算方法（试行）附件4</div>
+            <div class="progress-bar"><div class="progress-fill blue" id="progCarbon" style="width:0%"></div></div>
+            <div class="module-card-status"><span id="carbonStatus">0项 · 待采集</span><span>→</span></div>
+          </div>
+          <div class="module-card" onclick="navigate(document.querySelector('[data-page=renewable]'))">
+            <div class="module-card-icon" style="background:oklch(92% 0.06 80)">☀️</div>
+            <div class="module-card-title">风光资源摸排</div>
+            <div class="module-card-desc">太阳能辐射、风能资源、可开发容量、已有装机评估</div>
+            <div class="progress-bar"><div class="progress-fill amber" id="progRenew" style="width:0%"></div></div>
+            <div class="module-card-status"><span id="renewStatus">0项 · 待采集</span><span>→</span></div>
+          </div>
+          <div class="module-card" onclick="navigate(document.querySelector('[data-page=water]'))">
+            <div class="module-card-icon" style="background:oklch(92% 0.05 290)">💧</div>
+            <div class="module-card-title">水资源摸排</div>
+            <div class="module-card-desc">取水水源、用水结构、排水去向、水资源循环利用率</div>
+            <div class="progress-bar"><div class="progress-fill" id="progWater" style="width:0%;background:var(--accent-violet)"></div></div>
+            <div class="module-card-status"><span id="waterStatus">0项 · 待采集</span><span>→</span></div>
+          </div>
+          <div class="module-card" onclick="navigate(document.querySelector('[data-page=environment]'))">
+            <div class="module-card-icon" style="background:oklch(92% 0.06 25)">🌿</div>
+            <div class="module-card-title">环境要素摸排</div>
+            <div class="module-card-desc">固废、废水、废气、噪声、土壤等环境要素底数调查</div>
+            <div class="progress-bar"><div class="progress-fill" id="progEnv" style="width:0%;background:var(--accent-red)"></div></div>
+            <div class="module-card-status"><span id="envStatus">0项 · 待采集</span><span>→</span></div>
+          </div>
+        </div>
+
+        <!-- 910号文摘要 -->
+        <div class="content-card">
+          <div class="card-head"><div class="card-head-left"><div class="card-icon green-bg">📜</div><div><div class="card-title">910号文 · 零碳园区8大重点任务</div><div class="card-subtitle">发改环资〔2025〕910号 国家发展改革委等三部门</div></div></div></div>
+          <div class="card-body">
+            <div class="survey-grid" style="grid-template-columns:repeat(auto-fill,minmax(220px,1fr))">
+              <div class="survey-item" style="background:var(--green-50);border-color:var(--green-200)">
+                <div class="survey-item-header"><span class="survey-item-name">① 用能结构转型</span></div>
+                <span style="font-size:12px;color:var(--neutral-500)">可再生能源开发利用、绿电直连、绿证交易、氢电耦合</span>
+              </div>
+              <div class="survey-item" style="background:var(--green-50);border-color:var(--green-200)">
+                <div class="survey-item-header"><span class="survey-item-name">② 节能降碳</span></div>
+                <span style="font-size:12px;color:var(--neutral-500)">能效碳效诊断、落后产能淘汰、设备更新、极致能效</span>
+              </div>
+              <div class="survey-item">
+                <div class="survey-item-header"><span class="survey-item-name">③ 产业结构优化</span></div>
+                <span style="font-size:12px;color:var(--neutral-500)">低能耗高附加值产业、"以绿制绿"模式</span>
+              </div>
+              <div class="survey-item">
+                <div class="survey-item-header"><span class="survey-item-name">④ 资源节约集约</span></div>
+                <span style="font-size:12px;color:var(--neutral-500)">能量梯级利用、水资源循环、固废资源化</span>
+              </div>
+              <div class="survey-item">
+                <div class="survey-item-header"><span class="survey-item-name">⑤ 基础设施升级</span></div>
+                <span style="font-size:12px;color:var(--neutral-500)">超低能耗建筑、绿色交通、多能互补基础设施</span>
+              </div>
+              <div class="survey-item">
+                <div class="survey-item-header"><span class="survey-item-name">⑥ 先进技术应用</span></div>
+                <span style="font-size:12px;color:var(--neutral-500)">低碳零碳负碳技术、科技成果转化示范</span>
+              </div>
+              <div class="survey-item">
+                <div class="survey-item-header"><span class="survey-item-name">⑦ 能碳管理能力</span></div>
+                <span style="font-size:12px;color:var(--neutral-500)">能碳管理平台、负荷监控、碳排放核算</span>
+              </div>
+              <div class="survey-item">
+                <div class="survey-item-header"><span class="survey-item-name">⑧ 改革创新</span></div>
+                <span style="font-size:12px;color:var(--neutral-500)">虚拟电厂、电力市场参与、投融资模式创新</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ====== ENERGY SURVEY ====== -->
+      <div class="page" id="page-energy">
+        <div class="section-header">
+          <div class="section-header-left">
+            <div class="section-title">⚡ 能源消费摸排</div>
+            <div class="section-subtitle">采集园区全品种能源消费数据，计算综合能耗与强度指标</div>
+          </div>
+          <div class="section-header-right">
+            <button class="btn btn-primary" onclick="saveSurvey('energy')">💾 保存数据</button>
+          </div>
+        </div>
+
+        <div class="stats-row">
+          <div class="stat-card green"><div class="stat-value" id="energyTotalCalc">0</div><div class="stat-label">综合能耗 (万吨标煤)</div></div>
+          <div class="stat-card blue"><div class="stat-value" id="energyIntensityCalc">--</div><div class="stat-label">单位产值能耗 (tce/万元)</div></div>
+          <div class="stat-card amber"><div class="stat-value" id="renewRatioCalc">0%</div><div class="stat-label">可再生能源占比</div></div>
+        </div>
+
+        <div class="content-card">
+          <div class="card-head"><div class="card-head-left"><div class="card-icon green-bg">⚡</div><div><div class="card-title">化石能源消费</div><div class="card-subtitle">万元产值 GDP 数据辅助计算能耗强度</div></div></div></div>
+          <div class="card-body">
+            <div class="form-2col">
+              <div class="form-group"><label class="form-label">园区总产值 (万元) <span class="req">*</span></label><input class="form-input" id="energyGDP" type="number" step="0.01" placeholder="e.g. 100000" onchange="calcEnergy()"></div>
+              <div class="form-group"><label class="form-label">基准年度</label><input class="form-input" id="energyYear" type="number" value="2025" onchange="saveToStore()"></div>
+            </div>
+            <div class="survey-grid" style="grid-template-columns:repeat(auto-fill,minmax(240px,1fr))">
+              <div class="survey-item"><div class="survey-item-header"><span class="survey-item-name">电力消费量</span><span class="survey-item-unit">万 kWh</span></div><input class="survey-input" id="energyElec" type="number" step="0.01" placeholder="输入年度用电量" onchange="calcEnergy()"></div>
+              <div class="survey-item"><div class="survey-item-header"><span class="survey-item-name"># 其中：绿电消费量</span><span class="survey-item-unit">万 kWh</span></div><input class="survey-input" id="energyGreenElec" type="number" step="0.01" placeholder="绿电/可再生能源电力" onchange="calcEnergy()"></div>
+              <div class="survey-item"><div class="survey-item-header"><span class="survey-item-name">原煤消费量</span><span class="survey-item-unit">万吨</span></div><input class="survey-input" id="energyCoal" type="number" step="0.001" placeholder="年度原煤用量" onchange="calcEnergy()"></div>
+              <div class="survey-item"><div class="survey-item-header"><span class="survey-item-name">天然气消费量</span><span class="survey-item-unit">万 m³</span></div><input class="survey-input" id="energyGas" type="number" step="0.01" placeholder="年度天然气用量" onchange="calcEnergy()"></div>
+              <div class="survey-item"><div class="survey-item-header"><span class="survey-item-name">柴油消费量</span><span class="survey-item-unit">万吨</span></div><input class="survey-input" id="energyDiesel" type="number" step="0.001" placeholder="年度柴油用量" onchange="calcEnergy()"></div>
+              <div class="survey-item"><div class="survey-item-header"><span class="survey-item-name">汽油消费量</span><span class="survey-item-unit">万吨</span></div><input class="survey-input" id="energyGasoline" type="number" step="0.001" placeholder="年度汽油用量" onchange="calcEnergy()"></div>
+              <div class="survey-item"><div class="survey-item-header"><span class="survey-item-name">热力/蒸汽消费量</span><span class="survey-item-unit">万 GJ</span></div><input class="survey-input" id="energyHeat" type="number" step="0.01" placeholder="外购热力" onchange="calcEnergy()"></div>
+              <div class="survey-item"><div class="survey-item-header"><span class="survey-item-name">生物质消费量</span><span class="survey-item-unit">万吨</span></div><input class="survey-input" id="energyBiomass" type="number" step="0.001" placeholder="生物质燃料" onchange="calcEnergy()"></div>
+            </div>
+            <div class="form-hint mt-8">折标系数：1万kWh=1.229tce·1万m³天然气=13.3tce·1t原煤=0.7143tce·1t柴油=1.4571tce</div>
+          </div>
+        </div>
+
+        <div class="content-card">
+          <div class="card-head"><div class="card-head-left"><div class="card-icon green-bg">☀️</div><div><div class="card-title">可再生能源发电</div></div></div></div>
+          <div class="card-body">
+            <div class="survey-grid" style="grid-template-columns:repeat(auto-fill,minmax(240px,1fr))">
+              <div class="survey-item"><div class="survey-item-header"><span class="survey-item-name">光伏已装机容量</span><span class="survey-item-unit">MW</span></div><input class="survey-input" id="energyPV" type="number" step="0.01" placeholder="分布式/集中式光伏" onchange="calcEnergy()"></div>
+              <div class="survey-item"><div class="survey-item-header"><span class="survey-item-name">风电已装机容量</span><span class="survey-item-unit">MW</span></div><input class="survey-input" id="energyWind" type="number" step="0.01" placeholder="如有" onchange="calcEnergy()"></div>
+              <div class="survey-item"><div class="survey-item-header"><span class="survey-item-name">储能配置容量</span><span class="survey-item-unit">MWh</span></div><input class="survey-input" id="energyStorage" type="number" step="0.01" placeholder="电化学/抽水蓄能" onchange="calcEnergy()"></div>
+              <div class="survey-item"><div class="survey-item-header"><span class="survey-item-name">光伏年发电量</span><span class="survey-item-unit">万 kWh</span></div><input class="survey-input" id="energyPVGen" type="number" step="0.01" placeholder="年发电量" onchange="calcEnergy()"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ====== CARBON SURVEY ====== -->
+      <div class="page" id="page-carbon">
+        <div class="section-header">
+          <div class="section-header-left">
+            <div class="section-title">🌫️ 碳排放摸排</div>
+            <div class="section-subtitle">依据910号文附件4《零碳园区碳排放核算方法（试行）》，按3个范围核算</div>
+          </div>
+          <div class="section-header-right">
+            <button class="btn btn-primary" onclick="saveSurvey('carbon')">💾 保存数据</button>
+          </div>
+        </div>
+
+        <div class="alert alert-info">📌 范围1：化石燃料燃烧 + 工业生产过程排放；范围2：外购电力/热力隐含排放；范围3：供应链上下游及其他间接排放</div>
+
+        <div class="stats-row">
+          <div class="stat-card green"><div class="stat-value" id="carbonScope1">0</div><div class="stat-label">范围1 直接排放 (tCO₂e)</div></div>
+          <div class="stat-card blue"><div class="stat-value" id="carbonScope2">0</div><div class="stat-label">范围2 间接排放 (tCO₂e)</div></div>
+          <div class="stat-card amber"><div class="stat-value" id="carbonScope3">0</div><div class="stat-label">范围3 其他排放 (tCO₂e)</div></div>
+          <div class="stat-card red"><div class="stat-value" id="carbonTotal">0</div><div class="stat-label">排放总量 (tCO₂e)</div></div>
+        </div>
+
+        <!-- 范围1 -->
+        <div class="content-card">
+          <div class="card-head"><div class="card-head-left"><div class="card-icon green-bg">🔥</div><div><div class="card-title">范围1 · 直接排放</div><div class="card-subtitle">化石燃料燃烧 + 工业生产过程</div></div></div></div>
+          <div class="card-body">
+            <div class="survey-grid">
+              <div class="survey-item"><div class="survey-item-header"><span class="survey-item-name">化石燃料燃烧排放</span><span class="survey-item-unit">tCO₂</span></div><input class="survey-input" id="cb1Fuel" type="number" step="0.01" placeholder="煤/油/气燃烧排放" onchange="calcCarbon()"></div>
+              <div class="survey-item"><div class="survey-item-header"><span class="survey-item-name">工业生产过程排放</span><span class="survey-item-unit">tCO₂</span></div><input class="survey-input" id="cb1Process" type="number" step="0.01" placeholder="水泥/钢铁/化工等" onchange="calcCarbon()"></div>
+              <div class="survey-item"><div class="survey-item-header"><span class="survey-item-name">逸散排放</span><span class="survey-item-unit">tCO₂e</span></div><input class="survey-input" id="cb1Fugitive" type="number" step="0.01" placeholder="甲烷/制冷剂泄漏" onchange="calcCarbon()"></div>
+              <div class="survey-item"><div class="survey-item-header"><span class="survey-item-name">移动源排放</span><span class="survey-item-unit">tCO₂</span></div><input class="survey-input" id="cb1Mobile" type="number" step="0.01" placeholder="园区内部运输" onchange="calcCarbon()"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 范围2 -->
+        <div class="content-card">
+          <div class="card-head"><div class="card-head-left"><div class="card-icon blue-bg">🔌</div><div><div class="card-title">范围2 · 间接排放</div><div class="card-subtitle">外购电力、热力/蒸汽隐含排放</div></div></div></div>
+          <div class="card-body">
+            <div class="survey-grid">
+              <div class="survey-item"><div class="survey-item-header"><span class="survey-item-name">外购电力排放</span><span class="survey-item-unit">tCO₂</span></div><input class="survey-input" id="cb2Elec" type="number" step="0.01" placeholder="购入电量 × 电网排放因子" onchange="calcCarbon()"></div>
+              <div class="survey-item"><div class="survey-item-header"><span class="survey-item-name">化石能源电力排放因子</span><span class="survey-item-unit">tCO₂/MWh</span></div><input class="survey-input" id="cb2Factor" type="number" step="0.001" value="0.8325" onchange="calcCarbon()"><span class="form-hint">910号文附件4：全国化石能源电力排放因子 0.8325 kgCO₂/kWh；绿电直供部分因子=0，直供比例须≥50%</span></div>
+              <div class="survey-item"><div class="survey-item-header"><span class="survey-item-name">外购热力排放</span><span class="survey-item-unit">tCO₂</span></div><input class="survey-input" id="cb2Heat" type="number" step="0.01" placeholder="外购蒸汽/热水排放" onchange="calcCarbon()"></div>
+              <div class="survey-item"><div class="survey-item-header"><span class="survey-item-name">外购冷量排放</span><span class="survey-item-unit">tCO₂</span></div><input class="survey-input" id="cb2Cool" type="number" step="0.01" placeholder="集中供冷排放" onchange="calcCarbon()"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 范围3 -->
+        <div class="content-card">
+          <div class="card-head"><div class="card-head-left"><div class="card-icon amber-bg">🏭</div><div><div class="card-title">范围3 · 其他间接排放</div><div class="card-subtitle">供应链上下游、废弃物处理等</div></div></div></div>
+          <div class="card-body">
+            <div class="survey-grid">
+              <div class="survey-item"><div class="survey-item-header"><span class="survey-item-name">上游原材料隐含排放</span><span class="survey-item-unit">tCO₂e</span></div><input class="survey-input" id="cb3Upstream" type="number" step="0.01" placeholder="外购原材料" onchange="calcCarbon()"></div>
+              <div class="survey-item"><div class="survey-item-header"><span class="survey-item-name">废弃物处理排放</span><span class="survey-item-unit">tCO₂e</span></div><input class="survey-input" id="cb3Waste" type="number" step="0.01" placeholder="废水/固废处理" onchange="calcCarbon()"></div>
+              <div class="survey-item"><div class="survey-item-header"><span class="survey-item-name">员工通勤排放</span><span class="survey-item-unit">tCO₂e</span></div><input class="survey-input" id="cb3Commute" type="number" step="0.01" placeholder="上下班交通" onchange="calcCarbon()"></div>
+              <div class="survey-item"><div class="survey-item-header"><span class="survey-item-name">其他间接排放</span><span class="survey-item-unit">tCO₂e</span></div><input class="survey-input" id="cb3Other" type="number" step="0.01" placeholder="差旅/租赁等" onchange="calcCarbon()"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 碳汇与抵消 -->
+        <div class="content-card">
+          <div class="card-head"><div class="card-head-left"><div class="card-icon green-bg">🌱</div><div><div class="card-title">碳汇与抵消</div></div></div></div>
+          <div class="card-body">
+            <div class="survey-grid">
+              <div class="survey-item"><div class="survey-item-header"><span class="survey-item-name">园区碳汇量</span><span class="survey-item-unit">tCO₂</span></div><input class="survey-input" id="cbSink" type="number" step="0.01" placeholder="绿化/湿地碳汇" onchange="calcCarbon()"></div>
+              <div class="survey-item"><div class="survey-item-header"><span class="survey-item-name">CCER/绿证抵消量</span><span class="survey-item-unit">tCO₂</span></div><input class="survey-input" id="cbOffset" type="number" step="0.01" placeholder="自愿减排量" onchange="calcCarbon()"></div>
+            </div>
+            <div class="alert alert-success mt-8" id="carbonNetAlert">净排放: <strong id="carbonNetDisplay">0</strong> tCO₂e</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ====== RENEWABLE SURVEY ====== -->
+      <div class="page" id="page-renewable">
+        <div class="section-header">
+          <div class="section-header-left">
+            <div class="section-title">☀️ 风光资源摸排</div>
+            <div class="section-subtitle">评估园区及周边太阳能、风能资源禀赋与可开发潜力</div>
+          </div>
+          <div class="section-header-right">
+            <button class="btn btn-primary" onclick="saveSurvey('renewable')">💾 保存数据</button>
+          </div>
+        </div>
+
+        <div class="stats-row">
+          <div class="stat-card green"><div class="stat-value" id="solarPotential">--</div><div class="stat-label">光伏可开发容量 (MW)</div></div>
+          <div class="stat-card blue"><div class="stat-value" id="windPotential">--</div><div class="stat-label">风电可开发容量 (MW)</div></div>
+          <div class="stat-card amber"><div class="stat-value" id="totalPotential">--</div><div class="stat-label">可再生能源总潜力 (MW)</div></div>
+        </div>
+
+        <div class="form-2col">
+          <!-- 太阳能 -->
+          <div class="content-card">
+            <div class="card-head"><div class="card-head-left"><div class="card-icon amber-bg">☀️</div><div><div class="card-title">太阳能资源</div></div></div></div>
+            <div class="card-body">
+              <div class="survey-grid" style="grid-template-columns:1fr">
+                <div class="survey-item"><div class="survey-item-header"><span class="survey-item-name">年太阳总辐射量</span><span class="survey-item-unit">kWh/m²</span></div><input class="survey-input" id="solarRadiation" type="number" step="0.1" placeholder="e.g. 1200" onchange="calcRenewable()"></div>
+                <div class="survey-item"><div class="survey-item-header"><span class="survey-item-name">可利用屋顶面积</span><span class="survey-item-unit">万 m²</span></div><input class="survey-input" id="solarRoofArea" type="number" step="0.01" placeholder="园区建筑屋顶" onchange="calcRenewable()"></div>
+                <div class="survey-item"><div class="survey-item-header"><span class="survey-item-name">可利用空地面积</span><span class="survey-item-unit">万 m²</span></div><input class="survey-input" id="solarLandArea" type="number" step="0.01" placeholder="地面光伏可用地" onchange="calcRenewable()"></div>
+                <div class="survey-item"><div class="survey-item-header"><span class="survey-item-name">已有光伏装机</span><span class="survey-item-unit">MW</span></div><input class="survey-input" id="solarExisting" type="number" step="0.01" placeholder="当前已建" onchange="calcRenewable()"></div>
+                <div class="survey-item"><div class="survey-item-header"><span class="survey-item-name">最佳倾斜面辐射量</span><span class="survey-item-unit">kWh/m²</span></div><input class="survey-input" id="solarTilt" type="number" step="0.1" placeholder="按最佳倾角" onchange="calcRenewable()"></div>
+              </div>
+            </div>
+          </div>
+          <!-- 风能 -->
+          <div class="content-card">
+            <div class="card-head"><div class="card-head-left"><div class="card-icon blue-bg">💨</div><div><div class="card-title">风能资源</div></div></div></div>
+            <div class="card-body">
+              <div class="survey-grid" style="grid-template-columns:1fr">
+                <div class="survey-item"><div class="survey-item-header"><span class="survey-item-name">年平均风速</span><span class="survey-item-unit">m/s</span></div><input class="survey-input" id="windSpeed" type="number" step="0.1" placeholder="e.g. 5.5" onchange="calcRenewable()"></div>
+                <div class="survey-item"><div class="survey-item-header"><span class="survey-item-name">风功率密度</span><span class="survey-item-unit">W/m²</span></div><input class="survey-input" id="windPowerDensity" type="number" step="0.1" placeholder="e.g. 200" onchange="calcRenewable()"></div>
+                <div class="survey-item"><div class="survey-item-header"><span class="survey-item-name">可利用土地面积</span><span class="survey-item-unit">万 m²</span></div><input class="survey-input" id="windLand" type="number" step="0.01" placeholder="可用于风机布置" onchange="calcRenewable()"></div>
+                <div class="survey-item"><div class="survey-item-header"><span class="survey-item-name">已有风电装机</span><span class="survey-item-unit">MW</span></div><input class="survey-input" id="windExisting" type="number" step="0.01" placeholder="当前已建" onchange="calcRenewable()"></div>
+                <div class="survey-item"><div class="survey-item-header"><span class="survey-item-name">年等效满发小时数</span><span class="survey-item-unit">h</span></div><input class="survey-input" id="windHours" type="number" step="1" placeholder="e.g. 2000" onchange="calcRenewable()"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="content-card">
+          <div class="card-head"><div class="card-head-left"><div class="card-icon green-bg">🔋</div><div><div class="card-title">资源禀赋评估</div></div></div></div>
+          <div class="card-body">
+            <div class="alert alert-info">光伏可开发容量 ≈ (屋顶面积×0.015 + 空地面积×0.008) MW，考虑实际遮挡和利用系数</div>
+            <div id="renewableAssessment"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ====== WATER SURVEY ====== -->
+      <div class="page" id="page-water">
+        <div class="section-header">
+          <div class="section-header-left">
+            <div class="section-title">💧 水资源摸排</div>
+            <div class="section-subtitle">调查园区取水、用水、排水全过程，评估水资源利用效率</div>
+          </div>
+          <div class="section-header-right">
+            <button class="btn btn-primary" onclick="saveSurvey('water')">💾 保存数据</button>
+          </div>
+        </div>
+
+        <div class="stats-row">
+          <div class="stat-card blue"><div class="stat-value" id="waterTotal">0</div><div class="stat-label">年取水总量 (万吨)</div></div>
+          <div class="stat-card green"><div class="stat-value" id="waterRecycle">0%</div><div class="stat-label">水循环利用率</div></div>
+        </div>
+
+        <div class="form-2col">
+          <div class="content-card">
+            <div class="card-head"><div class="card-head-left"><div class="card-icon blue-bg">💧</div><div><div class="card-title">取水水源</div></div></div></div>
+            <div class="card-body">
+              <div class="survey-grid" style="grid-template-columns:1fr">
+                <div class="survey-item"><div class="survey-item-header"><span class="survey-item-name">地表水取水量</span><span class="survey-item-unit">万吨/年</span></div><input class="survey-input" id="waterSurface" type="number" step="0.01" onchange="calcWater()"></div>
+                <div class="survey-item"><div class="survey-item-header"><span class="survey-item-name">地下水取水量</span><span class="survey-item-unit">万吨/年</span></div><input class="survey-input" id="waterGround" type="number" step="0.01" onchange="calcWater()"></div>
+                <div class="survey-item"><div class="survey-item-header"><span class="survey-item-name">市政供水</span><span class="survey-item-unit">万吨/年</span></div><input class="survey-input" id="waterMunicipal" type="number" step="0.01" onchange="calcWater()"></div>
+                <div class="survey-item"><div class="survey-item-header"><span class="survey-item-name">再生水/雨水利用</span><span class="survey-item-unit">万吨/年</span></div><input class="survey-input" id="waterReuse" type="number" step="0.01" onchange="calcWater()"></div>
+              </div>
+            </div>
+          </div>
+          <div class="content-card">
+            <div class="card-head"><div class="card-head-left"><div class="card-icon amber-bg">🌊</div><div><div class="card-title">排水与循环</div></div></div></div>
+            <div class="card-body">
+              <div class="survey-grid" style="grid-template-columns:1fr">
+                <div class="survey-item"><div class="survey-item-header"><span class="survey-item-name">工业废水排放量</span><span class="survey-item-unit">万吨/年</span></div><input class="survey-input" id="waterWasteInd" type="number" step="0.01" onchange="calcWater()"></div>
+                <div class="survey-item"><div class="survey-item-header"><span class="survey-item-name">生活污水排放量</span><span class="survey-item-unit">万吨/年</span></div><input class="survey-input" id="waterWasteDom" type="number" step="0.01" onchange="calcWater()"></div>
+                <div class="survey-item"><div class="survey-item-header"><span class="survey-item-name">循环用水量</span><span class="survey-item-unit">万吨/年</span></div><input class="survey-input" id="waterCirc" type="number" step="0.01" onchange="calcWater()"></div>
+                <div class="survey-item"><div class="survey-item-header"><span class="survey-item-name">废水处理能力</span><span class="survey-item-unit">万吨/日</span></div><input class="survey-input" id="waterTreatCapacity" type="number" step="0.01" onchange="calcWater()"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ====== ENVIRONMENT SURVEY ====== -->
+      <div class="page" id="page-environment">
+        <div class="section-header">
+          <div class="section-header-left">
+            <div class="section-title">🌿 环境要素摸排</div>
+            <div class="section-subtitle">固废、废水、废气、噪声等环境底数调查</div>
+          </div>
+          <div class="section-header-right">
+            <button class="btn btn-primary" onclick="saveSurvey('env')">💾 保存数据</button>
+          </div>
+        </div>
+
+        <div class="form-3col">
+          <div class="content-card">
+            <div class="card-head"><div class="card-head-left"><div class="card-icon amber-bg">🗑️</div><div><div class="card-title">固体废物</div></div></div></div>
+            <div class="card-body">
+              <div class="survey-grid" style="grid-template-columns:1fr">
+                <div class="survey-item"><div class="survey-item-header"><span class="survey-item-name">一般工业固废产生量</span><span class="survey-item-unit">万吨/年</span></div><input class="survey-input" id="envSolidGen" type="number" step="0.001" onchange="saveEnv()"></div>
+                <div class="survey-item"><div class="survey-item-header"><span class="survey-item-name"># 综合利用量</span><span class="survey-item-unit">万吨/年</span></div><input class="survey-input" id="envSolidReuse" type="number" step="0.001" onchange="saveEnv()"></div>
+                <div class="survey-item"><div class="survey-item-header"><span class="survey-item-name">危险废物产生量</span><span class="survey-item-unit">吨/年</span></div><input class="survey-input" id="envHazWaste" type="number" step="0.01" onchange="saveEnv()"></div>
+                <div class="survey-item"><div class="survey-item-header"><span class="survey-item-name">生活垃圾产生量</span><span class="survey-item-unit">万吨/年</span></div><input class="survey-input" id="envDomWaste" type="number" step="0.001" onchange="saveEnv()"></div>
+              </div>
+            </div>
+          </div>
+          <div class="content-card">
+            <div class="card-head"><div class="card-head-left"><div class="card-icon red-bg">💨</div><div><div class="card-title">废气排放</div></div></div></div>
+            <div class="card-body">
+              <div class="survey-grid" style="grid-template-columns:1fr">
+                <div class="survey-item"><div class="survey-item-header"><span class="survey-item-name">SO₂ 排放量</span><span class="survey-item-unit">吨/年</span></div><input class="survey-input" id="envSO2" type="number" step="0.01" onchange="saveEnv()"></div>
+                <div class="survey-item"><div class="survey-item-header"><span class="survey-item-name">NOx 排放量</span><span class="survey-item-unit">吨/年</span></div><input class="survey-input" id="envNOx" type="number" step="0.01" onchange="saveEnv()"></div>
+                <div class="survey-item"><div class="survey-item-header"><span class="survey-item-name">颗粒物排放量</span><span class="survey-item-unit">吨/年</span></div><input class="survey-input" id="envPM" type="number" step="0.01" onchange="saveEnv()"></div>
+                <div class="survey-item"><div class="survey-item-header"><span class="survey-item-name">VOCs 排放量</span><span class="survey-item-unit">吨/年</span></div><input class="survey-input" id="envVOCs" type="number" step="0.01" onchange="saveEnv()"></div>
+              </div>
+            </div>
+          </div>
+          <div class="content-card">
+            <div class="card-head"><div class="card-head-left"><div class="card-icon blue-bg">🔊</div><div><div class="card-title">其他环境要素</div></div></div></div>
+            <div class="card-body">
+              <div class="survey-grid" style="grid-template-columns:1fr">
+                <div class="survey-item"><div class="survey-item-header"><span class="survey-item-name">厂界噪声昼间</span><span class="survey-item-unit">dB(A)</span></div><input class="survey-input" id="envNoiseDay" type="number" step="0.1" onchange="saveEnv()"></div>
+                <div class="survey-item"><div class="survey-item-header"><span class="survey-item-name">厂界噪声夜间</span><span class="survey-item-unit">dB(A)</span></div><input class="survey-input" id="envNoiseNight" type="number" step="0.1" onchange="saveEnv()"></div>
+                <div class="survey-item"><div class="survey-item-header"><span class="survey-item-name">绿化覆盖率</span><span class="survey-item-unit">%</span></div><input class="survey-input" id="envGreen" type="number" step="0.1" onchange="saveEnv()"></div>
+                <div class="survey-item"><div class="survey-item-header"><span class="survey-item-name">碳排放强度 (范围1+2)</span><span class="survey-item-unit">tCO₂/万元</span></div><input class="survey-input" id="envCarbonIntensity" type="number" step="0.001" onchange="saveEnv()" disabled style="background:var(--neutral-50)"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ====== ASSESSMENT ====== -->
+      <div class="page" id="page-assessment">
+        <div class="section-header">
+          <div class="section-header-left">
+            <div class="section-title">📊 对标评估</div>
+            <div class="section-subtitle">基于摸排数据与910号文指标体系进行对标评分</div>
+          </div>
+          <div class="section-header-right">
+            <button class="btn btn-primary" onclick="runAssessment()">🔄 开始评估</button>
+          </div>
+        </div>
+
+        <!-- 一票否决 -->
+        <div class="content-card">
+          <div class="card-head"><div class="card-head-left"><div class="card-icon red-bg">⚠️</div><div><div class="card-title">基础条件 · 一票否决项</div><div class="card-subtitle">以下条件须全部满足方可参评</div></div></div>
+            <span class="tag tag-gray" id="vetoStatus">待检查</span>
+          </div>
+          <div class="card-body">
+            <div class="form-2col">
+              <label class="survey-item" onclick="event.target.querySelector('input').click()"><input type="checkbox" onchange="checkVeto()" id="veto1" hidden><span>✅ 依法设立、手续齐全、运营合规</span></label>
+              <label class="survey-item" onclick="event.target.querySelector('input').click()"><input type="checkbox" onchange="checkVeto()" id="veto2" hidden><span>✅ 近三年无重大安全/环境事故</span></label>
+              <label class="survey-item" onclick="event.target.querySelector('input').click()"><input type="checkbox" onchange="checkVeto()" id="veto3" hidden><span>✅ 完成碳排放核算与报告</span></label>
+              <label class="survey-item" onclick="event.target.querySelector('input').click()"><input type="checkbox" onchange="checkVeto()" id="veto4" hidden><span>✅ 未列入环保失信名单</span></label>
+            </div>
+          </div>
+        </div>
+
+        <!-- 评分维度 -->
+        <div class="form-2col" id="assessGrid"></div>
+
+        <!-- 总分 -->
+        <div class="content-card" id="assessResult" style="display:none">
+          <div class="card-body text-center" style="padding:32px">
+            <div class="score-ring">
+              <svg width="100" height="100"><circle cx="50" cy="50" r="44" fill="none" stroke="var(--neutral-100)" stroke-width="8"/><circle cx="50" cy="50" r="44" fill="none" stroke="var(--green-500)" stroke-width="8" stroke-dasharray="276.46" stroke-dashoffset="276.46" id="assessRing" stroke-linecap="round"/></svg>
+              <div class="score-ring-text" id="assessScore">0</div>
+            </div>
+            <div style="font-size:16px;font-weight:600;color:var(--neutral-800)" id="assessRating">--</div>
+            <div style="font-size:13px;color:var(--neutral-400);margin-top:4px" id="assessDetail">基础分 + 加分 = 总分 / 110</div>
+            <div id="assessBreakdown" style="margin-top:16px;text-align:left"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ====== STANDARDS ====== -->
+      <div class="page" id="page-standard">
+        <div class="section-header">
+          <div class="section-header-left">
+            <div class="section-title">📋 标准对标 · 硬性指标看板</div>
+            <div class="section-subtitle">自动比对摸排数据 vs 国家级（910号文附件3）/ 广东省两套标准 · 推荐申报路径</div>
+          </div>
+          <div class="section-header-right">
+            <button class="btn btn-primary" onclick="runFullCompliance()">🔄 全面对标检查</button>
+            <button class="btn btn-outline" onclick="exportStdReport()">📥 导出标准报告</button>
+          </div>
+        </div>
+
+        <!-- 路线推荐 -->
+        <div class="hero-card" style="padding:24px;margin-bottom:20px" id="recBanner">
+          <div class="hero-content">
+            <div class="hero-title" id="recTitle" style="font-size:20px">点击「全面对标检查」获取推荐申报路径</div>
+            <div class="hero-desc" id="recDesc" style="font-size:13px;margin-top:4px">系统将基于您的摸排数据自动分析适合申报国家级还是广东省零碳园区</div>
+          </div>
+        </div>
+
+        <div class="alert alert-info">📌 <strong>对标说明：</strong>系统将您的摸排数据分别与 <strong>国家级（910号文附件3 建设指标体系）</strong>和 <strong>广东省零碳园区建设方案</strong>两套标准逐项对标。红色 ❌ 未达标，绿色 ✅ 达标。</div>
+
+        <!-- Tab switcher -->
+        <div class="tab-bar" style="margin-bottom:20px">
+          <button class="tab-btn active" onclick="switchStdTab('national')">🏛️ 国家级标准</button>
+          <button class="tab-btn" onclick="switchStdTab('guangdong')">🌊 广东省标准</button>
+        </div>
+
+        <!-- 标准摘要 -->
+        <div class="stats-row" id="stdSummary">
+          <div class="stat-card green"><div class="stat-value" id="stdPassCount">0</div><div class="stat-label">达标项数</div></div>
+          <div class="stat-card red"><div class="stat-value" id="stdFailCount">0</div><div class="stat-label">未达标项数</div></div>
+          <div class="stat-card amber"><div class="stat-value" id="stdCompliance">0%</div><div class="stat-label">整体达标率</div></div>
+          <div class="stat-card blue"><div class="stat-value" id="stdTargetGrade">--</div><div class="stat-label">可达等级</div></div>
+        </div>
+
+        <!-- 标准速览 -->
+        <div class="content-card">
+          <div class="card-head"><div class="card-head-left"><div class="card-icon green-bg">📋</div><div><div class="card-title">国家级 vs 广东省 标准速览</div><div class="card-subtitle">910号文附件3 vs 《广东省零碳园区建设方案》</div></div></div></div>
+          <div class="card-body" style="overflow-x:auto">
+            <table style="width:100%;font-size:13px;border-collapse:collapse">
+              <thead><tr style="background:var(--green-50)">
+                <th style="padding:10px 14px;text-align:left;border-bottom:2px solid var(--green-200)">指标</th>
+                <th style="padding:10px 14px;text-align:center;border-bottom:2px solid var(--green-200)">🏛️ 国家级</th>
+                <th style="padding:10px 14px;text-align:center;border-bottom:2px solid var(--green-200)">🌊 广东省</th>
+              </tr></thead>
+              <tbody>
+                <tr><td style="padding:8px 14px;border-bottom:1px solid var(--neutral-50)">单位能耗碳排放</td>
+                  <td style="padding:8px 14px;text-align:center;border-bottom:1px solid var(--neutral-50)">≤0.2(20~100万tce)<br>或≤0.3(≥100万tce)</td>
+                  <td style="padding:8px 14px;text-align:center;border-bottom:1px solid var(--neutral-50)">≤0.3<br>（≥10万tce园区）</td></tr>
+                <tr><td style="padding:8px 14px;border-bottom:1px solid var(--neutral-50)">清洁能源消费占比</td>
+                  <td style="padding:8px 14px;text-align:center;border-bottom:1px solid var(--neutral-50)">≥90%</td>
+                  <td style="padding:8px 14px;text-align:center;border-bottom:1px solid var(--neutral-50)">≥90%</td></tr>
+                <tr><td style="padding:8px 14px;border-bottom:1px solid var(--neutral-50)">产品单位能耗</td>
+                  <td style="padding:8px 14px;text-align:center;border-bottom:1px solid var(--neutral-50)">达到二级能耗限额</td>
+                  <td style="padding:8px 14px;text-align:center;border-bottom:1px solid var(--neutral-50)">达到二级能耗限额</td></tr>
+                <tr><td style="padding:8px 14px;border-bottom:1px solid var(--neutral-50)">工业固废综合利用率</td>
+                  <td style="padding:8px 14px;text-align:center;border-bottom:1px solid var(--neutral-50)">≥80%</td>
+                  <td style="padding:8px 14px;text-align:center;border-bottom:1px solid var(--neutral-50)">≥80%</td></tr>
+                <tr><td style="padding:8px 14px;border-bottom:1px solid var(--neutral-50)">余热/余冷/余压综合利用率</td>
+                  <td style="padding:8px 14px;text-align:center;border-bottom:1px solid var(--neutral-50)">≥50%</td>
+                  <td style="padding:8px 14px;text-align:center;border-bottom:1px solid var(--neutral-50)">≥50%</td></tr>
+                <tr><td style="padding:8px 14px;border-bottom:1px solid var(--neutral-50)">工业用水重复利用率</td>
+                  <td style="padding:8px 14px;text-align:center;border-bottom:1px solid var(--neutral-50)">≥80%</td>
+                  <td style="padding:8px 14px;text-align:center;border-bottom:1px solid var(--neutral-50)">≥80%</td></tr>
+              </tbody>
+            </table>
+            <div class="form-hint mt-8">💡 国家级标准仅6项指标：1项核心（单位能耗碳排放按年综合能耗规模分两档）+ 5项引导指标。核心指标达不到不得申请验收；引导指标因客观条件不具备可说明原因后不纳入验收要求。</div>
+          </div>
+        </div>
+
+        <!-- 硬性指标对标表 -->
+        <div id="stdComplianceTable"></div>
+      </div>
+
+      <!-- ====== REPORT ====== -->
+      <div class="page" id="page-report">
+        <div class="section-header">
+          <div class="section-header-left">
+            <div class="section-title">📄 报告管理</div>
+            <div class="section-subtitle">生成摸排报告、差距分析报告、申报材料</div>
+          </div>
+          <div class="section-header-right">
+            <button class="btn btn-primary" onclick="generateReport()">📄 生成报告</button>
+            <button class="btn btn-outline" onclick="exportData()">📥 导出数据</button>
+          </div>
+        </div>
+        <div class="alert alert-info">📌 报告将基于已填报的摸排数据自动生成，包括园区基本信息、能源消费、碳排放核算、资源评估及对标分析</div>
+        <div class="content-card" id="reportPreview">
+          <div class="card-head"><div class="card-head-left"><div class="card-icon green-bg">📋</div><div><div class="card-title">摸排报告预览</div></div></div></div>
+          <div class="card-body" id="reportContent">
+            <div class="text-center" style="padding:40px;color:var(--neutral-400)">请先完成各维度摸排数据填报</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script>
+// ============== Data Store ==============
+const KEY = 'zp_survey_data';
+let store = null;
+
+function loadStore() {
+  try {
+    const raw = localStorage.getItem(KEY);
+    if (raw) store = JSON.parse(raw);
+  } catch(e) {}
+  if (!store) {
+    store = { energy:{}, carbon:{}, renewable:{}, water:{}, env:{}, assessment:{veto:[],scores:{},bonus:{}} };
+  }
+}
+
+function saveToStore() {
+  try {
+    localStorage.setItem(KEY, JSON.stringify(store));
+  } catch(e) {}
+  updateSidebarBadges();
+  updateDashboard();
+}
+
+// ============== Navigation ==============
+function navigate(el) {
+  const page = el.dataset.page;
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  el.classList.add('active');
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  const target = document.getElementById('page-' + page);
+  if (target) target.classList.add('active');
+
+  const titles = {
+    dashboard:'评估看板', energy:'能源消费摸排', carbon:'碳排放摸排',
+    renewable:'风光资源摸排', water:'水资源摸排', environment:'环境要素摸排',
+    assessment:'对标评估', standard:'标准对标', report:'报告管理'
+  };
+  document.getElementById('pageTitle').textContent = titles[page] || '零碳园区';
+  document.getElementById('breadcrumbCurrent').textContent = titles[page] || '';
+
+  if (page === 'energy') renderEnergy();
+  if (page === 'carbon') renderCarbon();
+  if (page === 'renewable') renderRenewable();
+  if (page === 'water') renderWater();
+  if (page === 'environment') renderEnv();
+  if (page === 'assessment') renderAssessment();
+  if (page === 'dashboard') updateDashboard();
+  if (page === 'standard') renderStandardPage();
+  if (page === 'report') renderReport();
+  if (window.innerWidth < 1024) toggleSidebar(false);
+}
+
+function toggleSidebar(open) {
+  document.getElementById('sidebar').classList.toggle('open', open);
+  document.getElementById('sidebarOverlay').classList.toggle('active', open);
+}
+
+// ============== Energy ==============
+const energyFields = ['GDP','Year','Elec','GreenElec','Coal','Gas','Diesel','Gasoline','Heat','Biomass','PV','Wind','Storage','PVGen'];
+const ENERGY_FACTORS = { Elec:1.229, Coal:7143, Gas:13.3, Diesel:1457.1, Gasoline:1471, Heat:34.12, Biomass:500 };
+// Elec: tce/万kWh, Coal: tce/万吨? No... need to think
+// Standard coal factors:
+// 1 万kWh = 1.229 tce
+// 1 万吨煤 = 7143 tce  (1t = 0.7143 tce, so 1万t = 7143 tce)
+// 1 万m³天然气 = 13.3 tce
+// 1 万吨柴油 = 14571 tce (1t=1.4571)
+// 1 万吨汽油 = 14710 tce
+// 1 万GJ热力 = 34.12 tce
+// 1 万吨生物质 = 500 tce (approx)
+
+// Actually the factor values differ - let me recalculate properly:
+// 1 万kWh = 1.229 tce
+// 1 吨原煤 = 0.7143 tce → 1 万吨 = 7143 tce
+// 1 万m³天然气 = 13.3 tce
+// 1 吨柴油 = 1.4571 tce → 1 万吨 = 14571 tce
+// 1 吨汽油 = 1.471 tce → 1 万吨 = 14710 tce
+// 1 万GJ = 34.12 tce  
+// 1 万吨生物质 ≈ 500 tce (varies)
+
+function calcEnergy() {
+  const d = {};
+  energyFields.forEach(f => d[f] = parseFloat(document.getElementById('energy'+f)?.value) || 0);
+
+  const tceElec = d.Elec * 1.229;
+  const tceCoal = d.Coal * 7143;
+  const tceGas = d.Gas * 13.3;
+  const tceDiesel = d.Diesel * 14571;
+  const tceGasoline = d.Gasoline * 14710;
+  const tceHeat = d.Heat * 34.12;
+  const tceBiomass = d.Biomass * 500;
+
+  const totalTce = (tceElec + tceCoal + tceGas + tceDiesel + tceGasoline + tceHeat + tceBiomass) / 10000; // 万吨
+  document.getElementById('energyTotalCalc').textContent = totalTce.toFixed(2);
+
+  if (d.GDP > 0) {
+    document.getElementById('energyIntensityCalc').textContent = (totalTce / d.GDP * 10000).toFixed(2);
+  }
+
+  const greenRatio = d.Elec > 0 ? (d.GreenElec / d.Elec * 100) : 0;
+  document.getElementById('renewRatioCalc').textContent = greenRatio.toFixed(1) + '%';
+
+  store.energy = d;
+  saveToStore();
+}
+
+function renderEnergy() {
+  const d = store.energy || {};
+  energyFields.forEach(f => {
+    const el = document.getElementById('energy'+f);
+    if (el && d[f] !== undefined && d[f] !== null) el.value = d[f];
+  });
+  calcEnergy();
+}
+
+// ============== Carbon ==============
+const carbonFields = ['b1Fuel','b1Process','b1Fugitive','b1Mobile',
+  'b2Elec','b2Factor','b2Heat','b2Cool',
+  'b3Upstream','b3Waste','b3Commute','b3Other',
+  'Sink','Offset'];
+
+function calcCarbon() {
+  const d = {};
+  carbonFields.forEach(f => d[f] = parseFloat(document.getElementById('cb'+f)?.value) || 0);
+
+  const scope1 = d.b1Fuel + d.b1Process + d.b1Fugitive + d.b1Mobile;
+  const scope2Direct = parseFloat(document.getElementById('cb2Elec').value) || 0;
+  const scope2Calc = scope2Direct + d.b2Heat + d.b2Cool;
+  const scope3 = d.b3Upstream + d.b3Waste + d.b3Commute + d.b3Other;
+  const total = scope1 + scope2Calc + scope3;
+  const net = total - d.Sink - d.Offset;
+
+  document.getElementById('carbonScope1').textContent = scope1.toFixed(1);
+  document.getElementById('carbonScope2').textContent = scope2Calc.toFixed(1);
+  document.getElementById('carbonScope3').textContent = scope3.toFixed(1);
+  document.getElementById('carbonTotal').textContent = total.toFixed(1);
+  document.getElementById('carbonNetDisplay').textContent = net.toFixed(1);
+  document.getElementById('carbonNetAlert').innerHTML = net <= 0 ? '✅ 已实现碳中和！净排放: <strong>'+net.toFixed(1)+'</strong> tCO₂e' : '净排放: <strong>'+net.toFixed(1)+'</strong> tCO₂e';
+
+  // Update env carbon intensity field
+  const gdp = parseFloat(document.getElementById('energyGDP')?.value) || 0;
+  const intenEl = document.getElementById('envCarbonIntensity');
+  if (intenEl && gdp > 0) {
+    const ci = (scope1 + scope2Calc) / gdp;
+    intenEl.value = ci.toFixed(4);
+  }
+
+  store.carbon = d;
+  saveToStore();
+}
+
+function renderCarbon() {
+  const d = store.carbon || {};
+  carbonFields.forEach(f => {
+    const el = document.getElementById('cb'+f);
+    if (el && d[f] !== undefined && d[f] !== null) el.value = d[f];
+  });
+  calcCarbon();
+}
+
+// ============== Renewable ==============
+function calcRenewable() {
+  const solarRad = parseFloat(document.getElementById('solarRadiation').value) || 0;
+  const roofArea = parseFloat(document.getElementById('solarRoofArea').value) || 0;
+  const landArea = parseFloat(document.getElementById('solarLandArea').value) || 0;
+  const solarExist = parseFloat(document.getElementById('solarExisting').value) || 0;
+  const windSpeed = parseFloat(document.getElementById('windSpeed').value) || 0;
+  const windLand = parseFloat(document.getElementById('windLand').value) || 0;
+  const windExist = parseFloat(document.getElementById('windExisting').value) || 0;
+
+  // Estimated PV capacity: 1万m² roof ≈ 1.5MW, 1万m² land ≈ 0.8MW
+  const roofCap = roofArea * 1.5;
+  const landCap = landArea * 0.8;
+  const solarPotential = roofCap + landCap;
+
+  // Wind: rough estimate 1万m² ≈ 0.2MW for typical 2MW turbine spacing
+  const windPotential = windLand * 0.2;
+
+  document.getElementById('solarPotential').textContent = solarPotential.toFixed(1) + ' MW';
+  document.getElementById('windPotential').textContent = windPotential.toFixed(1) + ' MW';
+  document.getElementById('totalPotential').textContent = (solarPotential + windPotential + solarExist + windExist).toFixed(1) + ' MW';
+
+  const assessEl = document.getElementById('renewableAssessment');
+  const grade = solarRad > 1400 ? '丰富' : solarRad > 1100 ? '较丰富' : '一般';
+  assessEl.innerHTML = `
+    <div class="survey-grid" style="grid-template-columns:repeat(auto-fill,minmax(200px,1fr))">
+      <div class="survey-item"><div class="survey-item-header"><span class="survey-item-name">太阳能资源等级</span></div><span style="font-weight:600;color:var(--green-700)">${grade}</span></div>
+      <div class="survey-item"><div class="survey-item-header"><span class="survey-item-name">光伏可新增容量</span></div><span style="font-weight:600;color:var(--green-700)">${solarPotential.toFixed(1)} MW</span></div>
+      <div class="survey-item"><div class="survey-item-header"><span class="survey-item-name">风电可新增容量</span></div><span style="font-weight:600;color:var(--green-700)">${windPotential.toFixed(1)} MW</span></div>
+      <div class="survey-item"><div class="survey-item-header"><span class="survey-item-name">年均风速</span></div><span style="font-weight:600;color:var(--green-700)">${windSpeed} m/s ${windSpeed > 6 ? '🌬️ 优良' : windSpeed > 4 ? '🌬️ 一般' : ''}</span></div>
+    </div>
+  `;
+
+  store.renewable = {solarRad, roofArea, landArea, solarExist, windSpeed, windLand, windExist};
+  saveToStore();
+}
+
+function renderRenewable() {
+  const d = store.renewable || {};
+  ['solarRadiation','solarRoofArea','solarLandArea','solarExisting','solarTilt',
+    'windSpeed','windPowerDensity','windLand','windExisting','windHours'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el && d[id] !== undefined) el.value = d[id];
+  });
+  calcRenewable();
+}
+
+// ============== Water ==============
+function calcWater() {
+  const surface = parseFloat(document.getElementById('waterSurface').value) || 0;
+  const ground = parseFloat(document.getElementById('waterGround').value) || 0;
+  const municipal = parseFloat(document.getElementById('waterMunicipal').value) || 0;
+  const reuse = parseFloat(document.getElementById('waterReuse').value) || 0;
+  const circ = parseFloat(document.getElementById('waterCirc').value) || 0;
+  const total = surface + ground + municipal + reuse;
+  const recycleRate = total > 0 ? (circ / (total + circ) * 100) : 0;
+
+  document.getElementById('waterTotal').textContent = total.toFixed(2);
+  document.getElementById('waterRecycle').textContent = recycleRate.toFixed(1) + '%';
+
+  store.water = {surface, ground, municipal, reuse, circ};
+  saveToStore();
+}
+
+function renderWater() {
+  const d = store.water || {};
+  ['waterSurface','waterGround','waterMunicipal','waterReuse',
+    'waterWasteInd','waterWasteDom','waterCirc','waterTreatCapacity'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el && d[id] !== undefined) el.value = d[id];
+  });
+  calcWater();
+}
+
+// ============== Environment ==============
+function saveEnv() {
+  const fields = ['envSolidGen','envSolidReuse','envHazWaste','envDomWaste',
+    'envSO2','envNOx','envPM','envVOCs','envNoiseDay','envNoiseNight','envGreen'];
+  const d = {};
+  fields.forEach(id => { d[id] = parseFloat(document.getElementById(id).value) || 0; });
+  store.env = d;
+  saveToStore();
+}
+
+function renderEnv() {
+  const d = store.env || {};
+  ['envSolidGen','envSolidReuse','envHazWaste','envDomWaste',
+    'envSO2','envNOx','envPM','envVOCs','envNoiseDay','envNoiseNight','envGreen'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el && d[id] !== undefined) el.value = d[id];
+  });
+}
+
+// ============== Save Survey ==============
+function saveSurvey(type) {
+  if (type === 'energy') calcEnergy();
+  else if (type === 'carbon') calcCarbon();
+  else if (type === 'renewable') calcRenewable();
+  else if (type === 'water') calcWater();
+  else if (type === 'env') saveEnv();
+  saveToStore();
+  alert('✅ 数据已保存');
+}
+
+// ============== Assessment ==============
+const ASSESS_DIMS = [
+  { id:'energy', name:'用能结构转型', weight:20, max:20, items:[
+    {id:'e1',name:'可再生能源占比', max:6}, {id:'e2',name:'绿电消费比例', max:5},
+    {id:'e3',name:'储能配置', max:4}, {id:'e4',name:'供热清洁化', max:5}
+  ]},
+  { id:'efficiency', name:'节能降碳', weight:20, max:20, items:[
+    {id:'f1',name:'综合能耗强度', max:6}, {id:'f2',name:'能效对标达标率', max:5},
+    {id:'f3',name:'节能改造实施率', max:5}, {id:'f4',name:'落后设备淘汰率', max:4}
+  ]},
+  { id:'industry', name:'产业结构与循环', weight:15, max:15, items:[
+    {id:'i1',name:'产业链绿色化', max:4}, {id:'i2',name:'固废综合利用率', max:4},
+    {id:'i3',name:'水资源循环利用率', max:4}, {id:'i4',name:'能量梯级利用率', max:3}
+  ]},
+  { id:'infrastructure', name:'基础设施', weight:15, max:15, items:[
+    {id:'n1',name:'绿色建筑比例', max:4}, {id:'n2',name:'绿色交通占比', max:4},
+    {id:'n3',name:'智能照明覆盖率', max:3}, {id:'n4',name:'低碳基础设施', max:4}
+  ]},
+  { id:'monitor', name:'能碳管理', weight:15, max:15, items:[
+    {id:'m1',name:'碳排放核算完整性', max:5}, {id:'m2',name:'监测设备覆盖率', max:4},
+    {id:'m3',name:'能碳平台建设', max:3}, {id:'m4',name:'碳披露水平', max:3}
+  ]},
+  { id:'reduction', name:'减排与抵消', weight:15, max:15, items:[
+    {id:'r1',name:'减排项目实施', max:4}, {id:'r2',name:'碳抵消比例', max:4},
+    {id:'r3',name:'碳中和承诺路线', max:4}, {id:'r4',name:'创新示范', max:3}
+  ]}
+];
+
+function checkVeto() {
+  const v = [
+    document.getElementById('veto1').checked,
+    document.getElementById('veto2').checked,
+    document.getElementById('veto3').checked,
+    document.getElementById('veto4').checked
+  ];
+  store.assessment.veto = v;
+  saveToStore();
+  const allPass = v.every(Boolean);
+  document.getElementById('vetoStatus').textContent = allPass ? '✅全部通过' : `⚠️${v.filter(Boolean).length}/4通过`;
+  document.getElementById('vetoStatus').className = 'tag ' + (allPass ? 'tag-green' : 'tag-amber');
+}
+
+function renderAssessment() {
+  // Check veto
+  const v = store.assessment.veto || [];
+  ['veto1','veto2','veto3','veto4'].forEach((id,i) => {
+    document.getElementById(id).checked = v[i] || false;
+  });
+  checkVeto();
+
+  const grid = document.getElementById('assessGrid');
+  const scores = store.assessment.scores || {};
+  grid.innerHTML = ASSESS_DIMS.map(dim => {
+    const totalMax = dim.items.reduce((s,it) => s+it.max, 0);
+    let curSum = 0;
+    const itemsHtml = dim.items.map(it => {
+      const val = scores[it.id] || 0;
+      curSum += val;
+      const pct = (val / it.max * 100) || 0;
+      return `<div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid var(--neutral-50);font-size:13px">
+        <span>${it.name} <span style="color:var(--neutral-400);font-size:11px">(${it.max}分)</span></span>
+        <input type="number" min="0" max="${it.max}" step="0.5" value="${val}"
+          style="width:56px;padding:4px 8px;border:1px solid var(--neutral-200);border-radius:4px;font-size:13px;text-align:center"
+          onchange="updateAssessScore('${it.id}',${it.max},this)">
+      </div>`;
+    }).join('');
+    const pct = totalMax > 0 ? (curSum/totalMax*100) : 0;
+    return `<div class="content-card" style="break-inside:avoid">
+      <div class="card-head" style="padding:14px 18px">
+        <div class="card-head-left"><div><div class="card-title" style="font-size:14px">${dim.name}</div></div></div>
+        <span style="font-size:12px;color:var(--neutral-400)">${dim.weight}% · ${curSum}/${totalMax}</span>
+      </div>
+      <div class="card-body" style="padding:12px 18px">${itemsHtml}</div>
+    </div>`;
+  }).join('');
+}
+
+function updateAssessScore(id, max, el) {
+  let v = parseFloat(el.value) || 0;
+  if (v > max) v = max;
+  if (v < 0) v = 0;
+  el.value = v;
+  if (!store.assessment.scores) store.assessment.scores = {};
+  store.assessment.scores[id] = v;
+  saveToStore();
+}
+
+function runAssessment() {
+  const v = store.assessment.veto;
+  if (!v || !v.every(Boolean)) { alert('⚠️ 一票否决项未全部通过，请先完成基础条件检查'); return; }
+
+  const scores = store.assessment.scores || {};
+  let totalWeighted = 0;
+  let breakdown = [];
+
+  ASSESS_DIMS.forEach(dim => {
+    const totalMax = dim.items.reduce((s,it) => s+it.max, 0);
+    let cur = 0;
+    dim.items.forEach(it => { cur += (scores[it.id] || 0); });
+    const pct = totalMax > 0 ? (cur/totalMax*100) : 0;
+    const weighted = pct * (dim.weight/100);
+    totalWeighted += weighted;
+    breakdown.push({name:dim.name, pct, weight:dim.weight, weighted});
+  });
+
+  const baseScore = totalWeighted;
+  // Calculate bonus from actual data: green factory certificates, green finance etc.
+  let bonusTotal = 0;
+  const cb = store.carbon || {};
+  const en = store.energy || {};
+  // Bonus: green electricity coverage (already in full score), carbon offset ratio high
+  if (cb.Offset > 0) bonusTotal += 2;
+  if (en.Renew > 80) bonusTotal += 2;
+  if (store.assessment?.lastScore > 90) bonusTotal += 2;
+  bonusTotal = Math.min(bonusTotal, 10);
+  const finalScore = Math.min(baseScore + bonusTotal, 110);
+
+  // Rating based on 对标评估综合得分
+  let rating, gradeNote;
+  if (finalScore >= 100) { rating = '★★★★★★ 6星标杆'; gradeNote = '全部满分+加分6分以上+绿电覆盖'; }
+  else if (finalScore >= 90) { rating = '★★★★★ 5星优秀'; gradeNote = '全部满分+抵消100%'; }
+  else if (finalScore >= 80) { rating = '★★★★ 4星良好'; gradeNote = '核心全部达成+抵消80%'; }
+  else if (finalScore >= 70) { rating = '★★★ 3星达标'; gradeNote = '基本满足+抵消60%'; }
+  else { rating = '未达标'; gradeNote = '需≥70分方可获评'; }
+
+  document.getElementById('assessResult').style.display = 'block';
+  const circ = 276.46;
+  const offset = circ - (Math.min(finalScore,110)/110 * circ);
+  document.getElementById('assessRing').setAttribute('stroke-dashoffset', offset);
+  document.getElementById('assessScore').textContent = finalScore.toFixed(0);
+  document.getElementById('assessRating').textContent = rating;
+  document.getElementById('assessDetail').textContent = `基础分: ${baseScore.toFixed(1)} + 加分: ${bonusTotal.toFixed(1)} = ${finalScore.toFixed(1)} / 110 · ${gradeNote}`;
+
+  document.getElementById('assessBreakdown').innerHTML =
+    '<table style="width:100%;font-size:13px"><thead><tr><th>维度</th><th>得分率</th><th>加权</th></tr></thead><tbody>' +
+    breakdown.map(d => `<tr><td>${d.name}</td><td>${d.pct.toFixed(0)}%</td><td>${d.weighted.toFixed(2)}</td></tr>`).join('') + '</tbody></table>';
+
+  store.assessment.lastScore = finalScore;
+  saveToStore();
+  updateDashboard();
+}
+
+// ============== Report ==============
+function renderReport() {
+  const el = document.getElementById('reportContent');
+  const en = store.energy || {};
+  const cb = store.carbon || {};
+  const scope1 = (cb.b1Fuel||0)+(cb.b1Process||0)+(cb.b1Fugitive||0)+(cb.b1Mobile||0);
+  const scope2 = (cb.b2Elec||0)+(cb.b2Heat||0)+(cb.b2Cool||0);
+  const totalEmission = scope1 + scope2 + (cb.b3Upstream||0)+(cb.b3Waste||0)+(cb.b3Commute||0)+(cb.b3Other||0);
+  const score = store.assessment.lastScore;
+
+  el.innerHTML = `
+    <div style="padding:8px 0">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+        <h3 style="font-size:16px;font-weight:600">园区基础摸排报告</h3>
+        <span style="font-size:12px;color:var(--neutral-400)">${new Date().toLocaleDateString('zh-CN')} 生成</span>
+      </div>
+      <table style="width:100%;font-size:13px;border-collapse:collapse">
+        <tr style="background:var(--green-50)"><th style="padding:8px 12px;text-align:left;border-bottom:1px solid var(--green-200)" colspan="3">🔋 能源消费</th></tr>
+        <tr><td style="padding:6px 12px;border-bottom:1px solid var(--neutral-50)">电力消费</td><td>${en.Elec||0} 万kWh</td><td>${((en.Elec||0)*1.229/10000).toFixed(2)} 万吨标煤</td></tr>
+        <tr><td style="padding:6px 12px;border-bottom:1px solid var(--neutral-50)">天然气消费</td><td>${en.Gas||0} 万m³</td><td>${((en.Gas||0)*13.3/10000).toFixed(2)} 万吨标煤</td></tr>
+        <tr><td style="padding:6px 12px;border-bottom:1px solid var(--neutral-50)">原煤消费</td><td>${en.Coal||0} 万吨</td><td>${((en.Coal||0)*7143/10000).toFixed(2)} 万吨标煤</td></tr>
+        <tr><td style="padding:6px 12px;border-bottom:1px solid var(--neutral-50)">可再生能源占比</td><td colspan="2">${en.Elec>0?((en.GreenElec||0)/en.Elec*100).toFixed(1):'--'}%</td></tr>
+
+        <tr style="background:oklch(92% 0.05 250)"><th style="padding:8px 12px;text-align:left;border-bottom:1px solid oklch(85% 0.06 250)" colspan="3">🌫️ 碳排放 (依据910号文附件4)</th></tr>
+        <tr><td style="padding:6px 12px;border-bottom:1px solid var(--neutral-50)">范围1 直接排放</td><td colspan="2">${scope1.toFixed(1)} tCO₂e</td></tr>
+        <tr><td style="padding:6px 12px;border-bottom:1px solid var(--neutral-50)">范围2 间接排放</td><td colspan="2">${scope2.toFixed(1)} tCO₂e</td></tr>
+        <tr><td style="padding:6px 12px;border-bottom:1px solid var(--neutral-50)"><strong>排放总量</strong></td><td colspan="2"><strong>${totalEmission.toFixed(1)} tCO₂e</strong></td></tr>
+        <tr><td style="padding:6px 12px;border-bottom:1px solid var(--neutral-50)">碳汇+抵消量</td><td colspan="2">${(cb.Sink||0)+(cb.Offset||0)} tCO₂</td></tr>
+
+        <tr style="background:oklch(92% 0.06 80)"><th style="padding:8px 12px;text-align:left;border-bottom:1px solid oklch(85% 0.08 80)" colspan="3">☀️ 风光资源</th></tr>
+        <tr><td style="padding:6px 12px;border-bottom:1px solid var(--neutral-50)">年太阳辐射量</td><td colspan="2">${store.renewable?.solarRad||'--'} kWh/m²</td></tr>
+        <tr><td style="padding:6px 12px;border-bottom:1px solid var(--neutral-50)">年均风速</td><td colspan="2">${store.renewable?.windSpeed||'--'} m/s</td></tr>
+
+        <tr style="background:oklch(92% 0.05 290)"><th style="padding:8px 12px;text-align:left;border-bottom:1px solid oklch(85% 0.06 290)" colspan="3">💧 水资源</th></tr>
+        <tr><td style="padding:6px 12px;border-bottom:1px solid var(--neutral-50)">年取水总量</td><td colspan="2">${store.water?((store.water.surface||0)+(store.water.ground||0)+(store.water.municipal||0)+(store.water.reuse||0)).toFixed(2):'--'} 万吨</td></tr>
+
+        <tr style="${score ? 'background:var(--green-50)' : ''}"><th style="padding:8px 12px;text-align:left" colspan="3">📊 评估得分: ${score !== undefined ? score.toFixed(1) + ' / 110' : '未评估'}</th></tr>
+      </table>
+    </div>
+  `;
+}
+
+function generateReport() {
+  renderReport();
+  // Scroll to report section
+  document.getElementById('reportPreview').scrollIntoView({behavior:'smooth'});
+}
+
+// ============== Export ==============
+function exportData() {
+  const dataStr = JSON.stringify(store, null, 2);
+  const blob = new Blob([dataStr], {type:'application/json'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `零碳园区摸排数据_${new Date().toISOString().split('T')[0]}.json`;
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+
+// ============== Standards Compliance ==============
+
+let currentStdTab = 'national';
+
+// 国家级标准 (910号文附件3: 国家级零碳园区建设指标体系（试行）)
+// 附件3仅含：1项核心指标 + 5项引导指标，无其他内容
+const STD_ITEMS_NATIONAL = [
+  { cat:'核心指标（必须达标）', catShort:'核心', icon:'🎯', items:[
+    // 核心指标: 单位能耗碳排放
+    { id:'ne1', dim:'单位能耗碳排放', name:'≤0.2tCO₂/tce（年能耗20~100万tce园区）或≤0.3tCO₂/tce（≥100万tce）', 
+      ref:'910号文附件3 核心指标',
+      threshold:[0,0.3], unit:'tCO₂/tce',
+      val:d => {
+        const en=d.energy||{}; const cb=d.carbon||{};
+        const tce=((en.Elec||0)*1.229+(en.Coal||0)*7143+(en.Gas||0)*13.3)/10000;
+        const em=(cb.b1Fuel||0)+(cb.b2Elec||0);
+        return tce>0 ? em/tce/10000 : 0;
+      },
+      pass:v => v <= 0.3, full:v => v <= 0.2,
+      desc:'核心指标达不到不得申请验收'
+    }
+  ]},
+  { cat:'引导指标（5项）', catShort:'引导', icon:'🧭', items:[
+    { id:'ng1', dim:'清洁能源消费占比', name:'清洁能源消费占比 ≥ 90%', ref:'910号文附件3 引导指标1', threshold:[0,90], unit:'%',
+      val:d => { const en=d.energy||{}; return en.Elec>0 ? ((en.GreenElec||0)/en.Elec*100) : 0; },
+      pass:v => v >= 90, desc:'清洁能源含可再生能源、天然气等' },
+    { id:'ng2', dim:'产品单位能耗', name:'园区企业产出产品单位能耗达到二级能耗限额标准', ref:'910号文附件3 引导指标2',
+      val:d => 0, pass:v => false, desc:'需补充企业产品数据' },
+    { id:'ng3', dim:'工业固废综合利用率', name:'工业固体废弃物综合利用率 ≥ 80%', ref:'910号文附件3 引导指标3', threshold:[0,80], unit:'%',
+      val:d => { const ev=d.env||{}; return ev.envSolidGen>0 ? ((ev.envSolidReuse||0)/ev.envSolidGen*100) : 0; },
+      pass:v => v >= 80, desc:'省标为≥70%' },
+    { id:'ng4', dim:'余热/余冷/余压利用率', name:'余热/余冷/余压综合利用率 ≥ 50%', ref:'910号文附件3 引导指标4', threshold:[0,50], unit:'%',
+      val:d => 0, pass:v => false, desc:'需补充余能利用数据' },
+    { id:'ng5', dim:'工业用水重复利用率', name:'工业用水重复利用率 ≥ 80%', ref:'910号文附件3 引导指标5', threshold:[0,80], unit:'%',
+      val:d => { const w=d.water||{}; const total=(w.surface||0)+(w.ground||0)+(w.municipal||0); return total>0 ? (((w.circ||0)/(total+(w.circ||0)))*100) : 0; },
+      pass:v => v >= 80, desc:'省标为≥75%' }
+  ]}
+];
+
+// 广东省零碳园区建设指标体系（试行）- 20项指标（原文OCR核对）
+// 来源: 广东省零碳园区建设方案 附件1 表1
+const STD_ITEMS_GUANGDONG = [
+  { cat:'基本条件', catShort:'准入', icon:'⚠️', items:[
+    { id:'gv1', dim:'园区资质', name:'省级及以上开发区，应列入最新版审核公告目录', ref:'广东省方案附件1',
+      check: (d) => true, desc:'系统默认满足，需确认' },
+    { id:'gv2', dim:'边界范围', name:'建设范围可为园区整体或"园中园"（须明确四至边界）', ref:'广东省方案附件1',
+      check: (d) => d.assessment?.veto?.[0], desc:'须确认' },
+    { id:'gv3', dim:'安全合规', name:'3年内未发生重大安全/环境事故或社会不良影响', ref:'广东省方案附件1',
+      check: (d) => d.assessment?.veto?.[3], desc:'须确认无记录' }
+  ]},
+  { cat:'用能结构绿色转型（5项）', catShort:'用能', icon:'⚡', items:[
+    { id:'gd01', dim:'单位能耗碳排放', name:'≤0.3吨/吨标准煤（年综合能耗≥10万吨标煤园区）', ref:'粤方案 核心指标',
+      threshold:[0,0.3], unit:'tCO₂/tce',
+      val:d => { const en=d.energy||{}; const cb=d.carbon||{}; const tce=((en.Elec||0)*1.229+(en.Coal||0)*7143+(en.Gas||0)*13.3)/10000; const em=(cb.b1Fuel||0)+(cb.b2Elec||0); return tce>0 ? em/tce/10000 : 0; },
+      pass:v => v <= 0.3, desc:'与国家级核心指标一致' },
+    { id:'gd02', dim:'清洁能源消费占比', name:'≥90%', ref:'粤方案 引导指标', threshold:[0,90], unit:'%',
+      val:d => { const en=d.energy||{}; return en.Elec>0 ? ((en.GreenElec||0)/en.Elec*100) : 0; },
+      pass:v => v >= 90, desc:'清洁能源含可再生能源、天然气等' },
+    { id:'gd03', dim:'清洁燃料替代率', name:'≥70%', ref:'粤方案 引导指标', threshold:[0,70], unit:'%',
+      val:d => 0, pass:v => false, desc:'需补充燃料数据' },
+    { id:'gd04', dim:'需求响应能力占年最大负荷比例', name:'≥10%', ref:'粤方案 引导指标', threshold:[0,10], unit:'%',
+      val:d => 0, pass:v => false, desc:'需电力负荷数据' },
+    { id:'gd05', dim:'储能容量占日均用电量比例', name:'≥10%', ref:'粤方案 引导指标', threshold:[0,10], unit:'%',
+      val:d => { const en=d.energy||{}; const daily=en.Elec?en.Elec/365:0; return daily>0 ? ((en.Storage||0)/daily*100) : 0; },
+      pass:v => v >= 10, desc:'电化学/抽水蓄能' }
+  ]},
+  { cat:'基础设施绿色升级（4项）', catShort:'基建', icon:'🏗️', items:[
+    { id:'gd06', dim:'终端电气化率', name:'≥70%', ref:'粤方案 引导指标', threshold:[0,70], unit:'%',
+      val:d => 0, pass:v => false, desc:'需补充终端用能数据' },
+    { id:'gd07', dim:'超低能耗/近零能耗建筑占新建建筑比例', name:'≥50%', ref:'粤方案 引导指标', threshold:[0,50], unit:'%',
+      val:d => 0, pass:v => false, desc:'需补充建筑数据' },
+    { id:'gd08', dim:'既有建筑节能改造面积', name:'≥3万平方米', ref:'粤方案 引导指标', threshold:[0,3], unit:'万m²',
+      val:d => 0, pass:v => false, desc:'需补充既有建筑数据' },
+    { id:'gd09', dim:'清洁能源动力车辆保有量占比', name:'≥70%', ref:'粤方案 引导指标', threshold:[0,70], unit:'%',
+      val:d => 0, pass:v => false, desc:'需补充车辆数据' }
+  ]},
+  { cat:'绿色低碳产业发展（6项）', catShort:'产业', icon:'🏭', items:[
+    { id:'gd10', dim:'产品单位能耗', name:'园区企业产出主要产品单位能耗达二级限额标准', ref:'粤方案 引导指标',
+      val:d => 0, pass:v => false, desc:'需产品数据' },
+    { id:'gd11', dim:'工业固废综合利用率', name:'≥80%', ref:'粤方案 引导指标', threshold:[0,80], unit:'%',
+      val:d => { const ev=d.env||{}; return ev.envSolidGen>0 ? ((ev.envSolidReuse||0)/ev.envSolidGen*100) : 0; },
+      pass:v => v >= 80, desc:'与国标一致' },
+    { id:'gd12', dim:'余热/余冷/余压综合利用率', name:'≥50%', ref:'粤方案 引导指标', threshold:[0,50], unit:'%',
+      val:d => 0, pass:v => false, desc:'需余能数据' },
+    { id:'gd13', dim:'工业用水重复利用率', name:'≥80%', ref:'粤方案 引导指标', threshold:[0,80], unit:'%',
+      val:d => { const w=d.water||{}; const total=(w.surface||0)+(w.ground||0)+(w.municipal||0); return total>0 ? (((w.circ||0)/(total+(w.circ||0)))*100) : 0; },
+      pass:v => v >= 80, desc:'与国标一致' },
+    { id:'gd14', dim:'碳捕集利用与封存规模', name:'≥3万吨/年', ref:'粤方案 引导指标', threshold:[0,3], unit:'万t/年',
+      val:d => 0, pass:v => false, desc:'需专项数据' },
+    { id:'gd15', dim:'绿色低碳或外向型企业占比', name:'≥50%', ref:'粤方案 引导指标', threshold:[0,50], unit:'%',
+      val:d => 0, pass:v => false, desc:'需企业类型数据' }
+  ]},
+  { cat:'能碳管理能力提升（5项）', catShort:'管理', icon:'📡', items:[
+    { id:'gd16', dim:'能碳管理与服务平台覆盖率', name:'≥90%', ref:'粤方案 引导指标', threshold:[0,90], unit:'%',
+      val:d => 0, pass:v => false, desc:'需平台部署数据' },
+    { id:'gd17', dim:'规上企业清洁生产审核数量占比', name:'100%', ref:'粤方案 引导指标', threshold:[0,100], unit:'%',
+      val:d => 0, pass:v => false, desc:'需企业审核数据' },
+    { id:'gd18', dim:'重点用能单位节能降碳改造比例', name:'≥50%', ref:'粤方案 引导指标', threshold:[0,50], unit:'%',
+      val:d => 0, pass:v => false, desc:'需改造数据' },
+    { id:'gd19', dim:'产品碳足迹核算评价/标识认证企业覆盖率', name:'≥80%', ref:'粤方案 引导指标', threshold:[0,80], unit:'%',
+      val:d => 0, pass:v => false, desc:'需企业碳足迹数据' },
+    { id:'gd20', dim:'规上企业环境信息披露率', name:'≥80%', ref:'粤方案 引导指标', threshold:[0,80], unit:'%',
+      val:d => 0, pass:v => false, desc:'需披露数据' }
+  ]}
+];
+
+// ========== 渲染与对标 ==========
+function switchStdTab(tab) {
+  currentStdTab = tab;
+  document.querySelectorAll('#page-standard .tab-btn').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('#page-standard .tab-btn')[tab === 'national' ? 0 : 1].classList.add('active');
+  renderStandardPage();
+}
+
+function renderStandardPage() {
+  const container = document.getElementById('stdComplianceTable');
+  const items = currentStdTab === 'national' ? STD_ITEMS_NATIONAL : STD_ITEMS_GUANGDONG;
+  const results = runComplianceAll();
+
+  let passCount = 0, failCount = 0, totalCount = 0;
+
+  container.innerHTML = items.map(cat => {
+    let catHtml = '';
+    let catPass = 0, catTotal = 0;
+
+    cat.items.forEach(it => {
+      const res = results[it.id];
+      if (!res) return;
+      const isPass = res.status === 'pass';
+      const isFull = res.status === 'full';
+      totalCount++;
+      catTotal++;
+      if (isPass || isFull) { passCount++; catPass++; }
+      else failCount++;
+
+      const statusIcon = isFull ? '✅' : isPass ? '🟢' : res.canCheck ? '❌' : '⏳';
+      const statusClass = isFull ? 'tag-green' : isPass ? 'tag-blue' : res.canCheck ? 'tag-red' : 'tag-gray';
+      const statusText = isFull ? '优秀' : isPass ? '达标' : res.canCheck ? '未达标' : '待补充';
+
+      catHtml += `<div class="survey-item" style="margin-bottom:6px">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <div style="display:flex;align-items:center;gap:8px;flex:1">
+            <span>${statusIcon}</span>
+            <span class="survey-item-name">${it.name}</span>
+            <span class="tag tag-gray" style="font-size:10px">${it.ref}</span>
+          </div>
+          <span class="tag ${statusClass}" style="flex-shrink:0">${statusText}</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:4px">
+          <span style="font-size:12px;color:var(--neutral-400)">
+            ${res.canCheck ? `当前值: <strong>${res.displayVal}</strong>` : res.desc || '待补充数据'}
+            ${it.threshold ? `<span style="margin-left:8px">阈值: ${it.threshold[0]}-${it.threshold[1]}${it.unit||''}</span>` : ''}
+          </span>
+          ${it.weight ? `<span style="font-size:11px;color:var(--neutral-400)">权重 ${it.weight}%</span>` : ''}
+        </div>
+        ${it.threshold && res.canCheck ? `<div class="progress-bar" style="margin-top:6px;height:4px">
+          <div class="progress-fill ${isFull?'green':isPass?'blue':'red'}" style="width:${Math.min(res.rawVal/(it.threshold[1]||100)*100,100)}%"></div>
+        </div>` : ''}
+      </div>`;
+    });
+
+    return `<div class="content-card">
+      <div class="card-head" style="padding:14px 20px">
+        <div class="card-head-left">
+          <div class="card-icon ${cat.icon==='⚠️'?'red-bg':'green-bg'}">${cat.icon}</div>
+          <div><div class="card-title" style="font-size:14px">${cat.cat} <span style="font-size:12px;color:var(--neutral-400);font-weight:400">${cat.catShort}</span></div></div>
+        </div>
+        <span style="font-size:12px">${catPass}/${catTotal} 达标</span>
+      </div>
+      <div class="card-body" style="padding:14px 20px">${catHtml}</div>
+    </div>`;
+  }).join('');
+
+  // Update summary
+  const pct = totalCount > 0 ? Math.round(passCount/totalCount*100) : 0;
+  document.getElementById('stdPassCount').textContent = passCount;
+  document.getElementById('stdFailCount').textContent = failCount;
+  document.getElementById('stdCompliance').textContent = pct + '%';
+
+  // Determine grade + path recommendation
+  if (currentStdTab === 'national') {
+    // 910号文附件3: 核心指标必须达标 + 引导指标参考
+    const coreOk = results.ne1?.status === 'pass' || results.ne1?.status === 'full';
+    const guidePass = ['ng1','ng2','ng3','ng4','ng5'].filter(id => results[id]?.status === 'pass' || results[id]?.status === 'full').length;
+
+    let grade = '待评估';
+    if (!coreOk) {
+      grade = '⚠️ 核心指标(单位能耗碳排放)未达标，原则上不得申请验收';
+    } else {
+      grade = `✅ 核心指标达标！引导指标 ${guidePass}/5 项达标`;
+    }
+    document.getElementById('stdTargetGrade').textContent = grade;
+  } else {
+    const gdCore = ['gd01','gd02','gd04','gd05','gd06','gd08','gd09','gd11','gd12','gd14','gd15','gd16','gd17']
+      .every(id => results[id] && results[id].status !== 'fail' && results[id].canCheck);
+    const gdPassCount = ['gd01','gd02','gd03','gd04','gd05','gd06','gd07','gd08','gd09','gd10',
+      'gd11','gd12','gd13','gd14','gd15','gd16','gd17','gd18','gd19','gd20']
+      .filter(id => results[id] && (results[id].status === 'pass' || results[id].status === 'full')).length;
+
+    let grade = '待评估';
+    if (gdPassCount >= 16) grade = '✅ 满足广东省申报条件 (核心指标基本达标)';
+    else if (gdPassCount >= 10) grade = '🟡 部分达标，建议加速追赶';
+    else grade = '⚠️ 距离广东省标准有差距';
+    document.getElementById('stdTargetGrade').textContent = grade;
+  }
+
+  // Show path recommendation
+  updateRecBanner();
+}
+
+function updateRecBanner() {
+  const nResults = runComplianceAllFor(STD_ITEMS_NATIONAL);
+  const gResults = runComplianceAllFor(STD_ITEMS_GUANGDONG);
+
+  const nPass = countPass(nResults, ['nv1','nv2','nv3','ne1','ng1','ng2','ng3','ng4','ng5']);
+  const gPass = countPass(gResults, ['gd01','gd02','gd03','gd04','gd05','gd06','gd07','gd08','gd09','gd10',
+    'gd11','gd12','gd13','gd14','gd15','gd16','gd17','gd18','gd19','gd20']);
+
+  const nCanCheck = ['ne1','ng1','ng2','ng3','ng4','ng5'].filter(id => nResults[id]?.canCheck).length;
+  const gCanCheck = ['gd01','gd02','gd04','gd05','gd06','gd08','gd09','gd11','gd12','gd14','gd15','gd16','gd17'].filter(id => gResults[id]?.canCheck).length;
+
+  let recTitle, recDesc, bgClass = '';
+
+  // 核心: 单位能耗碳排放达标 → 推荐国家
+  const nCoreOk = nResults.ne1 && (nResults.ne1.status === 'pass' || nResults.ne1.status === 'full');
+  // 广东: 核心指标部分达标
+  const gCorePass = ['gd01','gd02','gd04','gd05','gd06','gd08','gd09','gd11','gd12'].filter(id => gResults[id] && (gResults[id].status === 'pass' || gResults[id].status === 'full')).length;
+
+  if (nCoreOk) {
+    bgClass = 'style="background:linear-gradient(135deg,oklch(92% 0.06 158),oklch(88% 0.08 155));margin-bottom:20px"';
+    recTitle = '🏛️ 推荐申报：国家级零碳园区';
+    recDesc = `园区单位能耗碳排放达标（核心指标通过），引导指标达标${nPass-1}/5项。满足国家级零碳园区申报核心条件，建议立即启动申报。`;
+  } else if (gCorePass >= 6) {
+    bgClass = 'style="background:linear-gradient(135deg,oklch(94% 0.06 80),oklch(90% 0.08 80));margin-bottom:20px"';
+    recTitle = '🌊 推荐申报：广东省零碳园区（优先）';
+    recDesc = `国家级核心指标（单位能耗碳排放≤0.2）暂未达标，但广东省指标达标${gCorePass}/8项核心。建议先申报广东省级，积累经验后冲刺国家级。`;
+  } else if (nPass >= 2) {
+    bgClass = 'style="background:linear-gradient(135deg,oklch(92% 0.06 158),oklch(88% 0.08 155));margin-bottom:20px"';
+    recTitle = '🏛️ 建议努力方向：国家级零碳园区';
+    recDesc = `单位能耗碳排放接近达标阈值，建议加快节能减碳改造，降低能耗强度。`;
+  } else if (gPass >= 8) {
+    bgClass = 'style="background:linear-gradient(135deg,oklch(94% 0.06 80),oklch(90% 0.08 80));margin-bottom:20px"';
+    recTitle = '🌊 建议努力方向：广东省零碳园区（优先）';
+    recDesc = `广东省达标 ${gPass}/20 项，省级标准门槛较低，建议先完成广东省零碳园区申报，积累经验后冲刺国家级。`;
+  } else {
+    recTitle = '📋 数据不足，请先完成基础摸排';
+    recDesc = `国家级: 核心指标${nCoreOk?'✅已达标':'❌待提升'} · 广东省: ${gCorePass}/8核心项达标。建议先完成各维度数据填报。`;
+  }
+
+  const banner = document.getElementById('recBanner');
+  if (banner) {
+    banner.outerHTML = `<div class="hero-card" id="recBanner" ${bgClass}>
+      <div class="hero-content">
+        <div class="hero-title" id="recTitle" style="font-size:20px">${recTitle}</div>
+        <div class="hero-desc" id="recDesc" style="font-size:13px;margin-top:4px">${recDesc}</div>
+      </div>
+    </div>`;
+  }
+}
+
+function countPass(results, ids) {
+  return ids.filter(id => results[id] && (results[id].status === 'pass' || results[id].status === 'full')).length;
+}
+
+function runComplianceAll() {
+  const items = currentStdTab === 'national' ? STD_ITEMS_NATIONAL : STD_ITEMS_GUANGDONG;
+  return runComplianceAllFor(items);
+}
+
+function runComplianceAllFor(items) {
+  const results = {};
+  items.forEach(cat => {
+    cat.items.forEach(it => {
+      try {
+        const rawVal = it.val ? it.val(store) : null;
+        const canCheck = rawVal !== null && rawVal !== undefined && rawVal !== false;
+        const isPass = it.pass ? it.pass(rawVal) : (it.check ? it.check(store) : false);
+        const isFull = it.full ? it.full(rawVal) : false;
+        const displayVal = it.unit ? (typeof rawVal === 'number' ? rawVal.toFixed(1) + it.unit : rawVal) : (rawVal ? '✅' : '❌');
+        results[it.id] = { status: isFull ? 'full' : isPass ? 'pass' : canCheck ? 'fail' : 'nodata', rawVal, displayVal, canCheck, desc: it.desc || '' };
+      } catch(e) {
+        results[it.id] = { status: 'nodata', rawVal: 0, displayVal: '--', canCheck: false, desc: it.desc || '数据不足' };
+      }
+    });
+  });
+  return results;
+}
+
+function runFullCompliance() {
+  // Run both standards comparison
+  renderStandardPage();
+  document.getElementById('stdComplianceTable').scrollIntoView({behavior:'smooth'});
+}
+
+function exportStdReport() {
+  const nResults = runComplianceAllFor(STD_ITEMS_NATIONAL);
+  const gResults = runComplianceAllFor(STD_ITEMS_GUANGDONG);
+
+  let report = `═══════════════════════════════════════════════\n`;
+  report += `  零碳园区标准对标报告\n`;
+  report += `  生成日期: ${new Date().toLocaleDateString('zh-CN')}\n`;
+  report += `═══════════════════════════════════════════════\n\n`;
+
+  // Recommendation
+  const nCoreOk = nResults.ne1 && (nResults.ne1.status === 'pass' || nResults.ne1.status === 'full');
+  const gCorePass = ['gd01','gd02','gd04','gd05','gd06','gd08','gd09','gd11','gd12'].filter(id =>
+    gResults[id] && (gResults[id].status === 'pass' || gResults[id].status === 'full')).length;
+
+  if (nCoreOk) report += `■ 推荐路径：国家级零碳园区（核心指标达标，可申报）\n\n`;
+  else if (gCorePass >= 6) report += `■ 推荐路径：广东省零碳园区（省标核心项${gCorePass}/8达标）\n\n`;
+  else report += `■ 目前数据不足以推荐，建议继续完善\n\n`;
+
+  // National
+  report += `━━━━━━━━━━━ 国家级标准 (910号文附件3) ━━━━━━━━━━━\n\n`;
+  STD_ITEMS_NATIONAL.forEach(cat => {
+    report += `【${cat.cat}】\n`;
+    cat.items.forEach(it => {
+      const res = nResults[it.id];
+      if (!res) return;
+      const statusMap = { full:'✅优秀', pass:'🟢达标', fail:'❌未达标', nodata:'⏳待补充' };
+      report += `  ${statusMap[res.status]||'❓'} ${it.name}\n`;
+      report += `    ${res.canCheck ? `当前值: ${res.displayVal}` : res.desc || '--'}\n`;
+      if (it.threshold) report += `    标准阈值: ${it.threshold[0]}-${it.threshold[1]}${it.unit||''}\n`;
+      report += `    参考: ${it.ref}\n`;
+    });
+    report += '\n';
+  });
+
+  // Guangdong
+  report += `━━━━━━━━━━━ 广东省标准 (建设方案) ━━━━━━━━━━━\n\n`;
+  STD_ITEMS_GUANGDONG.forEach(cat => {
+    report += `【${cat.cat}】\n`;
+    cat.items.forEach(it => {
+      const res = gResults[it.id];
+      if (!res) return;
+      const statusMap = { full:'✅优秀', pass:'🟢达标', fail:'❌未达标', nodata:'⏳待补充' };
+      report += `  ${statusMap[res.status]||'❓'} ${it.name}\n`;
+      report += `    ${res.canCheck ? `当前值: ${res.displayVal}` : res.desc || '--'}\n`;
+      if (it.threshold) report += `    标准阈值: ${it.threshold[0]}-${it.threshold[1]}${it.unit||''}\n`;
+      report += `    参考: ${it.ref}\n`;
+    });
+    report += '\n';
+  });
+
+  const blob = new Blob([report], {type:'text/plain;charset=utf-8'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `零碳园区双标准对标报告_${new Date().toISOString().split('T')[0]}.txt`;
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+
+// ============== Dashboard ==============
+function updateSidebarBadges() {
+  const en = store.energy || {};
+  const cb = store.carbon || {};
+  const rn = store.renewable || {};
+  const w = store.water || {};
+  const ev = store.env || {};
+
+  const eDone = ['GDP','Elec','Coal','Gas'].filter(f => en[f]).length;
+  document.getElementById('badgeEnergy').textContent = eDone > 0 ? eDone+'项' : '待填';
+  document.getElementById('badgeEnergy').className = 'nav-badge' + (eDone > 0 ? ' active' : '');
+
+  const cDone = ['b1Fuel','b2Elec','b3Upstream'].filter(f => cb[f]).length;
+  document.getElementById('badgeCarbon').textContent = cDone > 0 ? cDone+'项' : '待填';
+  document.getElementById('badgeCarbon').className = 'nav-badge' + (cDone > 0 ? ' active' : '');
+
+  const rDone = ['solarRad','windSpeed'].filter(f => rn[f]).length;
+  document.getElementById('badgeRenew').textContent = rDone > 0 ? rDone+'项' : '待填';
+  document.getElementById('badgeRenew').className = 'nav-badge' + (rDone > 0 ? ' active' : '');
+
+  const wDone = ['surface','ground','municipal'].filter(f => w[f]).length;
+  document.getElementById('badgeWater').textContent = wDone > 0 ? wDone+'项' : '待填';
+  document.getElementById('badgeWater').className = 'nav-badge' + (wDone > 0 ? ' active' : '');
+
+  const eDone2 = ['envSolidGen','envSO2','envNoiseDay'].filter(f => ev[f]).length;
+  document.getElementById('badgeEnv').textContent = eDone2 > 0 ? eDone2+'项' : '待填';
+  document.getElementById('badgeEnv').className = 'nav-badge' + (eDone2 > 0 ? ' active' : '');
+
+  const v = store.assessment.veto || [];
+  const aDone = v.every(Boolean) && store.assessment.lastScore ? '已评' : '待评';
+  document.getElementById('badgeAssess').textContent = aDone;
+  document.getElementById('badgeAssess').className = 'nav-badge' + (aDone === '已评' ? ' active' : '');
+
+  document.getElementById('sidebarScore').textContent = store.assessment.lastScore !== undefined ? store.assessment.lastScore.toFixed(0) : '--';
+  document.getElementById('sidebarScore').className = 'nav-badge' + (store.assessment.lastScore ? ' active' : '');
+}
+
+function updateDashboard() {
+  // Calculate total progress
+  const en = store.energy || {};
+  const cb = store.carbon || {};
+  const rn = store.renewable || {};
+  const w = store.water || {};
+  const ev = store.env || {};
+
+  const totalFields = 20; // approximate
+  let filled = 0;
+  if (en.Elec) filled++;
+  if (en.Coal) filled++;
+  if (en.Gas) filled++;
+  if (en.PV) filled++;
+  if (cb.b1Fuel) filled++;
+  if (cb.b2Elec) filled++;
+  if (cb.b2Heat) filled++;
+  if (cb.b3Upstream) filled++;
+  if (cb.Sink) filled++;
+  if (rn.solarRad) filled++;
+  if (rn.windSpeed) filled++;
+  if (w.surface) filled++;
+  if (w.ground) filled++;
+  if (w.reuse) filled++;
+  if (ev.envSolidGen) filled++;
+  if (ev.envSO2) filled++;
+  if (ev.envNoiseDay) filled++;
+  if (ev.envGreen) filled++;
+
+  const pct = Math.round(filled / totalFields * 100);
+  document.getElementById('dashProgress').textContent = pct + '%';
+  document.getElementById('dashFilled').textContent = filled + '/' + totalFields;
+
+  // Energy
+  const tceElec = (en.Elec||0) * 1.229 / 10000;
+  const tceCoal = (en.Coal||0) * 7143 / 10000;
+  const tceGas = (en.Gas||0) * 13.3 / 10000;
+  const totalTce = (tceElec + tceCoal + tceGas + ((en.Diesel||0)*14571/10000) + ((en.Gasoline||0)*14710/10000) + ((en.Heat||0)*34.12/10000)).toFixed(2);
+  document.getElementById('dashEnergy').textContent = totalTce;
+
+  // Carbon
+  const scope1 = (cb.b1Fuel||0)+(cb.b1Process||0)+(cb.b1Fugitive||0)+(cb.b1Mobile||0);
+  const scope2 = (cb.b2Elec||0)+(cb.b2Heat||0)+(cb.b2Cool||0);
+  const totalEm = scope1 + scope2 + (cb.b3Upstream||0)+(cb.b3Waste||0)+(cb.b3Commute||0)+(cb.b3Other||0);
+  document.getElementById('dashEmission').textContent = totalEm.toFixed(0);
+
+  // Renew %
+  const greenRatio = en.Elec > 0 ? ((en.GreenElec||0)/en.Elec*100).toFixed(0) + '%' : '--';
+  document.getElementById('dashRenew').textContent = greenRatio;
+
+  // Module progress indicators
+  const ePct = Math.min(Math.round(filled/4), 100);
+  document.getElementById('progEnergy').style.width = ePct + '%';
+  const cFields = ['b1Fuel','b2Elec','b3Upstream','Sink'].filter(f => cb[f]).length;
+  document.getElementById('progCarbon').style.width = Math.round(cFields/4*100) + '%';
+  document.getElementById('energyStatus').textContent = ePct > 0 ? ePct + '% 已完成' : '0项 · 待采集';
+  document.getElementById('carbonStatus').textContent = cFields > 0 ? cFields + '项 · 已填' : '0项 · 待采集';
+  document.getElementById('renewStatus').textContent = rn.solarRad ? '已测评' : '0项 · 待采集';
+  document.getElementById('waterStatus').textContent = w.surface ? '已测评' : '0项 · 待采集';
+  document.getElementById('envStatus').textContent = ev.envSolidGen ? '已测评' : '0项 · 待采集';
+
+  updateSidebarBadges();
+}
+
+// ============== Init ==============
+document.addEventListener('DOMContentLoaded', () => {
+  loadStore();
+  document.getElementById('dateDisplay').textContent = new Date().toLocaleDateString('zh-CN', { year:'numeric', month:'long', day:'numeric' });
+  updateDashboard();
+});
+</script>
+</body>
+</html>
