@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CBAM 填报表格和指南 — 2026 最新版</title>
+<style>
+:root {
+  --bg: #f4f6f4; --surface: #fff; --text: #1a1e1b; --muted: #5f6b62;
+  --accent: #1b6b3a; --accent-light: #e8f5eb; --danger: #c62828;
+  --danger-light: #ffebee; --warning: #e65100; --warning-light: #fff3e0;
+  --info: #1565c0; --info-light: #e3f2fd;
+  --border: #d8dcd8; --radius: 10px; --shadow: 0 1px 4px rgba(0,0,0,0.06);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--text);line-height:1.7;padding:0}
+.header{background:linear-gradient(135deg,#1b4332,#2d6a4f);color:#fff;padding:40px 24px;text-align:center;border-radius:0 0 16px 16px}
+.header h1{font-size:26px}
+.header p{font-size:14px;opacity:.85;margin-top:4px}
+.container{max-width:1000px;margin:0 auto;padding:20px}
+
+/* Navigation */
+.toc{background:var(--surface);border-radius:var(--radius);box-shadow:var(--shadow);padding:20px 24px;margin-bottom:20px}
+.toc h3{font-size:16px;color:var(--accent);margin-bottom:10px}
+.toc ol{padding-left:20px;font-size:14px;line-height:2}
+.toc a{color:var(--accent);text-decoration:none}
+.toc a:hover{text-decoration:underline}
+
+/* Cards */
+.card{background:var(--surface);border-radius:var(--radius);box-shadow:var(--shadow);margin-bottom:18px;overflow:hidden}
+.card-header{padding:15px 22px;border-bottom:1px solid var(--border);font-weight:700;font-size:15px;display:flex;align-items:center;gap:8px;background:#fafcfa}
+.card-body{padding:18px 22px;font-size:14px}
+
+/* Tables */
+table{width:100%;border-collapse:collapse;font-size:13px;margin:10px 0}
+th{background:#f0f4f0;padding:10px 12px;text-align:left;font-weight:600;border-bottom:2px solid #d0d8d0;font-size:12px;color:var(--muted)}
+td{padding:8px 12px;border-bottom:1px solid var(--border);vertical-align:top}
+tr:hover td{background:#f9fcf9}
+
+/* Alerts */
+.alert{padding:14px 18px;border-radius:8px;font-size:13px;margin:10px 0;line-height:1.7}
+.alert-info{background:var(--info-light);color:var(--info);border-left:4px solid var(--info)}
+.alert-warn{background:var(--warning-light);color:var(--warning);border-left:4px solid var(--warning)}
+.alert-danger{background:var(--danger-light);color:var(--danger);border-left:4px solid var(--danger)}
+.alert-success{background:var(--accent-light);color:var(--accent);border-left:4px solid var(--accent)}
+
+/* Tags */
+.tag{display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:700;margin-right:4px}
+.tag-new{background:var(--danger-light);color:var(--danger)}
+.tag-upd{background:var(--warning-light);color:var(--warning)}
+.tag-ok{background:var(--accent-light);color:var(--accent)}
+
+/* Steps */
+.step{display:flex;gap:12px;margin:14px 0;align-items:flex-start}
+.step-num{width:32px;height:32px;border-radius:50%;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;flex-shrink:0}
+.step-body{flex:1;font-size:14px}
+.step-body strong{display:block;margin-bottom:2px}
+
+/* Form Template */
+.form-table td:first-child{width:30%;font-weight:600;color:var(--accent)}
+
+/* Checklist */
+.checklist{list-style:none;padding:0}
+.checklist li{padding:6px 0;padding-left:20px;position:relative}
+.checklist li::before{content:"☐";position:absolute;left:0;color:var(--accent);font-weight:700}
+
+/* Responsive */
+@media(max-width:640px){
+  .header h1{font-size:20px}
+  table{font-size:12px}
+  th,td{padding:6px 8px}
+}
+
+/* Print */
+@media print{
+  body{background:#fff}
+  .header{background:#1b4332!important;-webkit-print-color-adjust:exact}
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>CBAM 填报表格和指南 · 2026 最新版</h1>
+  <p>来源：欧盟委员会官方FAQ（2026.05.27更新）· CBAM注册系统操作指南 · 维度系列碳中和 · 25份配套法规文件</p>
+</div>
+
+<div class="container">
+
+<!-- ====== TOC ====== -->
+<div class="toc">
+  <h3>📑 目录</h3>
+  <ol>
+    <li><a href="#s1">2026年最新政策变化</a></li>
+    <li><a href="#s2">CBAM 适用性自检</a></li>
+    <li><a href="#s3">填报时间节点</a></li>
+    <li><a href="#s4">账户注册与资质申请流程</a></li>
+    <li><a href="#s5">数据收集清单（2026版）</a></li>
+    <li><a href="#s6">碳排放核算方法与公式</a></li>
+    <li><a href="#s7">CBAM 填报表格模板</a></li>
+    <li><a href="#s8">CN编码查询与匹配</a></li>
+    <li><a href="#s9">CBAM证书购买与清缴</a></li>
+    <li><a href="#s10">罚则与合规风险</a></li>
+    <li><a href="#s11">术语速查表</a></li>
+    <li><a href="#s12">官方资源与联系方式</a></li>
+  </ol>
+</div>
+
+<!-- ====== 1. 2026年最新政策变化 ====== -->
+<div class="card" id="s1">
+  <div class="card-header">📢 1. 2026年最新政策变化</div>
+  <div class="card-body">
+
+    <div class="alert alert-warn">
+      <strong>⚠ 关键变化：</strong>2026年1月1日起，CBAM正式进入实施期，以下规则已生效或即将生效。
+    </div>
+
+    <table>
+      <tr><th style="width:22%;">变化项</th><th style="width:38%;">原规则（过渡期）</th><th>2026年正式实施期</th></tr>
+      <tr>
+        <td><strong>申报频率</strong></td>
+        <td>季度报告（每季度末+1月）</td>
+        <td><strong>年度报告</strong>（次年9月30日前）<span class="tag tag-new">修订提案</span></td>
+      </tr>
+      <tr>
+        <td><strong>免费配额</strong></td>
+        <td>EU ETS 免费配额仍然存在</td>
+        <td><strong>逐步取消</strong>，CBAM因子2026年97.5%→2034年0%</td>
+      </tr>
+      <tr>
+        <td><strong>CBAM证书</strong></td>
+        <td>无需购买</td>
+        <td><strong>2027年2月起购买</strong>，价格挂钩EU ETS周均价</td>
+      </tr>
+      <tr>
+        <td><strong>豁免门槛</strong></td>
+        <td>每批货物≤€150豁免</td>
+        <td><strong>年进口总量≤50吨</strong>豁免 <span class="tag tag-new">新规</span></td>
+      </tr>
+      <tr>
+        <td><strong>默认值规则</strong></td>
+        <td>复杂商品默认值占比≤20%</td>
+        <td>取消20%限制，但默认值取<strong>全球最高10国均值</strong>（更高） <span class="tag tag-upd">上调</span></td>
+      </tr>
+      <tr>
+        <td><strong>证书价格周期</strong></td>
+        <td>不适用</td>
+        <td>2026年按<strong>季度均价</strong>，2027年起按<strong>周均价</strong></td>
+      </tr>
+      <tr>
+        <td><strong>季度持有要求</strong></td>
+        <td>不适用</td>
+        <td>2027年起每季度末须持有<strong>≥50%证书</strong>（覆盖当年累计排放）</td>
+      </tr>
+      <tr>
+        <td><strong>范围扩展</strong></td>
+        <td>六大行业基础材料</td>
+        <td><strong>2028.01.01起扩展至180种下游产品</strong>（汽车零部件等） <span class="tag tag-new">预告</span></td>
+      </tr>
+    </table>
+
+    <div class="alert alert-info">
+      <strong>2025年12月17日：</strong>欧盟一次性发布<strong>24项</strong>CBAM配套实施细则，涵盖核算方法、核查原则、证书价格、免费分配调整、授权申报人制度、注册系统、海关通信、反规避、临时脱碳基金等。
+    </div>
+  </div>
+</div>
+
+<!-- ====== 2. CBAM 适用性自检 ====== -->
+<div class="card" id="s2">
+  <div class="card-header">🔍 2. CBAM 适用性自检</div>
+  <div class="card-body">
+    <p>按以下三步判断你的产品是否需要履行CBAM义务：</p>
+
+    <div class="step"><div class="step-num">1</div><div class="step-body"><strong>行业判定</strong>产品是否属于六大CBAM行业？（水泥/钢铁/铝/化肥/氢/电力）</div></div>
+    <div class="step"><div class="step-num">2</div><div class="step-body"><strong>CN编码匹配</strong>使用欧盟8位CN编码，在TARIC系统或CBAM自评工具中查询是否在管控清单内。</div></div>
+    <div class="step"><div class="step-num">3</div><div class="step-body"><strong>数量门槛</strong>年进口总量超过50吨（约80吨CO₂e）？如不超过，可豁免。</div></div>
+
+    <table>
+      <tr><th>行业</th><th>典型CN代码</th><th>核算气体</th><th>排放范围（正式期）</th></tr>
+      <tr><td>钢铁</td><td>7201-7229, 7301-7326</td><td>仅CO₂</td><td>仅直接排放</td></tr>
+      <tr><td><strong>铝</strong></td><td><strong>7601-7616</strong></td><td><strong>CO₂ + PFCs</strong></td><td><strong>仅直接排放</strong></td></tr>
+      <tr><td>水泥</td><td>2523, 2522</td><td>仅CO₂</td><td>直接+间接</td></tr>
+      <tr><td>化肥</td><td>28, 31章相关</td><td>CO₂ + N₂O</td><td>直接+间接</td></tr>
+      <tr><td>氢</td><td>2804 10 00</td><td>仅CO₂</td><td>仅直接</td></tr>
+      <tr><td>电力</td><td>2716 00 00</td><td>仅CO₂</td><td>仅直接</td></tr>
+    </table>
+
+    <div class="alert alert-success">
+      <strong>💡 铝行业提示：</strong>即使正式期仅核算直接排放，过渡期内间接排放（电力）也必须一并采集。另，铝制品(7603-7616)属于复杂商品，须追溯前体（未锻轧铝7601）的嵌入排放。
+    </div>
+  </div>
+</div>
+
+<!-- ====== 3. 填报时间节点 ====== -->
+<div class="card" id="s3">
+  <div class="card-header">⏱️ 3. 填报时间节点（2026-2027）</div>
+  <div class="card-body">
+    <table>
+      <tr><th>时间</th><th>事项</th><th>责任方</th></tr>
+      <tr><td>2025年3月31日起</td><td>申请"授权CBAM申报人"资质</td><td>欧盟进口商</td></tr>
+      <tr><td>2026年1月1日</td><td>正式实施期启动，开始生产数据年度采集</td><td>生产商+进口商</td></tr>
+      <tr><td>2026年3月31日前</td><td>提交ACD资质申请可享受临时进口过渡</td><td>欧盟进口商</td></tr>
+      <tr><td>2026年全年</td><td>按季度维护排放数据台账（内部用，不提交）</td><td>生产商</td></tr>
+      <tr><td>2027年2月起</td><td>CBAM证书开始销售</td><td>进口商购买</td></tr>
+      <tr><td>2027年起每季度末</td><td>证书持有量≥当年度累计排放量的50%</td><td>进口商</td></tr>
+      <tr><td><strong>2027年9月30日</strong></td><td><strong>2026年度CBAM申报截止+证书清缴</strong></td><td>进口商</td></tr>
+      <tr><td>2027年10月31日前</td><td>多余证书回购申请截止</td><td>进口商</td></tr>
+      <tr><td>2028年1月1日</td><td>扩展至180种钢铝下游产品</td><td>新增进口商</td></tr>
+    </table>
+    <p style="font-size:12px;color:var(--muted);margin-top:8px;">注：年度申报截止日原为5月31日，2025年修订提案拟延期至9月30日。</p>
+  </div>
+</div>
+
+<!-- ====== 4. 账户注册与资质申请 ====== -->
+<div class="card" id="s4">
+  <div class="card-header">🖥️ 4. 账户注册与资质申请流程</div>
+  <div class="card-body">
+
+    <div class="step"><div class="step-num">1</div><div class="step-body"><strong>创建EU Login账户</strong>访问 https://cbam-registry.ec.europa.eu/ → 企业邮箱注册 → 下载EU Login App完成双因素认证</div></div>
+    <div class="step"><div class="step-num">2</div><div class="step-body"><strong>申请授权申报人 (ACD)</strong>在Authorisation Management Module (AMM)中提交：企业贸易资质、历史出口数据、企业信用代码（须加国家前缀，如CN+代码）</div></div>
+    <div class="step"><div class="step-num">3</div><div class="step-body"><strong>非欧盟企业 O3CI 注册</strong>（出口商必做，2026年新增）：提交公司注册证书、代表权证明、授权代表身份证件 → 主管机构审批（5-10工作日）</div></div>
+    <div class="step"><div class="step-num">4</div><div class="step-body"><strong>获取EORI号</strong>向成员国海关申请经济经营者注册识别号，所有CBAM合规操作的前置条件</div></div>
+
+    <div class="alert alert-danger">
+      <strong>⚠ 常见错误：</strong>中国企业提交信用代码时未加国家前缀"CN"导致审核失败。申报单HS/CN编码须与CBAM申报编码完全一致，否则清关时直接扣货。
+    </div>
+  </div>
+</div>
+
+<!-- ====== 5. 数据收集清单 ====== -->
+<div class="card" id="s5">
+  <div class="card-header">📋 5. 数据收集清单（2026版）</div>
+  <div class="card-body">
+
+    <table class="form-table">
+      <tr><td colspan="2" style="background:#f0f4f0;font-weight:700;text-align:center;">A — 生产设施基本信息</td></tr>
+      <tr><td>企业名称（英文）</td><td>____________</td></tr>
+      <tr><td>设施地址 + UN/LOCODE</td><td>____________</td></tr>
+      <tr><td>报告年度</td><td>2026</td></tr>
+      <tr><td>生产工艺路线</td><td>____________</td></tr>
+      <tr><td>产品CN代码（8位）</td><td>如：7606 12 20</td></tr>
+
+      <tr><td colspan="2" style="background:#f0f4f0;font-weight:700;text-align:center;">B — 生产与能耗数据</td></tr>
+      <tr><td>产品总产量（吨）</td><td>逐月填报</td></tr>
+      <tr><td>天然气消耗量（1000Nm³）</td><td>逐月填报，注明NCV</td></tr>
+      <tr><td>外购电力（MWh）</td><td>逐月填报，注明电网排放因子</td></tr>
+      <tr><td>其他燃料消耗</td><td>柴油/液化气等，逐月</td></tr>
+
+      <tr><td colspan="2" style="background:#f0f4f0;font-weight:700;text-align:center;">C — 排放因子数据</td></tr>
+      <tr><td>燃料排放因子（tCO₂/TJ）</td><td>实测值 或 IPCC默认值</td></tr>
+      <tr><td>燃料净热值NCV (GJ/t)</td><td>实测值 或 IPCC默认值</td></tr>
+      <tr><td>氧化因子OxF (%)</td><td>默认100%</td></tr>
+      <tr><td>电力排放因子（tCO₂/MWh）</td><td>中国0.5703 / 区域值</td></tr>
+
+      <tr><td colspan="2" style="background:#f0f4f0;font-weight:700;text-align:center;">D — 前体材料（仅复杂商品）</td></tr>
+      <tr><td>前体名称 + CN代码</td><td>如：未锻轧铝 7601</td></tr>
+      <tr><td>前体消耗量（吨）</td><td>逐月</td></tr>
+      <tr><td>前体直接SEE (tCO₂e/t)</td><td>供应商提供 / 默认值</td></tr>
+      <tr><td>前体间接SEE (tCO₂e/t)</td><td>供应商提供 / 默认值</td></tr>
+
+      <tr><td colspan="2" style="background:#f0f4f0;font-weight:700;text-align:center;">E — 碳价信息</td></tr>
+      <tr><td>原产国碳价类型</td><td>全国碳市场CEA / CCER</td></tr>
+      <tr><td>已支付碳价金额（€）</td><td>该批次产品对应碳价总额</td></tr>
+      <tr><td>碳价减免/补偿</td><td>免费配额等，须扣除</td></tr>
+      <tr><td>碳价支付证明文件</td><td>清缴记录、购买凭证</td></tr>
+    </table>
+
+    <div class="alert alert-warn" style="margin-top:12px;">
+      <strong>⚠ 默认值警告：</strong>2026年起默认值取全球最高10国均值，叠加惩罚性加价（2026+10%→2027+20%→2028+30%），成本可能远超实测值。强烈建议使用实测排放数据。
+    </div>
+  </div>
+</div>
+
+<!-- ====== 6. 碳排放核算方法 ====== -->
+<div class="card" id="s6">
+  <div class="card-header">📐 6. 碳排放核算方法与公式</div>
+  <div class="card-body">
+
+    <div class="alert alert-info">
+      <strong>核算依据：</strong>EU 2025/2547 实施条例（2025年12月22日发布），三种标准方法。
+    </div>
+
+    <table>
+      <tr><th>方法</th><th>公式</th><th>适用场景</th></tr>
+      <tr><td><strong>燃烧法</strong></td><td>排放 = AD × NCV × EF × OxF</td><td>燃料燃烧（天然气、柴油等）</td></tr>
+      <tr><td><strong>过程法</strong></td><td>排放 = AD × EF × ConvF</td><td>化学反应排放（非燃烧）</td></tr>
+      <tr><td><strong>质量平衡法</strong></td><td>排放 = AD × CC × 44/12</td><td>碳平衡计算</td></tr>
+    </table>
+
+    <p style="margin:12px 0;"><strong>SEE 计算公式（特定隐含排放）：</strong></p>
+    <div class="alert alert-success">
+      SEE = (直接排放 + 间接排放 + 前体嵌入排放) ÷ 产品产量<br>
+      简单商品：不含前体嵌入排放<br>
+      复杂商品：须计入前体（如铝板须追溯铝锭的SEE）
+    </div>
+
+    <p style="margin:12px 0;"><strong>CBAM 碳关税计算公式：</strong></p>
+    <div class="alert alert-warn">
+      CBAM费用 = (产品隐含排放 × 欧盟碳价 × CBAM因子) － 原产国已付碳价<br>
+      <small>CBAM因子：2026年97.5% → 2034年降至0%（逐年按比例递减）</small>
+    </div>
+
+    <p style="margin:12px 0;"><strong>铝行业 PFC 排放（斜率法）：</strong></p>
+    <div class="alert alert-info" style="font-size:12px;">
+      EF(CF₄) = SEF × AEF × AED / 1000<br>
+      EF(C₂F₆) = EF(CF₄) × 0.1（典型比）<br>
+      PFC CO₂e = CF₄×6630 + C₂F₆×11100（GWP值：IPCC AR4）
+    </div>
+
+    <p style="margin:12px 0;"><strong>中国电力排放因子（2026年适用）：</strong></p>
+    <table>
+      <tr><th>区域电网</th><th>排放因子 (tCO₂/MWh)</th></tr>
+      <tr><td>全国平均</td><td>0.5703</td></tr>
+      <tr><td>南方电网（广西适用）</td><td>0.5271</td></tr>
+      <tr><td>华北电网</td><td>0.7266</td></tr>
+      <tr><td>华东电网</td><td>0.6239</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- ====== 7. CBAM 填报表格模板 ====== -->
+<div class="card" id="s7">
+  <div class="card-header">📄 7. CBAM 填报表格模板（2026适用）</div>
+  <div class="card-body">
+
+    <div class="alert alert-info">
+      <strong>官方模板下载方式：</strong>登录 CBAM 注册平台 (https://cbam-registry.ec.europa.eu/) → 文档下载区 → 获取最新 XML/XLS 模板。也可用欧盟官方Excel通信模板（Communication Template）。
+    </div>
+
+    <p><strong>欧盟官方通信模板包含以下5个工作表：</strong></p>
+    <table>
+      <tr><th style="width:15%;">工作表</th><th>内容</th><th>说明</th></tr>
+      <tr><td><strong>子表A</strong></td><td>企业基本信息、生产路线、原材料来源</td><td>设施名称、地址、UN/LOCODE</td></tr>
+      <tr><td><strong>子表B</strong></td><td>直接排放分类</td><td>按燃料类型逐项列出：消耗量、NCV、EF、OxF</td></tr>
+      <tr><td><strong>子表C</strong></td><td>间接排放计算</td><td>电力消耗量、电网排放因子、电力来源说明</td></tr>
+      <tr><td><strong>子表D</strong></td><td>产量与排放分配</td><td>按重量或工序分摊方法分配排放到各产品</td></tr>
+      <tr><td><strong>子表E</strong></td><td>前体产品数据</td><td>原材料隐含碳排放追溯（SEE直接+间接）</td></tr>
+    </table>
+
+    <p style="margin-top:12px;"><strong>两种提交方式：</strong></p>
+    <div class="step"><div class="step-num">A</div><div class="step-body"><strong>XML文件上传（推荐）</strong><br>下载XML样本 → 填写数据 → 上传至CBAM平台 → 系统自动校验 → 生成唯一报告编号</div></div>
+    <div class="step"><div class="step-num">B</div><div class="step-body"><strong>在线手工填报</strong><br>登录CBAM平台 → 创建新报告 → 逐字段填写 → 系统实时校验 → 提交并下载确认函</div></div>
+  </div>
+</div>
+
+<!-- ====== 8. CN编码查询 ====== -->
+<div class="card" id="s8">
+  <div class="card-header">🔢 8. CN编码查询与匹配</div>
+  <div class="card-body">
+    <div class="alert alert-warn">
+      <strong>⚠ CN编码 vs HS编码：</strong>CBAM使用8位欧盟CN编码，中国海关使用10位HS编码。前6位相同，但后几位是关键差异点。申报时必须使用CN编码，不能使用HS编码。
+    </div>
+
+    <table>
+      <tr><th>查询工具</th><th>地址</th></tr>
+      <tr><td>欧盟TARIC编码查询</td><td>https://ec.europa.eu/taxation_customs/dds2/taric/</td></tr>
+      <tr><td>CBAM自评工具</td><td>欧盟CBAM官网 → Self-assessment tool</td></tr>
+      <tr><td>中国贸促会指南</td><td>附录含完整行业CN代码清单</td></tr>
+    </table>
+
+    <p style="margin-top:8px;"><strong>铝行业主要CBAM CN代码：</strong></p>
+    <table>
+      <tr><th>CN代码</th><th>商品</th><th>类型</th><th>默认排放 (tCO₂e/t)</th></tr>
+      <tr><td>7601</td><td>未锻轧铝</td><td>基础材料</td><td>7.75</td></tr>
+      <tr><td>7603</td><td>铝粉末及薄片</td><td>复杂商品</td><td>3.78</td></tr>
+      <tr><td>7604</td><td>铝条、杆及型材</td><td>复杂商品</td><td>3.78</td></tr>
+      <tr><td>7606</td><td>铝板、片及带</td><td>复杂商品</td><td>3.78</td></tr>
+      <tr><td>7607</td><td>铝箔</td><td>复杂商品</td><td>3.78</td></tr>
+      <tr><td>7608</td><td>铝管</td><td>复杂商品</td><td>3.78</td></tr>
+    </table>
+    <p style="font-size:11px;color:var(--muted);">注：复杂商品的默认值仅为加工环节排放，不含前体（如铝锭）的嵌入排放。</p>
+  </div>
+</div>
+
+<!-- ====== 9. CBAM证书 ====== -->
+<div class="card" id="s9">
+  <div class="card-header">💰 9. CBAM证书购买与清缴</div>
+  <div class="card-body">
+    <table>
+      <tr><th>环节</th><th>说明</th></tr>
+      <tr><td><strong>证书定价</strong></td><td>与EU ETS配额拍卖价挂钩。2026年按季度均价，2027年起按周均价。</td></tr>
+      <tr><td><strong>参考碳价</strong></td><td>当前约€80/tCO₂（2026年6月）</td></tr>
+      <tr><td><strong>购买时间</strong></td><td>从2027年2月起</td></tr>
+      <tr><td><strong>购买方式</strong></td><td>登录CBAM登记系统 → 选择购买数量 → 按官方价格成交</td></tr>
+      <tr><td><strong>季度持有</strong></td><td>2027年起每季度末须持有≥当年累计排放量50%的证书</td></tr>
+      <tr><td><strong>年度清缴</strong></td><td>每年9月30日前清缴上年全部证书量（首次为2027.09.30）</td></tr>
+      <tr><td><strong>证书有效期</strong></td><td>2年</td></tr>
+      <tr><td><strong>证书回购</strong></td><td>每年10月31日前申请回购，回购数量≤上年购买量的1/3，按原购买价退款</td></tr>
+      <tr><td><strong>证书注销</strong></td><td>每年6月30日，两年前购买的未使用证书自动注销</td></tr>
+      <tr><td><strong>碳价抵扣</strong></td><td>在原产国已支付的有效碳价（如CEA配额清缴），可用于抵扣CBAM证书需求量</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- ====== 10. 罚则 ====== -->
+<div class="card" id="s10">
+  <div class="card-header">⚠️ 10. 罚则与合规风险</div>
+  <div class="card-body">
+    <table>
+      <tr><th>违规行为</th><th>处罚</th><th>依据</th></tr>
+      <tr><td>未提交报告</td><td><strong>每吨未报告排放 10-50€ 罚款</strong></td><td>Art. 16</td></tr>
+      <tr><td>报告不完整/错误</td><td>同上 + 限期更正</td><td>Art. 16</td></tr>
+      <tr><td>多次违规</td><td>处罚金额上浮</td><td>Art. 16</td></tr>
+      <tr><td>未取得ACD资质进口</td><td>货物扣押、无法清关</td><td>正式实施期</td></tr>
+      <tr><td>未清缴证书</td><td><strong>100€/吨</strong> + 撤销授权</td><td>正式实施期</td></tr>
+      <tr><td>报关时忘填Y128代码</td><td>直接扣货，无法补救</td><td>海关实操</td></tr>
+    </table>
+
+    <div class="alert alert-danger" style="margin-top:12px;">
+      <strong>核心合规风险：</strong><br>
+      ① 数据质量风险：使用默认值导致成本飙升（全球最高10国均值）<br>
+      ② 编码匹配风险：CN/HS编码混淆导致申报错误<br>
+      ③ 供应链风险：前体供应商数据缺失 → 被迫用最高默认值<br>
+      ④ 时间风险：逾期申报或清缴 → 罚款+货物滞留
+    </div>
+  </div>
+</div>
+
+<!-- ====== 11. 术语速查 ====== -->
+<div class="card" id="s11">
+  <div class="card-header">📖 11. 术语速查表</div>
+  <div class="card-body">
+    <table>
+      <tr><th>缩写</th><th>全称</th><th>中文</th></tr>
+      <tr><td>CBAM</td><td>Carbon Border Adjustment Mechanism</td><td>碳边境调节机制</td></tr>
+      <tr><td>EU ETS</td><td>EU Emissions Trading System</td><td>欧盟碳排放交易体系</td></tr>
+      <tr><td>SEE</td><td>Specific Embedded Emissions</td><td>特定隐含排放 (tCO₂e/t)</td></tr>
+      <tr><td>ACD</td><td>Authorised CBAM Declarant</td><td>授权CBAM申报人</td></tr>
+      <tr><td>O3CI</td><td>Operator of a Installation in a Third Country</td><td>非欧盟设施运营商</td></tr>
+      <tr><td>NCA</td><td>National Competent Authority</td><td>国家主管机构</td></tr>
+      <tr><td>EORI</td><td>Economic Operators Registration and Identification</td><td>欧盟经济经营者注册识别号</td></tr>
+      <tr><td>CN code</td><td>Combined Nomenclature</td><td>欧盟8位商品编码</td></tr>
+      <tr><td>MRV</td><td>Monitoring, Reporting, Verification</td><td>监测、报告、核查体系</td></tr>
+      <tr><td>PFC</td><td>Perfluorocarbons</td><td>全氟碳化物 (CF₄, C₂F₆)</td></tr>
+      <tr><td>FFA</td><td>Free Allocation Adjustment</td><td>免费配额调节值</td></tr>
+      <tr><td>GWP</td><td>Global Warming Potential</td><td>全球变暖潜能值</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- ====== 12. 官方资源 ====== -->
+<div class="card" id="s12">
+  <div class="card-header">🔗 12. 官方资源与联系方式</div>
+  <div class="card-body">
+    <table>
+      <tr><th>资源</th><th>链接</th></tr>
+      <tr><td>CBAM注册平台</td><td>https://cbam-registry.ec.europa.eu/</td></tr>
+      <tr><td>CBAM官方主页</td><td>https://taxation-customs.ec.europa.eu/carbon-border-adjustment-mechanism_en</td></tr>
+      <tr><td>欧盟TARIC编码查询</td><td>https://ec.europa.eu/taxation_customs/dds2/taric/</td></tr>
+      <tr><td>CBAM法规原文</td><td>EUR-Lex → 搜索 "2023/956" "2025/2547"</td></tr>
+      <tr><td>欧盟电子学习课程</td><td>https://customs-taxation.learning.europa.eu/</td></tr>
+      <tr><td>O3CI培训视频系列</td><td>18个授权管理模块视频 + 非欧盟运营商专题</td></tr>
+      <tr><td>各成员国NCA联系信息</td><td>欧盟委员会发布的最新NCA名单（2026-06-26更新）</td></tr>
+      <tr><td>铝行业CBAM排放计算器</td><td>中文在线工具（含CN代码查询+默认值表）</td></tr>
+    </table>
+  </div>
+</div>
+
+<hr style="border:none;border-top:1px solid var(--border);margin:24px 0">
+<p style="font-size:12px;color:var(--muted);text-align:center">
+  资料来源：EU 2023/956 · EU 2025/2547 · 欧盟委员会CBAM FAQ (2026.05.27) · 维度系列碳中和公众号 · 24项配套实施细则<br>
+  整理日期：2026年7月1日 · 仅供内部参考，最终以欧盟官方公告为准
+</p>
+
+</div>
+
+</body>
+</html>
