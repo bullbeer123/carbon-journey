@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>顺其自然 — CBAM碳边境调节机制</title>
+<link rel="stylesheet" href="shunqiziran.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'><path d='M20 4C12 4 5 10 5 18C5 26 10 32 18 36L20 38L22 36C30 32 35 26 35 18C35 10 28 4 20 4Z' fill='%231a7a3a' opacity='0.15'/><path d='M14 16L20 12L26 16V24L20 28L14 24V16Z' stroke='%231a7a3a' stroke-width='1.5' fill='none' stroke-linejoin='round'/></svg>">
+</head>
+<body>
+<nav id="navbar">
+  <div class="nav-container">
+    <div class="nav-logo">
+      <svg class="logo-icon" viewBox="0 0 40 40" fill="none">
+        <path d="M20 4C12 4 5 10 5 18C5 26 10 32 18 36L20 38L22 36C30 32 35 26 35 18C35 10 28 4 20 4Z" fill="#1a7a3a" opacity="0.15"/>
+        <path d="M14 16L20 12L26 16V24L20 28L14 24V16Z" stroke="#1a7a3a" stroke-width="1.5" fill="none" stroke-linejoin="round"/>
+        <path d="M20 12V28M14 20H26" stroke="#1a7a3a" stroke-width="1.2" opacity="0.6"/>
+        <circle cx="20" cy="20" r="18" stroke="#1a7a3a" stroke-width="0.8" opacity="0.3"/>
+      </svg>
+      <span class="logo-text">顺其自然</span>
+    </div>
+    <ul class="nav-links">
+                <li><a href="index.html">工作台</a></li>
+                <li><a href="market.html">碳市场</a></li>
+                <li><a href="policy.html">政策解读</a></li>
+                <li><a href="cbam.html" class="active">CBAM</a></li>
+                <li><a href="reports.html">报告中心</a></li>
+                <li><a href="tools.html">工具箱</a></li>
+                <li><a href="platforms.html">服务平台</a></li>
+            </ul>
+    <button class="nav-toggle" id="navToggle">☰</button>
+  </div>
+</nav>
+
+<div class="page-wrap">
+
+  <!-- ===== 标题 ===== -->
+  <div class="section-block">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:16px;">
+      <div>
+        <h1 style="font-size:24px;font-weight:700;color:var(--sz-green-dark);margin:0;">CBAM 碳边境调节机制</h1>
+        <p style="color:var(--sz-text-muted);font-size:14px;margin:4px 0 0;">EU Carbon Border Adjustment Mechanism — 政策解读·合规工具·填报指南</p>
+      </div>
+      <div style="display:flex;gap:8px;">
+        <a href="https://taxation-customs.ec.europa.eu/carbon-border-adjustment-mechanism_en" target="_blank" class="btn-sz btn-sz-outline btn-sz-sm">EU官方 ↗</a>
+        <a href="https://ec.europa.eu/taxation_customs/dds2/taric/taric_consultation.jsp" target="_blank" class="btn-sz btn-sz-outline btn-sz-sm">TARIC查询 ↗</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 核心工具 ===== -->
+  <div class="section-block">
+    <div class="section-title">核心工具</div>
+    <div class="card-grid card-grid-2">
+      <a href="https://c50e3f8ac9c2466b89490201fcf55822.app.codebuddy.work/" target="_blank" class="card quick-entry">
+        <div class="entry-icon" style="background:#fce4ec;color:#b71c1c;">🔩</div>
+        <div class="entry-name">铝行业CBAM排放计算器</div>
+        <div class="entry-desc">EU 2025/2547 · 隐含排放一键计算 · CN7606预设</div>
+        <div style="font-size:11px;color:var(--sz-green);margin-top:4px;">在线工具 ↗</div>
+      </a>
+      <div class="card tool-card">
+        <div class="tool-header">
+          <div class="tool-icon" style="background:#fce4ec;color:#b71c1c;">🔩</div>
+          <div><div class="tool-name">CBAM铝业合规系统</div><div style="font-size:12px;color:var(--sz-text-muted);">合规管理</div></div>
+        </div>
+        <div class="tool-desc">铝行业CBAM合规管理全流程系统。</div>
+        <span class="btn-sz btn-sz-outline btn-sz-sm tool-link" style="opacity:0.5;">本地工具</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== CBAM关键信息 ===== -->
+  <div class="section-block">
+    <div class="section-title">快速了解CBAM</div>
+    <div class="card-grid card-grid-3">
+      <div class="card" style="padding:20px;">
+        <div style="font-size:15px;font-weight:600;color:var(--sz-green-dark);margin-bottom:8px;">什么是CBAM</div>
+        <div style="font-size:13px;color:var(--sz-text-muted);line-height:1.7;">欧盟碳边境调节机制，2023年10月过渡期生效，2026年正式征收。要求进口商按商品隐含碳排放购买CBAM证书，价格与EU ETS碳价挂钩。</div>
+      </div>
+      <div class="card" style="padding:20px;">
+        <div style="font-size:15px;font-weight:600;color:var(--sz-green-dark);margin-bottom:8px;">覆盖行业</div>
+        <div style="font-size:13px;color:var(--sz-text-muted);line-height:1.7;">钢铁、铝、水泥、化肥、电力、氢气六大行业。涵盖直接排放+部分间接排放，按CN编码分类管理。</div>
+      </div>
+      <div class="card" style="padding:20px;">
+        <div style="font-size:15px;font-weight:600;color:var(--sz-green-dark);margin-bottom:8px;">时间线</div>
+        <div style="font-size:13px;color:var(--sz-text-muted);line-height:1.7;">过渡期（2023.10-2025.12）→ 正式征收（2026-2034逐步取消免费配额）→ 全量征收（2035年起）。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 资料与报告 ===== -->
+  <div class="section-block">
+    <div class="section-title">资料与报告</div>
+    <div class="card-grid card-grid-2">
+      <a href="reports/cbam-guide-2026.html" class="card related-link">
+        <div class="rl-icon" style="background:#e3f2fd;color:#1565c0;">📘</div>
+        <div><div style="font-size:14px;font-weight:600;">CBAM填报表格和指南2026</div><div style="font-size:12px;color:var(--sz-text-muted);">12章完整手册 · 表格·核算·注册·罚则</div></div>
+      </a>
+      <a href="reports/cbam-library.html" class="card related-link">
+        <div class="rl-icon" style="background:#e3f2fd;color:#1565c0;">📦</div>
+        <div><div style="font-size:14px;font-weight:600;">CBAM资料库</div><div style="font-size:12px;color:var(--sz-text-muted);">法规·指南·报告·工具一站式索引</div></div>
+      </a>
+      <a href="reports/policy-summary.html" class="card related-link">
+        <div class="rl-icon" style="background:#eeedfe;color:#534ab7;">📋</div>
+        <div><div style="font-size:14px;font-weight:600;">政策解读工作汇总</div><div style="font-size:12px;color:var(--sz-text-muted);">9份政策·8份PPT·6个动画（含CBAM）</div></div>
+      </a>
+      <div class="card related-link">
+        <div class="rl-icon" style="background:#fce4ec;color:#b71c1c;">📄</div>
+        <div><div style="font-size:14px;font-weight:600;">CBAM合同审查报告</div><div style="font-size:12px;color:var(--sz-text-muted);">大亚新能源 · 合规审查</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 官方资源 ===== -->
+  <div class="section-block">
+    <div class="section-title">官方资源</div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px;">
+      <a href="https://taxation-customs.ec.europa.eu/carbon-border-adjustment-mechanism_en" target="_blank" class="card" style="display:flex;align-items:center;gap:12px;padding:14px 18px;text-decoration:none;color:var(--sz-text);">
+        <span style="font-size:20px;">🇪🇺</span>
+        <div><div style="font-size:14px;font-weight:600;">EU CBAM官方页面</div><div style="font-size:12px;color:var(--sz-text-muted);">法规原文·指南·最新动态</div></div>
+      </a>
+      <a href="https://ec.europa.eu/taxation_customs/dds2/taric/taric_consultation.jsp" target="_blank" class="card" style="display:flex;align-items:center;gap:12px;padding:14px 18px;text-decoration:none;color:var(--sz-text);">
+        <span style="font-size:20px;">🔍</span>
+        <div><div style="font-size:14px;font-weight:600;">TARIC关税查询系统</div><div style="font-size:12px;color:var(--sz-text-muted);">CN编码·关税税率·适用性查询</div></div>
+      </a>
+      <a href="https://cbam-acs.ec.europa.eu/" target="_blank" class="card" style="display:flex;align-items:center;gap:12px;padding:14px 18px;text-decoration:none;color:var(--sz-text);">
+        <span style="font-size:20px;">📝</span>
+        <div><div style="font-size:14px;font-weight:600;">CBAM过渡期注册系统</div><div style="font-size:12px;color:var(--sz-text-muted);">ACS系统 · 填报入口</div></div>
+      </a>
+      <a href="https://www.mee.gov.cn/" target="_blank" class="card" style="display:flex;align-items:center;gap:12px;padding:14px 18px;text-decoration:none;color:var(--sz-text);">
+        <span style="font-size:20px;">🏛️</span>
+        <div><div style="font-size:14px;font-weight:600;">中国生态环境部</div><div style="font-size:12px;color:var(--sz-text-muted);">CBAM应对政策·国内碳市场</div></div>
+      </a>
+    </div>
+  </div>
+
+</div>
+
+<div class="footer-sz">
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <svg width="24" height="24" viewBox="0 0 40 40" fill="none"><path d="M20 4C12 4 5 10 5 18C5 26 10 32 18 36L20 38L22 36C30 32 35 26 35 18C35 10 28 4 20 4Z" fill="#1a7a3a" opacity="0.15"/><path d="M14 16L20 12L26 16V24L20 28L14 24V16Z" stroke="#1a7a3a" stroke-width="1.5" fill="none" stroke-linejoin="round"/></svg>
+      <span>顺其自然</span>
+    </div>
+    <div>© 2026 bull beer</div>
+  </div>
+</div>
+
+<script>
+document.getElementById('navToggle').addEventListener('click', function(){
+  document.querySelector('.nav-links').classList.toggle('open');
+});
+</script>
+</body>
+</html>
