@@ -1,0 +1,1031 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>铝行业CBAM信息填报辅助系统 — 进口商与生产商</title>
+<style>
+:root {
+  --bg: #f4f6f4;
+  --card: #fff;
+  --text: #1a1a1a;
+  --muted: #666;
+  --border: #d8dcd8;
+  --accent: #1b6b3a;
+  --accent-light: #e6f4ea;
+  --red: #c62828;
+  --red-light: #fce4e4;
+  --blue: #1565c0;
+  --blue-light: #e3f2fd;
+  --yellow: #f57f17;
+  --yellow-light: #fff8e1;
+  --green: #2e7d32;
+  --radius: 10px;
+  --shadow: 0 1px 4px rgba(0,0,0,0.06);
+}
+* { box-sizing:border-box; margin:0; padding:0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+  background: var(--bg); color: var(--text); line-height:1.7;
+}
+.container { max-width:1100px; margin:0 auto; padding:20px; }
+
+/* Header */
+.header {
+  background: linear-gradient(135deg, #1b4332, #2d6a4f);
+  color:#fff; padding:40px 24px; text-align:center; border-radius:0 0 16px 16px;
+}
+.header h1 { font-size:26px; margin-bottom:6px; }
+.header p { font-size:14px; opacity:.85; }
+
+/* Tabs */
+.tabs { display:flex; gap:4px; margin:20px 0; background:var(--card); border-radius:var(--radius); padding:4px; box-shadow:var(--shadow); }
+.tab {
+  flex:1; text-align:center; padding:12px 8px; cursor:pointer; border-radius:8px; font-size:14px; font-weight:600;
+  color:var(--muted); transition:.2s; border:none; background:transparent;
+}
+.tab:hover { background:var(--accent-light); color:var(--accent); }
+.tab.active { background:var(--accent); color:#fff; }
+.tab-content { display:none; }
+.tab-content.active { display:block; }
+
+/* Cards */
+.card { background:var(--card); border-radius:var(--radius); box-shadow:var(--shadow); margin-bottom:18px; overflow:hidden; }
+.card-header {
+  padding:14px 20px; border-bottom:1px solid var(--border); font-weight:700; font-size:15px;
+  display:flex; align-items:center; gap:8px; background:#fafcfa;
+}
+.card-header .icon { font-size:18px; }
+.card-body { padding:18px 20px; }
+
+/* Form */
+.form-group { margin-bottom:14px; }
+.form-group label { display:block; font-size:13px; font-weight:600; color:var(--muted); margin-bottom:4px; }
+.form-group input, .form-group select, .form-group textarea {
+  width:100%; padding:10px 12px; border:1px solid var(--border); border-radius:8px; font-size:14px;
+  font-family:inherit; transition:.2s; background:#fafcfa;
+}
+.form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+  outline:none; border-color:var(--accent); box-shadow:0 0 0 3px rgba(27,107,58,.1);
+}
+.form-row { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+.form-row-3 { display:grid; grid-template-columns:1fr 1fr 1fr; gap:14px; }
+@media(max-width:768px){ .form-row,.form-row-3{grid-template-columns:1fr;} }
+
+/* Table */
+table { width:100%; border-collapse:collapse; font-size:13px; margin:12px 0; }
+th { background:#f0f4f0; padding:10px 12px; text-align:left; font-weight:600; border-bottom:2px solid #d0d8d0; font-size:12px; color:var(--muted); }
+td { padding:10px 12px; border-bottom:1px solid var(--border); vertical-align:top; }
+tr:hover td { background:#f9fcf9; }
+.inp-cell { width:100%; padding:6px 8px; border:1px solid var(--border); border-radius:6px; font-size:13px; text-align:right; }
+
+/* Buttons */
+.btn {
+  display:inline-block; padding:10px 22px; border-radius:8px; font-size:14px; font-weight:600;
+  cursor:pointer; border:none; transition:.2s;
+}
+.btn-primary { background:var(--accent); color:#fff; }
+.btn-primary:hover { background:#1a5e32; }
+.btn-outline { background:#fff; color:var(--accent); border:2px solid var(--accent); }
+.btn-outline:hover { background:var(--accent-light); }
+.btn-sm { padding:6px 14px; font-size:12px; }
+
+/* Alerts */
+.alert { padding:14px 18px; border-radius:8px; font-size:13px; margin:12px 0; }
+.alert-info { background:var(--blue-light); color:var(--blue); border-left:4px solid var(--blue); }
+.alert-warn { background:var(--yellow-light); color:var(--yellow); border-left:4px solid var(--yellow); }
+.alert-danger { background:var(--red-light); color:var(--red); border-left:4px solid var(--red); }
+.alert-success { background:var(--accent-light); color:var(--accent); border-left:4px solid var(--accent); }
+
+/* Summary boxes */
+.summary-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:12px; }
+.summary-box {
+  background:linear-gradient(135deg,#f0f7f0,#e8f2e8); padding:18px; border-radius:10px; text-align:center;
+}
+.summary-box .val { font-size:28px; font-weight:800; color:var(--accent); }
+.summary-box .lbl { font-size:12px; color:var(--muted); margin-top:2px; }
+
+/* CN code lookup */
+.cn-list { max-height:400px; overflow-y:auto; border:1px solid var(--border); border-radius:8px; }
+.cn-item { padding:10px 14px; border-bottom:1px solid var(--border); cursor:pointer; font-size:13px; display:flex; justify-content:space-between; align-items:center; transition:.15s; }
+.cn-item:hover { background:var(--accent-light); }
+.cn-item.selected { background:var(--accent); color:#fff; }
+.cn-item .code { font-family:"SF Mono","Consolas",monospace; font-weight:700; font-size:14px; }
+.cn-search { margin-bottom:12px; }
+
+/* Tag */
+.tag { display:inline-block; padding:2px 8px; border-radius:4px; font-size:11px; font-weight:700; }
+.tag-red { background:var(--red-light); color:var(--red); }
+.tag-green { background:var(--accent-light); color:var(--accent); }
+.tag-blue { background:var(--blue-light); color:var(--blue); }
+
+/* Tech analysis */
+.issue-card {
+  border:1px solid var(--border); border-radius:8px; overflow:hidden; margin-bottom:14px;
+}
+.issue-header {
+  padding:12px 16px; display:flex; justify-content:space-between; align-items:flex-start;
+  border-bottom:1px solid var(--border); background:#fafcfa;
+}
+.issue-header h4 { font-size:14px; margin:0; flex:1; }
+.issue-body { padding:14px 16px; font-size:13px; }
+.issue-body blockquote {
+  background:#f9fcf9; border-left:3px solid var(--accent); padding:10px 14px;
+  margin:8px 0; border-radius:0 6px 6px 0;
+}
+
+/* Print */
+@media print {
+  body { background:#fff; }
+  .tabs, .btn, .header { background:#1b4332 !important; -webkit-print-color-adjust:exact; }
+  .card { box-shadow:none; border:1px solid #ddd; break-inside:avoid; }
+  .tab-content { display:block !important; }
+}
+
+.badge { display:inline-block; padding:3px 10px; border-radius:12px; font-size:11px; font-weight:700; margin-right:4px; }
+.badge-crit { background:#ffebee; color:#c62828; }
+.badge-high { background:#fff3e0; color:#e65100; }
+.badge-mid { background:#fff8e1; color:#f57f17; }
+
+/* accordion */
+.accordion { border:1px solid var(--border); border-radius:8px; margin-bottom:10px; }
+.accordion-head {
+  padding:12px 16px; cursor:pointer; font-weight:600; font-size:14px;
+  display:flex; justify-content:space-between; align-items:center;
+  background:#fafcfa; user-select:none;
+}
+.accordion-head:hover { background:#f0f4f0; }
+.accordion-body { padding:14px 16px; display:none; border-top:1px solid var(--border); font-size:13px; }
+.accordion.open .accordion-body { display:block; }
+.accordion-head .arrow { transition:.3s; }
+.accordion.open .arrow { transform:rotate(180deg); }
+
+/* step wizard */
+.steps { display:flex; gap:4px; margin-bottom:24px; }
+.step {
+  flex:1; text-align:center; padding:12px 8px; border-radius:8px; font-size:12px; font-weight:600;
+  background:var(--border); color:var(--muted); position:relative;
+}
+.step.done { background:var(--accent-light); color:var(--accent); }
+.step.current { background:var(--accent); color:#fff; }
+.step .step-num { display:block; font-size:18px; font-weight:800; }
+
+.qtr-grid { display:grid; grid-template-columns:repeat(5,1fr); gap:8px; }
+.qtr-col { padding:10px; border-radius:8px; background:#f9fcf9; text-align:center; }
+.qtr-col input { width:100%; padding:6px; border-radius:6px; border:1px solid var(--border); text-align:center; font-size:13px; }
+@media(max-width:768px){ .qtr-grid{grid-template-columns:repeat(3,1fr);} }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>铝行业 CBAM 信息填报辅助系统</h1>
+  <p>基于 Reg (EU) 2023/956 · 2025/2547 · 欧盟铝行业事实清单 · 中国贸促会企业应对指南</p>
+</div>
+
+<div class="container">
+
+<!-- ============ TABS ============ -->
+<div class="tabs">
+  <div class="tab active" onclick="switchTab('tech')">专业技术审查</div>
+  <div class="tab" onclick="switchTab('producer')">生产商数据填报</div>
+  <div class="tab" onclick="switchTab('importer')">进口商申报表单</div>
+  <div class="tab" onclick="switchTab('reference')">法规参考与默认值</div>
+</div>
+
+<!-- ================================================================== -->
+<!-- TAB 0: 专业技术审查 -->
+<!-- ================================================================== -->
+<div id="tab-tech" class="tab-content active">
+
+<div class="card">
+  <div class="card-header"><span class="icon">🔬</span> 合同的专业/技术问题 — 从CBAM铝行业合规角度</div>
+  <div class="card-body">
+    <p style="font-size:14px;margin-bottom:16px;">以下问题不同于常规法律条款审查，聚焦于<strong>CBAM铝行业的专业技术要求在该合同中的遗漏和误配</strong>。这些问题即使合同条款法律上"无瑕疵"，也会导致履约过程中的实质性障碍。</p>
+
+<!-- Issue 1 -->
+<div class="issue-card">
+  <div class="issue-header">
+    <h4>1. 未区分铝行业与其他行业的CBAM核算差异</h4>
+    <span class="badge badge-crit">严重</span>
+  </div>
+  <div class="issue-body">
+    <p>合同P32前言及第1条"标的"中，将CBAM服务混杂在"组织GHG核查、碳足迹、碳中和、零碳、绿色工厂"等十余项通用认证服务中，仅在末尾勾选"☑ 其他：CBAM"。这种写法暴露出合同模板来自<strong>通用认证合同</strong>，而非铝行业CBAM专项服务合同。</p>
+    <blockquote>
+      <strong>铝行业CBAM的特殊性：</strong><br>
+      ① 铝行业需核算的温室气体不仅包括CO₂，还包括<strong>全氟碳化物（PFCs）</strong>——这是铝电解过程的特征排放，其他五个CBAM行业（钢铁、水泥、化肥、电力、氢）均不涉及；<br>
+      ② 铝产品的隐含碳排放需要<strong>向上追溯至前体材料</strong>（氧化铝、铝土矿等），且前体材料同样受CBAM管控——形成嵌套核算；<br>
+      ③ 铝行业的<strong>间接排放（电力）</strong>必须纳入计算（不同于钢铁行业的某些产品可豁免）；<br>
+      ④ EU ETS中铝行业有<strong>间接成本补偿机制</strong>，这直接影响CBAM证书的成本抵扣计算。
+    </blockquote>
+    <p><strong>合同应明确：</strong>服务范围界定为"铝产品（CN 7601-7616）的CBAM合规服务，包括PFCs排放核算、前体材料排放追溯和间接排放计入。"</p>
+  </div>
+</div>
+
+<!-- Issue 2 -->
+<div class="issue-card">
+  <div class="issue-header">
+    <h4>2. 监测计划（Monitoring Plan）编制标准不完整</h4>
+    <span class="badge badge-crit">严重</span>
+  </div>
+  <div class="issue-body">
+    <p>合同阶段二（表格1）仅笼统提及"按(EU)2025/2547法规要求建立监测计划"，未细化铝行业的监测计划特殊要求。</p>
+    <blockquote>
+      <strong>铝行业监测计划的法定最低要素（依据(EU)2025/2547 Annex II A.5）：</strong><br>
+      ① 安装设施描述 → 电解槽数量、型号、产能；<br>
+      ② 生产流程和排放源 → 需逐项列出阳极消耗、PFCs阳极效应、燃料燃烧、烟气净化等所有排放源流；<br>
+      ③ 监测方法选择 → 计算法还是连续测量法，每类排放源需分别指定；<br>
+      ④ 数据流活动描述 → 从原始数据采集到最终排放报告的完整链条；<br>
+      ⑤ 控制系统描述 → 数据质量保证/质量控制（QA/QC）流程；<br>
+      ⑥ <strong>不确定性评估</strong> → 各排放源流的不确定度分析；<br>
+      ⑦ 测量仪器校准要求 → 合同仅提"测量仪器校正要求"，但未要求纳入监测计划附件。
+    </blockquote>
+    <p><strong>合同应明确：</strong>监测计划须包含上述7项最低要素且以<strong>英文</strong>提交（Reg 2025/2547 Art.5(6)明确要求英文），并经欧盟进口商书面确认。</p>
+  </div>
+</div>
+
+<!-- Issue 3 -->
+<div class="issue-card">
+  <div class="issue-header">
+    <h4>3. 碳排放核算方法论层级不明确</h4>
+    <span class="badge badge-high">高</span>
+  </div>
+  <div class="issue-body">
+    <p>合同P50引用了Reg (EU)2025/2545、2025/2546及"铝行业专属规则"，但未说明适用哪个核算方法论层级。</p>
+    <blockquote>
+      <strong>CBAM核算方法论层级（依据Annex II）：</strong><br>
+      ① <strong>最低要求（Minimum requirements）</strong>：可接受的最低努力水平——允许使用默认值但默认值占比不得超过20%；<br>
+      ② <strong>推荐改进（Recommended improvements）</strong>：基于实测数据，要求更高数据精度；<br>
+      ③ 如果采用最低要求+默认值，需在报告中说明理由，否则<strong>视为申报无效</strong>。<br>
+      ④ 铝行业的PFCs排放只有两种核算方法：<strong>斜率法（Slope Method）</strong>或<strong>过电压法（Overvoltage Method）</strong>——合同完全未提及。
+    </blockquote>
+    <p><strong>合同应明确：</strong>乙方按"推荐改进"层级（基于实测数据）编制核算报告，默认值占比不超过20%。PFCs排放应注明采用的核算方法。</p>
+  </div>
+</div>
+
+<!-- Issue 4 -->
+<div class="issue-card">
+  <div class="issue-header">
+    <h4>4. 交付物质量标准缺少CBAM技术指标</h4>
+    <span class="badge badge-high">高</span>
+  </div>
+  <div class="issue-body">
+    <p>合同P69-74列出了五项核心交付物，但每项均缺少可验证的技术质量标准。</p>
+    <blockquote>
+      <strong>每项交付物应有的最低技术标准：</strong><br>
+      ① <strong>《CBAM监测计划》</strong>→ 须通过CBAM登记系统的格式校验 + Annex II全部要素覆盖率检查；<br>
+      ② <strong>《产品碳排放核算报告》</strong>→ 须按Reg 2023/956 Annex IV模板格式，区分直接排放/间接排放/PFCs/前体排放，并以CN代码为核算单元；<br>
+      ③ <strong>《核查应对手册》</strong>→ 须基于(EU)2025/2546核查实施细则，覆盖核查机构可能提出的10类以上标准问题；<br>
+      ④ <strong>《模拟核查报告》</strong>→ 须模拟真实核查机构的工作底稿结构，按排放源流逐项给出差距分析；<br>
+      ⑤ <strong>《整改方案》</strong>→ 须为每个不符合项指定纠正措施、责任人、完成时限和验证方法。
+    </blockquote>
+  </div>
+</div>
+
+<!-- Issue 5 -->
+<div class="issue-card">
+  <div class="issue-header">
+    <h4>5. 铝产品多CN代码场景未覆盖</h4>
+    <span class="badge badge-high">高</span>
+  </div>
+  <div class="issue-body">
+    <p>合同P104备注"如涉及多个产品品类，产品核算费按实际产品数量另行协商"，但：</p>
+    <blockquote>
+      ① 合同未明确"产品品类"是按CN 4位码（如7601 vs 7604）还是CN 8位码（如7601 10 00 vs 7601 20 00）划分——单位不同导致计价差别很大（8位码可能涉及几十个品类）；<br>
+      ② 铝产品CBAM覆盖范围从7601到7616共14个4位码、超过60个8位码——大亚具体出口哪些CN代码？合同完全没有约定；<br>
+      ③ 铝制品（7603-7616）以未锻轧铝（7601）为前体，若甲方同时出口7601和7604，核算逻辑是嵌套的——合同的服务范围描述没有体现这种产业链关系。
+    </blockquote>
+    <p><strong>合同应明确：</strong>以附件形式列出甲方出口的CN 8位代码清单，并明确该清单内的产品均包含在6万元服务费内。</p>
+  </div>
+</div>
+
+<!-- Issue 6 -->
+<div class="issue-card">
+  <div class="issue-header">
+    <h4>6. 间接排放的"已付碳价抵扣"核算完全缺失</h4>
+    <span class="badge badge-high">高</span>
+  </div>
+  <div class="issue-body">
+    <p>这是CBAM成本核算中最关键的技术环节之一，合同中只字未提。</p>
+    <blockquote>
+      <strong>CBAM证书成本 = 隐含碳排放 × EU ETS碳价 − 已付碳价抵扣</strong><br>
+      ① 中国碳市场（全国碳市场CEA交易）目前仅覆盖电力行业，铝企业的直接排放是否已纳入碳市场并付费？<br>
+      ② 铝行业的电力消耗是否可通过中国绿证（GEC）或PPA（购电协议）主张间接排放减免？<br>
+      ③ 欧盟对"已付碳价"的认定需要提供何种证据？（Reg 2023/956 Annex IV第5-6条规定了严格的证明标准）<br>
+      ④ 若甲方没有有效碳价支付记录，CBAM成本将直接按EU ETS全额碳价计算——这是巨大的成本变量，合同对此无任何提示。
+    </blockquote>
+    <p><strong>合同应明确：</strong>乙方应在服务过程中评估甲方的碳价抵扣可能性，并提供书面建议。最终是否可抵扣由欧盟主管机构决定，乙方不对此承担责任。</p>
+  </div>
+</div>
+
+<!-- Issue 7 -->
+<div class="issue-card">
+  <div class="issue-header">
+    <h4>7. 铝行业特有的数据追溯复杂度被低估</h4>
+    <span class="badge badge-mid">中</span>
+  </div>
+  <div class="issue-body">
+    <p>合同阶段三（表格1）提到"铝产品涉及直接排放和上游原材料排放追溯"，但仅做了简短说明。</p>
+    <blockquote>
+      <strong>铝产品碳排放的全链条追溯路径：</strong><br>
+      铝土矿开采 → 氧化铝精炼（Al₂O₃，CN 2818 20 00）→ 预焙阳极生产 → 电解铝（7601）→ 铝加工（7603-7616）<br>
+      其中<strong>氧化铝（alumina）本身也受CBAM管控</strong>——如果甲方自产氧化铝，需同时核算氧化铝和铝产品的排放；如果外购氧化铝，需获取供应商的排放数据。<br>
+      <strong>现实痛点：</strong>中国铝企的上游供应商（铝土矿、氧化铝）大多没有CBAM合规意识，获取实际排放数据非常困难——这意味着可能需要大量使用默认值（有20%上限风险）。
+    </blockquote>
+    <p><strong>合同应明确：</strong>乙方应尽商业上合理的努力协助甲方获取上游供应商的排放数据。若因供应商不配合导致需使用默认值，乙方应在报告中予以说明并管理默认值不超过20%阈值。</p>
+  </div>
+</div>
+
+<!-- Issue 8 -->
+<div class="issue-card">
+  <div class="issue-header">
+    <h4>8. 核查机构对接的"甲方自负核查费"隐含巨大信息不对称</h4>
+    <span class="badge badge-mid">中</span>
+  </div>
+  <div class="issue-body">
+    <p>合同阶段四表格注释"甲方应自行负责与核查机构的沟通、现场接待及核查费用的支付"，但未披露核查费用的大致水平。</p>
+    <blockquote>
+      <strong>CBAM第三方核查费用参考（2025年市场调研）：</strong><br>
+      ① 单一工厂、单一产品类别的核查：约 €15,000 - €30,000/次；<br>
+      ② 多CN代码的复杂核查：€30,000 - €60,000/次；<br>
+      ③ 加上核查人员来华差旅费：€5,000 - €15,000/次；<br>
+      ④ 这意味着甲方除支付乙方6万元服务费外，还需额外承担<strong>约15-50万人民币/年的核查费</strong>——这笔费用完全未在合同中披露。
+    </blockquote>
+    <p><strong>合同应明确：</strong>乙方应在签约前书面告知甲方预估的第三方核查费用区间，并推荐至少2家欧盟认可的核查机构供甲方选择。</p>
+  </div>
+</div>
+
+<!-- Issue 9 -->
+<div class="issue-card">
+  <div class="issue-header">
+    <h4>9. CBAM证书清缴的现金流风险未提示</h4>
+    <span class="badge badge-mid">中</span>
+  </div>
+  <div class="issue-body">
+    <blockquote>
+      ① CBAM证书须由<strong>欧盟进口商</strong>购买和清缴（每年5月31日前），不是甲方直接购买；<br>
+      ② 但进口商会将证书成本转嫁给甲方（通过压低采购价或要求分担）；<br>
+      ③ 2026年EU ETS碳价约€80/tCO₂e × 铝产品隐含碳排放（约8-12 tCO₂e/吨铝）→ 每吨铝的证书成本约€640-€960；<br>
+      ④ 对于年出口量较大的企业，这可能是数百万欧元的现金流出——合同完全没有帮助甲方预估这一成本。
+    </blockquote>
+    <p><strong>合同应明确：</strong>乙方应基于核算结果为甲方提供年度CBAM证书成本的估算，作为经营决策参考。</p>
+  </div>
+</div>
+
+</div>
+</div>
+
+<!-- Summary -->
+<div class="card">
+  <div class="card-header"><span class="icon">📊</span> 专业技术问题总结</div>
+  <div class="card-body">
+    <p style="font-size:14px;line-height:1.9;">
+      从CBAM铝行业技术合规角度看，这份合同最大的问题是：<strong>它是一份"通用认证服务合同"被套用在了一个高度专业化、快速演变、有重大财务影响的CBAM专项服务场景上。</strong>
+    </p>
+    <p style="font-size:14px;line-height:1.9;margin-top:8px;">
+      合同正确地识别了6个服务阶段和5项交付物，但每个阶段和每项交付物都缺乏可验证的<strong>CBAM技术标准</strong>。建立在这些模糊标准上的6万元固定价格，可能在实际履约中因工作量远超预期而导致双方纠纷。
+    </p>
+    <p style="font-size:14px;line-height:1.9;margin-top:8px;">
+      <strong>根本建议：</strong>在现有合同框架下，增加一份<strong>《CBAM铝行业技术附件》</strong>，逐项细化9个技术要点，将抽象的"技术服务"转化为可测量、可验证、可验收的具体技术指标。
+    </p>
+  </div>
+</div>
+
+</div><!-- /tab-tech -->
+
+<!-- ================================================================== -->
+<!-- TAB 1: 生产商数据填报 -->
+<!-- ================================================================== -->
+<div id="tab-producer" class="tab-content">
+
+<div class="card">
+  <div class="card-header"><span class="icon">🏭</span> 生产商（Operator）排放数据填报</div>
+  <div class="card-body">
+
+<div class="alert alert-info">
+  <strong>填表说明：</strong>本表依据(EU)2025/2547 Annex IV 操作者排放报告模板设计。所有字段如使用默认值，须在备注中说明理由；默认值占比超过20%将导致申报无效。<br>
+  <strong>报告语言：</strong>最终提交须为英文，本表为中文辅助填报版本。
+</div>
+
+<!-- Basic Info -->
+<div class="card" style="margin-top:16px;">
+  <div class="card-header"><span class="icon">📋</span> 一、生产设施基本信息</div>
+  <div class="card-body">
+    <div class="form-row">
+      <div class="form-group"><label>生产商名称（英文）</label><input id="op-name" placeholder="Operator legal name"></div>
+      <div class="form-group"><label>生产设施地址</label><input id="op-addr" placeholder="完整地址"></div>
+    </div>
+    <div class="form-row-3">
+      <div class="form-group"><label>国家</label><input id="op-country" value="中国 (China)"></div>
+      <div class="form-group"><label>设施ID（如有UN/LOCODE）</label><input id="op-id" placeholder="如 CNNNG"></div>
+      <div class="form-group"><label>报告年度</label><select id="op-year"><option>2026</option><option>2027</option><option>2028</option></select></div>
+    </div>
+    <div class="form-group"><label>生产过程简述</label><textarea id="op-process" rows="2" placeholder="如：铝土矿→氧化铝精炼→预焙阳极+电解→铝锭铸造→铝板带轧制"></textarea></div>
+  </div>
+</div>
+
+<!-- CN Code Selection -->
+<div class="card" style="margin-top:12px;">
+  <div class="card-header"><span class="icon">🔍</span> 二、选择出口CBAM铝产品（CN代码）</div>
+  <div class="card-body">
+    <div class="cn-search">
+      <input type="text" id="cn-search-input" placeholder="搜索CN代码或产品描述..." oninput="filterCN()" style="width:100%;padding:10px;border-radius:8px;border:1px solid var(--border);">
+    </div>
+    <div class="cn-list" id="cn-list"></div>
+    <p style="font-size:12px;color:var(--muted);margin-top:8px;">已选择：<span id="cn-selected-count">0</span> 个产品代码 · <span class="tag tag-red">全氟碳化物PFCs纳入核算</span> · <span class="tag tag-blue">间接排放必须计入</span></p>
+  </div>
+</div>
+
+<!-- Quarterly Data Table -->
+<div class="card" style="margin-top:12px;">
+  <div class="card-header"><span class="icon">📅</span> 三、季度排放数据填报（2026年度）</div>
+  <div class="card-body">
+
+    <div class="alert alert-warn"><strong>注意：</strong>铝行业须核算CO₂ + PFCs（四氟化碳CF₄和六氟化二碳C₂F₆），PFCs排放量需乘以各自GWP值（CF₄=6630, C₂F₆=11100）折算为CO₂e。</div>
+
+    <table id="quarterly-table">
+      <thead>
+        <tr>
+          <th>数据项</th>
+          <th>单位</th>
+          <th>Q1<br><small>1-3月</small></th>
+          <th>Q2<br><small>4-6月</small></th>
+          <th>Q3<br><small>7-9月</small></th>
+          <th>Q4<br><small>10-12月</small></th>
+          <th>年度合计</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td colspan="8" style="background:#f0f4f0;font-weight:700;">生产活动数据</td></tr>
+        <tr>
+          <td>产品产量</td><td>吨(t)</td>
+          <td><input class="inp-cell" id="q1-prod" value="0" onchange="calcAll()"></td>
+          <td><input class="inp-cell" id="q2-prod" value="0" onchange="calcAll()"></td>
+          <td><input class="inp-cell" id="q3-prod" value="0" onchange="calcAll()"></td>
+          <td><input class="inp-cell" id="q4-prod" value="0" onchange="calcAll()"></td>
+          <td id="yr-prod" style="font-weight:700;">0</td>
+        </tr>
+        <tr><td colspan="8" style="background:#f0f4f0;font-weight:700;">直接排放 — 燃料燃烧</td></tr>
+        <tr>
+          <td>天然气消耗量</td><td>万Nm³</td>
+          <td><input class="inp-cell" id="q1-gas" placeholder="0" onchange="calcAll()"></td>
+          <td><input class="inp-cell" id="q2-gas" placeholder="0" onchange="calcAll()"></td>
+          <td><input class="inp-cell" id="q3-gas" placeholder="0" onchange="calcAll()"></td>
+          <td><input class="inp-cell" id="q4-gas" placeholder="0" onchange="calcAll()"></td>
+          <td id="yr-gas" style="font-weight:700;">0</td>
+        </tr>
+        <tr>
+          <td>天然气排放因子</td><td>tCO₂/万Nm³</td>
+          <td colspan="5"><input class="inp-cell" id="gas-ef" value="21.62" style="width:120px;"> <small style="color:var(--muted);">默认值21.62 tCO₂/万Nm³</small></td>
+        </tr>
+        <tr>
+          <td>其他燃料排放</td><td>tCO₂</td>
+          <td><input class="inp-cell" id="q1-fuel-other" placeholder="0" onchange="calcAll()"></td>
+          <td><input class="inp-cell" id="q2-fuel-other" placeholder="0" onchange="calcAll()"></td>
+          <td><input class="inp-cell" id="q3-fuel-other" placeholder="0" onchange="calcAll()"></td>
+          <td><input class="inp-cell" id="q4-fuel-other" placeholder="0" onchange="calcAll()"></td>
+          <td id="yr-fuel-other" style="font-weight:700;">0</td>
+        </tr>
+        <tr><td colspan="8" style="background:#f0f4f0;font-weight:700;">直接排放 — 工艺排放（PFCs）</td></tr>
+        <tr>
+          <td>阳极效应CF₄排放</td><td>t</td>
+          <td><input class="inp-cell" id="q1-cf4" placeholder="0" onchange="calcAll()"></td>
+          <td><input class="inp-cell" id="q2-cf4" placeholder="0" onchange="calcAll()"></td>
+          <td><input class="inp-cell" id="q3-cf4" placeholder="0" onchange="calcAll()"></td>
+          <td><input class="inp-cell" id="q4-cf4" placeholder="0" onchange="calcAll()"></td>
+          <td id="yr-cf4" style="font-weight:700;">0</td>
+        </tr>
+        <tr>
+          <td>阳极效应C₂F₆排放</td><td>t</td>
+          <td><input class="inp-cell" id="q1-c2f6" placeholder="0" onchange="calcAll()"></td>
+          <td><input class="inp-cell" id="q2-c2f6" placeholder="0" onchange="calcAll()"></td>
+          <td><input class="inp-cell" id="q3-c2f6" placeholder="0" onchange="calcAll()"></td>
+          <td><input class="inp-cell" id="q4-c2f6" placeholder="0" onchange="calcAll()"></td>
+          <td id="yr-c2f6" style="font-weight:700;">0</td>
+        </tr>
+        <tr>
+          <td>阳极消耗排放</td><td>tCO₂</td>
+          <td><input class="inp-cell" id="q1-anode" placeholder="0" onchange="calcAll()"></td>
+          <td><input class="inp-cell" id="q2-anode" placeholder="0" onchange="calcAll()"></td>
+          <td><input class="inp-cell" id="q3-anode" placeholder="0" onchange="calcAll()"></td>
+          <td><input class="inp-cell" id="q4-anode" placeholder="0" onchange="calcAll()"></td>
+          <td id="yr-anode" style="font-weight:700;">0</td>
+        </tr>
+        <tr><td colspan="8" style="background:#f0f4f0;font-weight:700;">间接排放 — 外购电力</td></tr>
+        <tr>
+          <td>外购电力消耗</td><td>MWh</td>
+          <td><input class="inp-cell" id="q1-elec" value="0" onchange="calcAll()"></td>
+          <td><input class="inp-cell" id="q2-elec" value="0" onchange="calcAll()"></td>
+          <td><input class="inp-cell" id="q3-elec" value="0" onchange="calcAll()"></td>
+          <td><input class="inp-cell" id="q4-elec" value="0" onchange="calcAll()"></td>
+          <td id="yr-elec" style="font-weight:700;">0</td>
+        </tr>
+        <tr>
+          <td>电网排放因子</td><td>tCO₂/MWh</td>
+          <td colspan="5"><input class="inp-cell" id="grid-ef" value="0.5703" style="width:120px;"> <small style="color:var(--muted);">默认值：中国南方电网 0.5703 tCO₂/MWh (2024)</small></td>
+        </tr>
+        <tr><td colspan="8" style="background:#f0f4f0;font-weight:700;">前体材料嵌入排放</td></tr>
+        <tr>
+          <td>外购氧化铝(Al₂O₃)消耗量</td><td>吨(t)</td>
+          <td><input class="inp-cell" id="q1-alumina" placeholder="0" onchange="calcAll()"></td>
+          <td><input class="inp-cell" id="q2-alumina" placeholder="0" onchange="calcAll()"></td>
+          <td><input class="inp-cell" id="q3-alumina" placeholder="0" onchange="calcAll()"></td>
+          <td><input class="inp-cell" id="q4-alumina" placeholder="0" onchange="calcAll()"></td>
+          <td id="yr-alumina" style="font-weight:700;">0</td>
+        </tr>
+        <tr>
+          <td>氧化铝默认排放因子</td><td>tCO₂e/t</td>
+          <td colspan="5"><input class="inp-cell" id="alumina-ef" value="1.52" style="width:120px;"> <small style="color:var(--muted);">默认值1.52 tCO₂e/t Al₂O₃（如使用实际值请修改并备注）</small></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Calculation Results -->
+<div class="card" style="margin-top:12px;">
+  <div class="card-header"><span class="icon">📊</span> 四、自动计算结果</div>
+  <div class="card-body">
+    <div class="summary-grid" id="results-grid">
+      <div class="summary-box"><div class="val" id="res-direct">0</div><div class="lbl">直接排放合计 (tCO₂e)</div></div>
+      <div class="summary-box"><div class="val" id="res-pfc">0</div><div class="lbl">PFCs排放 (tCO₂e)</div></div>
+      <div class="summary-box"><div class="val" id="res-indirect">0</div><div class="lbl">间接排放 (tCO₂e)</div></div>
+      <div class="summary-box"><div class="val" id="res-precursor">0</div><div class="lbl">前体嵌入排放 (tCO₂e)</div></div>
+      <div class="summary-box"><div class="val" id="res-total">0</div><div class="lbl">总隐含碳排放 (tCO₂e)</div></div>
+      <div class="summary-box"><div class="val" id="res-intensity">0</div><div class="lbl">排放强度 (tCO₂e/t产品)</div></div>
+    </div>
+
+    <div class="alert alert-warn" style="margin-top:16px;">
+      <strong>默认值使用比例：</strong><span id="default-ratio">0%</span>
+      <span id="default-warn" style="display:none;color:var(--red);font-weight:700;"> ⚠ 超过20%上限！申报将被视为无效！</span>
+    </div>
+
+    <div style="margin-top:16px;">
+      <label style="font-size:13px;font-weight:600;color:var(--muted);">EU ETS碳价参考 (€/tCO₂)</label>
+      <input class="inp-cell" id="ets-price" value="80" style="width:120px;">
+      <span style="margin-left:8px;font-size:13px;" id="cbam-cost-result"></span>
+    </div>
+  </div>
+</div>
+
+<div style="margin-top:16px;display:flex;gap:12px;">
+  <button class="btn btn-primary" onclick="generateProducerReport()">生成生产商排放报告</button>
+  <button class="btn btn-outline" onclick="resetProducer()">重置数据</button>
+</div>
+
+<div id="producer-report" style="margin-top:16px;"></div>
+
+</div>
+</div>
+</div><!-- /tab-producer -->
+
+<!-- ================================================================== -->
+<!-- TAB 2: 进口商表单 -->
+<!-- ================================================================== -->
+<div id="tab-importer" class="tab-content">
+
+<div class="card">
+  <div class="card-header"><span class="icon">📥</span> 进口商（Importer）CBAM季度申报表</div>
+  <div class="card-body">
+
+<div class="alert alert-info">
+  <strong>填表说明：</strong>本表依据(EU)2025/2547及CBAM登记系统（CBAM Registry）字段设计。进口商须在每季度结束后1个月内提交数据报告，每年5月31日前完成证书清缴。
+</div>
+
+<div class="card">
+  <div class="card-header"><span class="icon">📋</span> 一、进口商基本信息</div>
+  <div class="card-body">
+    <div class="form-row">
+      <div class="form-group"><label>进口商名称（英文）</label><input id="imp-name" placeholder="Importer legal name"></div>
+      <div class="form-group"><label>EORI编号</label><input id="imp-eori" placeholder="Economic Operators Registration and Identification"></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>授权申报人（Authorised Declarant）</label><input id="imp-auth" placeholder="如由第三方代理申报，填写代理名称"></div>
+      <div class="form-group"><label>申报季度</label><select id="imp-qtr"><option>2026-Q1</option><option>2026-Q2</option><option selected>2026-Q3</option><option>2026-Q4</option></select></div>
+    </div>
+    <div class="form-group"><label>成员国主管机构（NCA）</label><input id="imp-nca" placeholder="如：DEHSt (德国), DGEC (法国)"></div>
+  </div>
+</div>
+
+<div class="card" style="margin-top:12px;">
+  <div class="card-header"><span class="icon">📦</span> 二、进口货物明细</div>
+  <div class="card-body">
+    <table id="imp-goods-table">
+      <thead>
+        <tr>
+          <th>序号</th>
+          <th>CN代码</th>
+          <th>产品描述</th>
+          <th>进口量<br>(吨)</th>
+          <th>原产国</th>
+          <th>生产商</th>
+          <th>隐含碳排放<br>(tCO₂e/t)</th>
+          <th>直接排放<br>(tCO₂e/t)</th>
+          <th>间接排放<br>(tCO₂e/t)</th>
+          <th>碳排放<br>来源</th>
+          <th>操作</th>
+        </tr>
+      </thead>
+      <tbody id="imp-goods-body">
+        <tr>
+          <td>1</td>
+          <td><input class="inp-cell" value="7601 10 00" style="width:100px;"></td>
+          <td><input class="inp-cell" value="未锻轧非合金铝" style="width:140px;"></td>
+          <td><input class="inp-cell calc-imp" value="1000" style="width:80px;" onchange="calcImporter()"></td>
+          <td><input class="inp-cell" value="中国 (CN)" style="width:90px;"></td>
+          <td><input class="inp-cell" value="大亚新能源" style="width:120px;"></td>
+          <td><input class="inp-cell calc-imp-see" value="12.5" style="width:90px;" onchange="calcImporter()"></td>
+          <td><input class="inp-cell" value="8.2" style="width:80px;"></td>
+          <td><input class="inp-cell" value="4.3" style="width:80px;"></td>
+          <td>
+            <select class="inp-cell" style="width:110px;">
+              <option value="actual">实际值(Actual)</option>
+              <option value="default">默认值(Default)</option>
+            </select>
+          </td>
+          <td><button class="btn btn-sm btn-outline" onclick="this.closest('tr').remove();calcImporter();">删除</button></td>
+        </tr>
+      </tbody>
+    </table>
+    <button class="btn btn-sm btn-outline" style="margin-top:8px;" onclick="addImpRow()">+ 添加货物</button>
+  </div>
+</div>
+
+<div class="card" style="margin-top:12px;">
+  <div class="card-header"><span class="icon">💰</span> 三、CBAM证书成本计算</div>
+  <div class="card-body">
+    <div class="summary-grid">
+      <div class="summary-box"><div class="val" id="imp-total-weight">0</div><div class="lbl">进口总量 (吨)</div></div>
+      <div class="summary-box"><div class="val" id="imp-total-emb">0</div><div class="lbl">总隐含碳排放 (tCO₂e)</div></div>
+      <div class="summary-box"><div class="val" id="imp-total-cert">0</div><div class="lbl">需购买证书 (吨CO₂e)</div></div>
+      <div class="summary-box"><div class="val" id="imp-total-cost">€0</div><div class="lbl">证书总成本 (€)</div></div>
+    </div>
+    <div class="form-row" style="margin-top:16px;">
+      <div class="form-group"><label>本周EU ETS碳价 (€/tCO₂)</label><input id="imp-ets-price" class="inp-cell" value="80" onchange="calcImporter()"></div>
+      <div class="form-group"><label>已付碳价抵扣 (€/tCO₂)</label><input id="imp-deduction" class="inp-cell" value="0" onchange="calcImporter()"><small style="color:var(--muted);">需提供已付碳价证明文件</small></div>
+    </div>
+  </div>
+</div>
+
+<button class="btn btn-primary" style="margin-top:12px;" onclick="generateImporterReport()">生成进口商季度申报摘要</button>
+<div id="importer-report" style="margin-top:16px;"></div>
+
+</div>
+</div>
+</div><!-- /tab-importer -->
+
+<!-- ================================================================== -->
+<!-- TAB 3: 法规参考与默认值 -->
+<!-- ================================================================== -->
+<div id="tab-reference" class="tab-content">
+
+<div class="card">
+  <div class="card-header"><span class="icon">📚</span> 铝行业CBAM法规框架</div>
+  <div class="card-body">
+    <table>
+      <tr><th style="width:45%;">法规文件</th><th>编号</th><th>关键内容</th></tr>
+      <tr><td>碳边境调节机制基本条例</td><td>Reg (EU) 2023/956</td><td>CBAM总体框架、适用范围、证书制度</td></tr>
+      <tr><td>监测与报告方法实施细则</td><td>2025/2547</td><td>排放监测计划、核算方法、报告模板（Annex I-VII）</td></tr>
+      <tr><td>核查原则实施细则</td><td>2025/2546</td><td>第三方核查标准、核查机构资质</td></tr>
+      <tr><td>核查机构授权条例</td><td>2025/2551</td><td>核查机构认可要求</td></tr>
+      <tr><td>CBAM范围扩展提案</td><td>-</td><td>2028年起扩展至180种钢铝下游产品</td></tr>
+    </table>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header"><span class="icon">🏷️</span> 铝行业CBAM覆盖CN代码（完整清单）</div>
+  <div class="card-body">
+    <div class="alert alert-warn">
+      <strong>注意：</strong>2028年1月1日起，CBAM将扩展至约180种钢铝密集型下游产品（含机械零部件、汽车零部件、家用电器等），以下为基础材料清单。
+    </div>
+    <table>
+      <tr><th style="width:14%;">CN代码</th><th style="width:46%;">商品描述</th><th style="width:20%;">温室气体</th><th style="width:20%;">类型</th></tr>
+      <tr><td style="font-family:monospace;font-weight:700;">7601</td><td>未锻轧铝</td><td>CO₂ + PFCs</td><td><span class="tag tag-red">基础材料</span></td></tr>
+      <tr><td style="font-family:monospace;font-weight:700;">7603</td><td>铝粉末及薄片</td><td>CO₂ + PFCs</td><td><span class="tag tag-green">复杂商品</span></td></tr>
+      <tr><td style="font-family:monospace;font-weight:700;">7604</td><td>铝条、杆及型材</td><td>CO₂ + PFCs</td><td><span class="tag tag-green">复杂商品</span></td></tr>
+      <tr><td style="font-family:monospace;font-weight:700;">7605</td><td>铝丝</td><td>CO₂ + PFCs</td><td><span class="tag tag-green">复杂商品</span></td></tr>
+      <tr><td style="font-family:monospace;font-weight:700;">7606</td><td>铝板、片及带（厚度>0.2mm）</td><td>CO₂ + PFCs</td><td><span class="tag tag-green">复杂商品</span></td></tr>
+      <tr><td style="font-family:monospace;font-weight:700;">7607</td><td>铝箔（厚度≤0.2mm）</td><td>CO₂ + PFCs</td><td><span class="tag tag-green">复杂商品</span></td></tr>
+      <tr><td style="font-family:monospace;font-weight:700;">7608</td><td>铝管</td><td>CO₂ + PFCs</td><td><span class="tag tag-green">复杂商品</span></td></tr>
+      <tr><td style="font-family:monospace;font-weight:700;">7609 00 00</td><td>铝管附件（接头、肘管、法兰）</td><td>CO₂ + PFCs</td><td><span class="tag tag-green">复杂商品</span></td></tr>
+      <tr><td style="font-family:monospace;font-weight:700;">7610</td><td>铝结构件及其部件</td><td>CO₂ + PFCs</td><td><span class="tag tag-green">复杂商品</span></td></tr>
+      <tr><td style="font-family:monospace;font-weight:700;">7611 00 00</td><td>铝制大型容器（>300L）</td><td>CO₂ + PFCs</td><td><span class="tag tag-green">复杂商品</span></td></tr>
+      <tr><td style="font-family:monospace;font-weight:700;">7612</td><td>铝制小型容器（≤300L）</td><td>CO₂ + PFCs</td><td><span class="tag tag-green">复杂商品</span></td></tr>
+      <tr><td style="font-family:monospace;font-weight:700;">7613 00 00</td><td>压缩/液化气体用铝容器</td><td>CO₂ + PFCs</td><td><span class="tag tag-green">复杂商品</span></td></tr>
+      <tr><td style="font-family:monospace;font-weight:700;">7614</td><td>非绝缘铝绞线、缆、编带</td><td>CO₂ + PFCs</td><td><span class="tag tag-green">复杂商品</span></td></tr>
+      <tr><td style="font-family:monospace;font-weight:700;">7616</td><td>其他铝制品</td><td>CO₂ + PFCs</td><td><span class="tag tag-green">复杂商品</span></td></tr>
+    </table>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header"><span class="icon">📉</span> CBAM默认值参考 — 铝行业</div>
+  <div class="card-body">
+    <div class="alert alert-warn">
+      <strong>⚠ 使用默认值的限制：</strong>默认值占比不得超过总排放量的<strong>20%</strong>，否则申报无效。且默认值自带<strong>10%-30%惩罚性加价</strong>，建议优先使用实测数据。
+    </div>
+    <table>
+      <tr><th>默认值类别</th><th>商品</th><th>默认值 (tCO₂e/t)</th><th>适用范围</th></tr>
+      <tr><td>直接排放默认值</td><td>未锻轧铝 (7601)</td><td style="font-weight:700;">1.54</td><td>燃料燃烧 + 工艺排放（不含电力）</td></tr>
+      <tr><td>间接排放默认值</td><td>未锻轧铝 (7601)</td><td style="font-weight:700;">6.21</td><td>外购电力排放</td></tr>
+      <tr><td>总排放默认值</td><td>未锻轧铝 (7601)</td><td style="font-weight:700;color:var(--red);">7.75</td><td>直接 + 间接排放合计</td></tr>
+      <tr><td>直接排放默认值</td><td>铝制品 (7603-7616)</td><td style="font-weight:700;">1.73</td><td>加工过程直接排放</td></tr>
+      <tr><td>间接排放默认值</td><td>铝制品 (7603-7616)</td><td style="font-weight:700;">2.05</td><td>加工过程电力排放</td></tr>
+    </table>
+    <p style="font-size:12px;color:var(--muted);margin-top:8px;">
+      数据来源：EU CBAM Transitional Registry Default Values (2025过渡期终版)。2026年正式实施期默认值以欧盟委员会最新公告为准。
+      使用默认值时，系统自动上浮10%-30%作为惩罚性加价。
+    </p>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header"><span class="icon">⏱️</span> CBAM关键时间节点（铝行业）</div>
+  <div class="card-body">
+    <table>
+      <tr><th style="width:18%;">时间节点</th><th>事项</th><th>责任人</th></tr>
+      <tr><td>2026年3月31日前</td><td>进口商完成"授权申报人"资质申请</td><td>欧盟进口商</td></tr>
+      <tr><td>每季度结束后1个月内</td><td>提交季度排放数据报告</td><td>欧盟进口商</td></tr>
+      <tr><td>2027年2月1日</td><td>首次征收CBAM碳关税（对2026年全年进口）</td><td>欧盟进口商</td></tr>
+      <tr><td>每年5月31日前</td><td>完成上一年度CBAM证书购买与清缴</td><td>欧盟进口商</td></tr>
+      <tr><td>2027年9月30日前</td><td>完成2026年全年首次正式申报</td><td>欧盟进口商 + 生产商配合</td></tr>
+      <tr><td>2028年1月1日起</td><td>CBAM扩展至约180种下游产品</td><td>新增进口商</td></tr>
+    </table>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header"><span class="icon">🔗</span> 参考资源</div>
+  <div class="card-body">
+    <table>
+      <tr><th>资源</th><th>链接/说明</th></tr>
+      <tr><td>中国贸促会《CBAM企业应对指南》</td><td>商务部研究院 + 贸促会联合发布（2026年2月）</td></tr>
+      <tr><td>EU CBAM铝行业事实清单</td><td>taxation-customs.ec.europa.eu → CBAM Sectors → Aluminium</td></tr>
+      <tr><td>EUR-Lex法规原文 (EU)2025/2547</td><td>eur-lex.europa.eu/eli/reg_impl/2025/2547/oj</td></tr>
+      <tr><td>CBAM铝行业电子学习模块</td><td>customs-taxation.learning.europa.eu</td></tr>
+      <tr><td>中国WTO/FTA咨询网 CBAM专栏</td><td>chinawto.mofcom.gov.cn</td></tr>
+    </table>
+  </div>
+</div>
+
+</div><!-- /tab-reference -->
+
+</div><!-- container -->
+
+<script>
+// ======================= TABS =======================
+function switchTab(tabId) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+  document.querySelector(`[onclick="switchTab('${tabId}')"]`).classList.add('active');
+  document.getElementById('tab-' + tabId).classList.add('active');
+  if (tabId === 'producer') initCNList();
+}
+
+// ======================= CN CODE LIST =======================
+const cnCodes = [
+  {code:"7601 10 00", desc:"未锻轧非合金铝", type:"基础材料", ghg:"CO₂ + PFCs"},
+  {code:"7601 20 20", desc:"未锻轧铝合金（板坯）", type:"基础材料", ghg:"CO₂ + PFCs"},
+  {code:"7601 20 80", desc:"未锻轧铝合金（其他）", type:"基础材料", ghg:"CO₂ + PFCs"},
+  {code:"7603 10 00", desc:"铝粉末（非层状结构）", type:"复杂商品", ghg:"CO₂ + PFCs"},
+  {code:"7603 20 00", desc:"铝粉末（层状结构）；铝薄片", type:"复杂商品", ghg:"CO₂ + PFCs"},
+  {code:"7604 10 10", desc:"非合金铝条、杆", type:"复杂商品", ghg:"CO₂ + PFCs"},
+  {code:"7604 10 90", desc:"非合金铝型材", type:"复杂商品", ghg:"CO₂ + PFCs"},
+  {code:"7604 21 00", desc:"铝合金空心型材", type:"复杂商品", ghg:"CO₂ + PFCs"},
+  {code:"7604 29 10", desc:"铝合金条、杆", type:"复杂商品", ghg:"CO₂ + PFCs"},
+  {code:"7604 29 90", desc:"铝合金型材（其他）", type:"复杂商品", ghg:"CO₂ + PFCs"},
+  {code:"7605 11 00", desc:"非合金铝丝（最大截面>7mm）", type:"复杂商品", ghg:"CO₂ + PFCs"},
+  {code:"7605 19 00", desc:"非合金铝丝（最大截面≤7mm）", type:"复杂商品", ghg:"CO₂ + PFCs"},
+  {code:"7605 21 00", desc:"铝合金丝（最大截面>7mm）", type:"复杂商品", ghg:"CO₂ + PFCs"},
+  {code:"7605 29 00", desc:"铝合金丝（最大截面≤7mm）", type:"复杂商品", ghg:"CO₂ + PFCs"},
+  {code:"7606 11 10", desc:"非合金铝板/片/带（>0.2mm, 矩形, 涂漆/涂层）", type:"复杂商品", ghg:"CO₂ + PFCs"},
+  {code:"7606 11 91", desc:"非合金铝板/片/带（>0.2mm, 矩形, 其他, <3mm）", type:"复杂商品", ghg:"CO₂ + PFCs"},
+  {code:"7606 11 93", desc:"非合金铝板/片/带（>0.2mm, 矩形, 其他, ≥3mm &lt;6mm）", type:"复杂商品", ghg:"CO₂ + PFCs"},
+  {code:"7606 12 20", desc:"铝合金板/片/带（>0.2mm, 矩形, 涂漆/涂层）", type:"复杂商品", ghg:"CO₂ + PFCs"},
+  {code:"7606 12 92", desc:"铝合金板/片/带（>0.2mm, 矩形, 其他, <3mm）", type:"复杂商品", ghg:"CO₂ + PFCs"},
+  {code:"7606 12 93", desc:"铝合金板/片/带（>0.2mm, 矩形, 其他, ≥3mm &lt;6mm）", type:"复杂商品", ghg:"CO₂ + PFCs"},
+  {code:"7607 11 11", desc:"铝箔（无背衬, 轧制, ≤0.2mm, 0.021-0.2mm）", type:"复杂商品", ghg:"CO₂ + PFCs"},
+  {code:"7607 11 19", desc:"铝箔（无背衬, 轧制, ≤0.2mm, 其他）", type:"复杂商品", ghg:"CO₂ + PFCs"},
+  {code:"7607 11 90", desc:"铝箔（无背衬, 其他, ≤0.2mm）", type:"复杂商品", ghg:"CO₂ + PFCs"},
+  {code:"7607 19 10", desc:"铝箔（有背衬, ≤0.2mm, 0.021-0.2mm）", type:"复杂商品", ghg:"CO₂ + PFCs"},
+  {code:"7607 19 90", desc:"铝箔（有背衬, ≤0.2mm, 其他）", type:"复杂商品", ghg:"CO₂ + PFCs"},
+  {code:"7608 10 00", desc:"非合金铝管", type:"复杂商品", ghg:"CO₂ + PFCs"},
+  {code:"7608 20 20", desc:"铝合金管（焊接）", type:"复杂商品", ghg:"CO₂ + PFCs"},
+  {code:"7608 20 81", desc:"铝合金管（挤压, 未进一步加工）", type:"复杂商品", ghg:"CO₂ + PFCs"},
+  {code:"7608 20 89", desc:"铝合金管（挤压, 已进一步加工）", type:"复杂商品", ghg:"CO₂ + PFCs"},
+  {code:"7609 00 00", desc:"铝管附件（接头、肘管、法兰）", type:"复杂商品", ghg:"CO₂ + PFCs"},
+];
+
+let cnSelected = {};
+
+function filterCN() {
+  const q = document.getElementById('cn-search-input').value.toLowerCase();
+  const filtered = cnCodes.filter(c => c.code.includes(q) || c.desc.toLowerCase().includes(q));
+  renderCNList(filtered);
+}
+
+function renderCNList(list) {
+  const container = document.getElementById('cn-list');
+  container.innerHTML = list.map(c => `
+    <div class="cn-item${cnSelected[c.code] ? ' selected' : ''}" onclick="toggleCN('${c.code}')">
+      <div>
+        <span class="code">${c.code}</span>
+        <span style="margin-left:8px;">${c.desc}</span>
+      </div>
+      <span class="tag ${c.type==='基础材料'?'tag-red':'tag-green'}">${c.type}</span>
+    </div>
+  `).join('');
+  updateCNCount();
+}
+
+function toggleCN(code) {
+  cnSelected[code] = !cnSelected[code];
+  filterCN();
+}
+
+function updateCNCount() {
+  const count = Object.values(cnSelected).filter(v => v).length;
+  document.getElementById('cn-selected-count').textContent = count;
+}
+
+function initCNList() { renderCNList(cnCodes); }
+
+// ======================= PRODUCER CALCS =======================
+function getVal(id) { return parseFloat(document.getElementById(id)?.value || 0); }
+function setVal(id, v) {
+  const el = document.getElementById(id);
+  if (el) el.textContent = typeof v === 'number' ? v.toFixed(2) : v;
+}
+
+function calcAll() {
+  // quarterly sums
+  ['prod','gas','fuel-other','cf4','c2f6','anode','elec','alumina'].forEach(k => {
+    let sum = 0;
+    for (let q of [1,2,3,4]) sum += getVal('q'+q+'-'+k);
+    setVal('yr-'+k, sum);
+  });
+
+  const yrGas = getVal('q1-gas')+getVal('q2-gas')+getVal('q3-gas')+getVal('q4-gas');
+  const gasEF = getVal('gas-ef');
+  const gasEmis = yrGas * gasEF;
+  const otherFuel = getVal('q1-fuel-other')+getVal('q2-fuel-other')+getVal('q3-fuel-other')+getVal('q4-fuel-other');
+  const yrCF4 = getVal('q1-cf4')+getVal('q2-cf4')+getVal('q3-cf4')+getVal('q4-cf4');
+  const yrC2F6 = getVal('q1-c2f6')+getVal('q2-c2f6')+getVal('q3-c2f6')+getVal('q4-c2f6');
+  const pfcEmis = yrCF4 * 6630 + yrC2F6 * 11100;
+  const yrAnode = getVal('q1-anode')+getVal('q2-anode')+getVal('q3-anode')+getVal('q4-anode');
+
+  const direct = gasEmis + otherFuel + pfcEmis + yrAnode;
+  const yrElec = getVal('q1-elec')+getVal('q2-elec')+getVal('q3-elec')+getVal('q4-elec');
+  const indirect = yrElec * getVal('grid-ef');
+  const yrAlumina = getVal('q1-alumina')+getVal('q2-alumina')+getVal('q3-alumina')+getVal('q4-alumina');
+  const precursor = yrAlumina * getVal('alumina-ef');
+  const total = direct + indirect + precursor;
+  const yrProd = getVal('q1-prod')+getVal('q2-prod')+getVal('q3-prod')+getVal('q4-prod');
+  const intensity = yrProd > 0 ? total / yrProd : 0;
+
+  setVal('res-direct', direct);
+  setVal('res-pfc', pfcEmis);
+  setVal('res-indirect', indirect);
+  setVal('res-precursor', precursor);
+  setVal('res-total', total);
+  setVal('res-intensity', intensity);
+
+  // default ratio estimate
+  let defaultUsed = 0, totalUsed = 0;
+  if (gasEF === 21.62) defaultUsed += gasEmis;
+  totalUsed += gasEmis;
+  if (getVal('grid-ef') === 0.5703) defaultUsed += indirect;
+  totalUsed += indirect;
+  if (getVal('alumina-ef') === 1.52) defaultUsed += precursor;
+  totalUsed += precursor;
+  const ratio = totalUsed > 0 ? (defaultUsed / totalUsed * 100) : 0;
+  document.getElementById('default-ratio').textContent = ratio.toFixed(1) + '%';
+  const warnEl = document.getElementById('default-warn');
+  warnEl.style.display = ratio > 20 ? 'inline' : 'none';
+
+  // CBAM cost estimate
+  const etsPrice = getVal('ets-price');
+  const cbamCost = total * etsPrice;
+  document.getElementById('cbam-cost-result').textContent =
+    '预估CBAM证书成本（未抵扣）：€' + cbamCost.toFixed(0) +
+    ' ≈ ¥' + (cbamCost * 7.8).toFixed(0);
+}
+
+function resetProducer() {
+  document.querySelectorAll('#quarterly-table input[type]').forEach(inp => {
+    if (['gas-ef','grid-ef','alumina-ef'].includes(inp.id)) return;
+    inp.value = '';
+  });
+  document.getElementById('q1-gas').value = '0';
+  document.getElementById('q1-elec').value = '0';
+  document.getElementById('q1-prod').value = '0';
+  calcAll();
+}
+
+function generateProducerReport() {
+  calcAll();
+  const selCN = Object.entries(cnSelected).filter(([,v])=>v).map(([k])=>k);
+  const report = `
+  <div class="card">
+    <div class="card-header">📄 操作者排放报告摘要 (Operator Emissions Report Summary)</div>
+    <div class="card-body">
+      <table>
+        <tr><td style="width:30%;font-weight:600;">生产商</td><td>${document.getElementById('op-name').value||'(未填写)'} · ${document.getElementById('op-addr').value||''}</td></tr>
+        <tr><td>报告年度</td><td>${document.getElementById('op-year').value}</td></tr>
+        <tr><td>出口CN代码</td><td>${selCN.length?selCN.join(', '):'(未选择)'}</td></tr>
+        <tr><td>产品产量</td><td>${document.getElementById('yr-prod').textContent} 吨</td></tr>
+        <tr><td>直接排放（含PFCs）</td><td>${document.getElementById('res-direct').textContent} tCO₂e</td></tr>
+        <tr><td>　其中PFCs排放</td><td>${document.getElementById('res-pfc').textContent} tCO₂e</td></tr>
+        <tr><td>间接排放（电力）</td><td>${document.getElementById('res-indirect').textContent} tCO₂e</td></tr>
+        <tr><td>前体嵌入排放（氧化铝）</td><td>${document.getElementById('res-precursor').textContent} tCO₂e</td></tr>
+        <tr><td style="font-weight:700;color:var(--accent);">隐含碳排放总量</td><td style="font-weight:700;color:var(--accent);">${document.getElementById('res-total').textContent} tCO₂e</td></tr>
+        <tr><td>排放强度</td><td>${document.getElementById('res-intensity').textContent} tCO₂e/t</td></tr>
+        <tr><td>默认值使用比例</td><td>${document.getElementById('default-ratio').textContent}</td></tr>
+        <tr><td>预估证书成本（€80/tCO₂）</td><td>€${(parseFloat(document.getElementById('res-total').textContent)*80).toFixed(0)}</td></tr>
+      </table>
+      <p style="font-size:12px;color:var(--muted);margin-top:12px;">
+        ⚠ 本报告为辅助工具生成的摘要，最终排放报告须经欧盟认可核查机构核查，并以英文提交CBAM登记系统。
+      </p>
+    </div>
+  </div>`;
+  document.getElementById('producer-report').innerHTML = report;
+}
+
+// ======================= IMPORTER CALCS =======================
+function addImpRow() {
+  const tbody = document.getElementById('imp-goods-body');
+  const rowCount = tbody.querySelectorAll('tr').length + 1;
+  const row = document.createElement('tr');
+  row.innerHTML = `
+    <td>${rowCount}</td>
+    <td><input class="inp-cell" style="width:100px;"></td>
+    <td><input class="inp-cell" style="width:140px;"></td>
+    <td><input class="inp-cell calc-imp" value="0" style="width:80px;" onchange="calcImporter()"></td>
+    <td><input class="inp-cell" value="中国 (CN)" style="width:90px;"></td>
+    <td><input class="inp-cell" style="width:120px;"></td>
+    <td><input class="inp-cell calc-imp-see" value="0" style="width:90px;" onchange="calcImporter()"></td>
+    <td><input class="inp-cell" value="0" style="width:80px;"></td>
+    <td><input class="inp-cell" value="0" style="width:80px;"></td>
+    <td><select class="inp-cell" style="width:110px;"><option value="actual">实际值</option><option value="default">默认值</option></select></td>
+    <td><button class="btn btn-sm btn-outline" onclick="this.closest('tr').remove();calcImporter();">删除</button></td>`;
+  tbody.appendChild(row);
+}
+
+function calcImporter() {
+  let totalWeight = 0, totalEmb = 0;
+  document.querySelectorAll('#imp-goods-body tr').forEach(row => {
+    const cells = row.querySelectorAll('td');
+    const weight = parseFloat(cells[3].querySelector('input')?.value || 0);
+    const see = parseFloat(cells[6].querySelector('input')?.value || 0);
+    totalWeight += weight;
+    totalEmb += weight * see;
+  });
+  const etsPrice = parseFloat(document.getElementById('imp-ets-price').value || 80);
+  const deduction = parseFloat(document.getElementById('imp-deduction').value || 0);
+  const certNeeded = totalEmb;
+  const cost = certNeeded * (etsPrice - deduction);
+
+  setVal('imp-total-weight', totalWeight);
+  setVal('imp-total-emb', totalEmb);
+  setVal('imp-total-cert', certNeeded);
+  document.getElementById('imp-total-cost').textContent = '€' + cost.toFixed(0);
+}
+
+function generateImporterReport() {
+  calcImporter();
+  const report = `
+  <div class="card">
+    <div class="card-header">📄 进口商季度申报摘要</div>
+    <div class="card-body">
+      <table>
+        <tr><td style="width:35%;font-weight:600;">进口商</td><td>${document.getElementById('imp-name').value||'(未填写)'} · EORI: ${document.getElementById('imp-eori').value||''}</td></tr>
+        <tr><td>申报季度</td><td>${document.getElementById('imp-qtr').value}</td></tr>
+        <tr><td>进口总量</td><td>${document.getElementById('imp-total-weight').textContent} 吨</td></tr>
+        <tr><td>总隐含碳排放</td><td>${document.getElementById('imp-total-emb').textContent} tCO₂e</td></tr>
+        <tr><td>需购买CBAM证书</td><td>${document.getElementById('imp-total-cert').textContent} 吨CO₂e</td></tr>
+        <tr><td style="font-weight:700;color:var(--red);">证书总成本</td><td style="font-weight:700;color:var(--red);">${document.getElementById('imp-total-cost').textContent}</td></tr>
+      </table>
+      <p style="font-size:12px;color:var(--muted);margin-top:12px;">
+        ⚠ 请在${getDeadline()}前完成CBAM证书购买与清缴。逾期将面临罚款。
+      </p>
+    </div>
+  </div>`;
+  document.getElementById('importer-report').innerHTML = report;
+}
+
+function getDeadline() {
+  const yr = new Date().getFullYear();
+  return yr + '年5月31日';
+}
+
+// Init
+document.addEventListener('DOMContentLoaded', () => {
+  initCNList();
+  calcAll();
+  calcImporter();
+});
+</script>
+
+</body>
+</html>
